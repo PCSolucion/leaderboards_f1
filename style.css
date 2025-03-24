@@ -1,0 +1,108 @@
+/* importar la fuente Rubik desde Google Fonts */
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500');
+
+/* establecer el modelo de caja para todos los elementos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  /* borde superior del cuerpo */
+  border-top: 4px solid #DC0000;
+  background: #15151E;
+  color: #fff;
+  font-family: 'Rubik', sans-serif;
+  /* centrar la tabla horizontalmente */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+table {
+  /* posición relativa para incluir una banda a la izquierda del contenedor */
+  margin: 0rem 1rem;
+  position: relative;
+  /* limitar el ancho de la tabla */
+  width: calc(90vw - 2rem);
+  max-width: 500px;
+  /* separación entre las filas de la tabla */
+  border-spacing: 0 1rem;
+}
+/* con un pseudo elemento agregar una banda con un degradado lineal repetido */
+table:before {
+  position: absolute;
+  content: '';
+  right: calc(100% + 1rem);
+  top: 0;
+  height: 100%;
+  width: 1.5rem;
+  border-radius: 5px;
+  border: 1px solid #38383F;
+  background: repeating-linear-gradient(-45deg, #15151E 0px, #15151E 4px, #38383F 4px, #38383F 8px);
+}
+/* centrar cada elemento anidado en una fila de la tabla */
+table tr > * {
+  text-align: center;
+  padding: 0.5rem;
+}
+/* alinear cada segundo elemento de cada fila a la izquierda */
+table tr > *:nth-child(2) {
+  text-align: left;
+  padding-left: 0.05rem;
+  padding-right: 0.05rem;
+}
+table tr > *:nth-child(3) {
+  padding-left: 0.05rem;
+  padding-right: 0.05rem;
+  font-size: 1.5rem;
+}
+
+/* estilo para los encabezados con títulos en mayúsculas */
+table th {
+  font-weight: 300;
+  letter-spacing: 0.04rem;
+  font-size: 20px;
+  color: #eee;
+  text-transform: uppercase;
+}
+
+/* aumentar ligeramente el peso de la celda que describe la posición */
+table td.position {
+  font-weight: 500;
+}
+
+/* estilo para la celda con el conductor, separando el nombre y el equipo */
+table td.driver {
+  padding-left: 1rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.05rem;
+}
+table td.driver strong {
+  text-transform: uppercase;
+  font-weight: 500;
+}
+table td.driver span {
+  text-transform: capitalize;
+  margin-left: 0.75rem;
+  font-size: 0.8rem;
+  color: #999;
+  letter-spacing: initial;
+}
+
+/* estilo para el span anidado en la última celda con un fondo en rectángulo redondeado */
+table td.gap span {
+  background: #38383F;
+  border-radius: 30px;
+  padding: 0.5rem 0.75rem;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin-left: -220px;
+}
+
+/* en pantallas más pequeñas, ocultar la tercera columna */
+@media (max-width: 500px) {
+  table tr > *:nth-child(3) {
+    display: none;
+  }
+}

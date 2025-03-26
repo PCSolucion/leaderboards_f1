@@ -92,12 +92,12 @@ table td.driver span {
 
 /* estilo para el span anidado en la última celda con un fondo en rectángulo redondeado */
 table td.gap span {
-  background: #38383F;
+  
   border-radius: 30px;
   padding: 0.5rem 0.75rem;
   font-size: 16px;
   text-transform: uppercase;
-  margin-left: -220px;
+  margin-left: -280px;
 }
 
 /* en pantallas más pequeñas, ocultar la tercera columna */

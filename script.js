@@ -18,12 +18,12 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '+539'
+    gap: '+542'
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '+451'
+    gap: '+456'
   },
   {
     name: 'DARKOUS666',
@@ -33,31 +33,31 @@ const leaderboard = [
   {
     name: 'X1LENZ',
     team: 'red bull',
-    gap: '+385'
+    gap: '+387'
   },
   {
     name: 'BROXA24',
     team: 'ferrari',
-    gap: '+372'
+    gap: '+373'
   },
   {
     name: 'MANGUERAZO',
     team: 'red bull',
-    gap: '+330'
+    gap: '+332'
   },
   {
-    name: 'MACUSAM',
-    team: 'alpine',
-    gap: '+313'
-  }, {
     name: 'RACTOR09',
+    team: 'alpine',
+    gap: '+317'
+  }, {
+    name: 'macusam',
     team: 'astonmartin',
-    gap: '+303'
+    gap: '+316'
   },
   {
     name: 'CCXSNOP',
     team: 'alfaRomeo',
-    gap: '+292'
+    gap: '+295'
   },
   {
     name: 'XROOCKK',

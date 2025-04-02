@@ -57,7 +57,12 @@ table tr > *:nth-child(3) {
   padding-right: 0.05rem;
   font-size: 1.5rem;
 }
-
+td.position {
+  text-align: center;
+}
+.updown{
+  
+}
 /* estilo para los encabezados con títulos en mayúsculas */
 table th {
   font-weight: 300;

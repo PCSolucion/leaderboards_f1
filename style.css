@@ -60,8 +60,15 @@ table tr > *:nth-child(3) {
 td.position {
   text-align: center;
 }
-.updown{
-  
+.up{
+  position: absolute;
+    margin-top: -18px;
+    margin-left: 9px;
+}
+.down{
+  position: absolute;
+    margin-top: 22px;
+    margin-left: 10px;
 }
 /* estilo para los encabezados con títulos en mayúsculas */
 table th {

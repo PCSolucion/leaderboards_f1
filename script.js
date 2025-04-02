@@ -14,6 +14,7 @@ const colors = {
 }
 
 // array que describe los conductores, ordenados por posición y con un gap que describe la distancia del conductor líder
+// para los iconos de subir o bajar puestos se ha añadido posicion. 1 para que no aparezca nada, 2 para la flecha verde de subir y 3 para la roja de bajar
 const leaderboard = [
   {
     name: 'JAMES_193',
@@ -58,10 +59,10 @@ const leaderboard = [
     posicion: 2
   }, 
   {
-    name: 'macusam',
+    name: 'MACUSAM',
     team: 'astonmartin',
     gap: '+316',
-    posicion: 1
+    posicion: 3
   },
   {
     name: 'CCXSNOP',
@@ -160,7 +161,9 @@ drivers
   .attr('class', 'position')
   .html((d, i) => {
     const positionImage = d.posicion === 2 
-      ? '<img class="updown" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Up_gbv0y4.png" alt="Position Up" style="height: 1em; vertical-align: middle; display: block; margin-bottom: 2px;">'
+      ? '<img class="up" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Up_gbv0y4.png" alt="Position Up" style="height: 1em; vertical-align: middle; display: block; margin-bottom: 2px;">'
+      : d.posicion === 3
+      ? '<img class="down" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Down_jjm0ha.png" alt="Position Down" style="height: 1em; vertical-align: middle; display: block; margin-bottom: 2px;">'
       : '';
     return `${positionImage}${i + 1}`;
   });

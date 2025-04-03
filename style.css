@@ -62,13 +62,15 @@ td.position {
 }
 .up{
   position: absolute;
-    margin-top: -18px;
-    margin-left: 9px;
+    margin-top: -12px;
+    margin-left: 10px;
+    width: 20px;
 }
 .down{
   position: absolute;
-    margin-top: 22px;
+    margin-top: 14px;
     margin-left: 10px;
+    width: 20px;
 }
 /* estilo para los encabezados con títulos en mayúsculas */
 table th {
@@ -104,12 +106,11 @@ table td.driver span {
 
 /* estilo para el span anidado en la última celda con un fondo en rectángulo redondeado */
 table td.gap span {
-  
   border-radius: 30px;
   padding: 0.5rem 0.75rem;
-  font-size: 16px;
+  font-size: 17px;
   text-transform: uppercase;
-  margin-left: -280px;
+  margin-left: -408px;
 }
 
 /* en pantallas más pequeñas, ocultar la tercera columna */

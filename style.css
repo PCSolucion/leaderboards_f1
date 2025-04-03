@@ -10,7 +10,7 @@
 body {
   /* borde superior del cuerpo */
   border-top: 4px solid #DC0000;
-  background: #15151E;
+  background: #15151e00;
   color: #fff;
   font-family: 'Rubik', sans-serif;
   /* centrar la tabla horizontalmente */
@@ -22,6 +22,7 @@ body {
 table {
   /* posición relativa para incluir una banda a la izquierda del contenedor */
   margin: 0rem 1rem;
+  background-color: #15151E;
   position: relative;
   /* limitar el ancho de la tabla */
   width: calc(90vw - 2rem);
@@ -118,4 +119,62 @@ table td.gap span {
   table tr > *:nth-child(3) {
     display: none;
   }
+}
+
+#table-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: transparent;
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  99% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+    visibility: visible;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.slide-out {
+  animation: slideOut 1s ease-in-out forwards;
+}
+
+.slide-in {
+  animation: slideIn 1s ease-in-out forwards;
+}
+
+/* Asegúrate de que estas propiedades estén en tu tabla */
+table {
+  margin: 0rem 1rem;
+  position: relative;
+  width: calc(90vw - 2rem);
+  max-width: 500px;
+  border-spacing: 0 1rem;
+  transition: transform 1s ease-in-out;
+  transform: translateX(0);
 }

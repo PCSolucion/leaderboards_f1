@@ -9,7 +9,6 @@
 }
 body {
   /* borde superior del cuerpo */
-  border-top: 4px solid #DC0000;
   background: #15151e00;
   color: #fff;
   font-family: 'Rubik', sans-serif;
@@ -60,6 +59,9 @@ table tr > *:nth-child(3) {
 }
 td.position {
   text-align: center;
+}
+table th{
+  height: 70px;
 }
 .up{
   position: absolute;
@@ -178,4 +180,5 @@ table {
   border-spacing: 0 1rem;
   transition: transform 1s ease-in-out;
   transform: translateX(0);
+  border-top-left-radius: 40px;
 }

@@ -140,7 +140,9 @@ const leaderboard = [
 
 // seleccionar el elemento de la tabla en el que agregar un div para cada conductor
 const main = d3
-  .select('table');
+  .select('table')
+  .style('border-collapse', 'separate')
+  .style('border-spacing', '0 2px');
 
 // para cada conductor agregar una fila de tabla
 // ! agregar una clase a la fila para diferenciar las filas de la existente
@@ -163,10 +165,16 @@ drivers
     const positionImage = d.posicion === 2 
       ? '<img class="up" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Up_gbv0y4.png" alt="Position Up" style="height: 1em; vertical-align: middle; display: block; margin-bottom: 2px;">'
       : d.posicion === 3
-      ? '<img class="down" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Down_jjm0ha.png" alt="Position Down" style="height: 1em; vertical-align: middle; display: block; margin-bottom: 2px;">'
+      ? '<img class="down" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Down_jjm0ha.png" alt="Position Down" style="height: 1em; vertical-align: middle; display: none; margin-bottom: 2px;">'
       : '';
     return `${positionImage}${i + 1}`;
-  });
+  })
+  .style('background-color', (d, i) => {
+    if ((i + 1) === 1) return 'rgba(255, 0, 0, 1)';
+    if ((i + 1) >= 2 && (i + 1) <= 20) return 'rgba(70, 70, 70, 0.5)';
+    return null;
+  })
+  .style('width', (d, i) => (i + 1) === 1 ? '37px' : null);
 
 // nombre seguido del equipo
 drivers
@@ -174,27 +182,28 @@ drivers
   .html(({name, team}) => {
     // Verificar si el equipo es Mercedes y mostrar la imagen
     const teamName = team === 'mercedes' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742785431/Mercedes-Logo.svg_obpxws.png" alt="Mercedes" style="height: 1em; vertical-align: middle;">' 
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742785431/Mercedes-Logo.svg_obpxws.png" alt="Mercedes" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">' 
       : team === 'ferrari' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742785952/Ferrari-Logo_l17w2e.png" alt="Ferrari" style="height: 1em; vertical-align: middle;">' 
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742785952/Ferrari-Logo_l17w2e.png" alt="Ferrari" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">' 
       : team === 'red bull' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786100/rb_x5pwuu.png" alt="Red Bull" style="height: 1em; vertical-align: middle;">' 
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786100/rb_x5pwuu.png" alt="Red Bull" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">' 
       : team === 'alpine' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786254/imgbin_alpine-a110-sports-car-renault-png_upq6ni.png" alt="Alpine" style="height: 1em; vertical-align: middle;">'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786254/imgbin_alpine-a110-sports-car-renault-png_upq6ni.png" alt="Alpine" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">'
       : team === 'astonmartin' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786664/am_wuvn6v.png" alt="Aston Martin" style="height: 1em; vertical-align: middle;">'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786664/am_wuvn6v.png" alt="Aston Martin" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">'
       : team === 'alfaRomeo' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786780/20210106191506_Alfa_Romeo_Racing__Logo_fly4r8.svg" alt="Alfa Romeo" style="height: 1em; vertical-align: middle;">'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786780/20210106191506_Alfa_Romeo_Racing__Logo_fly4r8.svg" alt="Alfa Romeo" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">'
       : team === 'toroRosso' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786903/racing_bulls-logo_brandlogos.net_bjuef_ygq2em.png" alt="Toro Rosso" style="height: 1em; vertical-align: middle;">'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786903/racing_bulls-logo_brandlogos.net_bjuef_ygq2em.png" alt="Toro Rosso" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">'
       : team;
     
-    return `${name.split(' ').map((part, index) => index > 0 ? `<strong>${part}</strong>` : `${part}`).join(' ')} <span>${teamName}</span>`;
+    return `<span style="margin-left: -2px; display: inline-block; margin-right: 3px;">${teamName}</span> ${name.split(' ').map((part, index) => index > 0 ? `<strong>${part}</strong>` : `${part}`).join(' ')}`;
   })
   .style('border-left', ({team}) => {
     const color = team.split(' ').map((word, index) => index > 0 ? `${word[0].toUpperCase()}${word.slice(1)}` : `${word}`).join('');
     return `4px solid ${colors[color]}`;
   })
+  .style('padding-left', '6px')
   .attr('class', 'driver');
 
 // gap desde el primer conductor

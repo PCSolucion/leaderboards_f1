@@ -181,7 +181,7 @@ drivers
     return `${positionImage}${i + 1}`;
   })
   .style('background-color', (d, i) => {
-    if ((i + 1) === 1) return 'rgba(255, 0, 0, 1)';
+    if ((i + 1) === 1) return '#8714cb';
     if ((i + 1) >= 2 && (i + 1) <= 20) return 'rgba(5, 5, 5, 0.5)';
     return null;
   })

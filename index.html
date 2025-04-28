@@ -2,29 +2,40 @@
 <html lang="es" >
 <head>
   <meta charset="UTF-8">
-  <title>Leaderboards Canal</title>
+  <title>Leaderboards Canal - F1 Style</title>
   <link rel="stylesheet" href="./style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <!-- Añadimos un div contenedor alrededor de la tabla -->
 <div id="table-container">
   <table>
     <tr>
-      <th>
-        
-      </th>
-      <th>
-        Rank Canal
-      </th>
-      <th>
-        
-      </th>
+      <th style="font-size: 14px;">POS</th>
+      <th style="text-align: center;"><span class="f1-text" style="font-size: 18px;">RANK</span> <span class="f1-text-bold" style="font-size: 18px;">CANAL</span></th>
+      <th></th>
     </tr>
   </table>
+  <div class="f1-footer">
+    <div class="timing-powered">powered by <span class="highlight">Liiukiin</span></div>
+  </div>
 </div>
 <!-- parcial -->
   <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js'></script>
   <script src="./script.js"></script>
   <script src="./animation.js"></script>
+  <script>
+    // Función para actualizar la fecha con el mes y año actual
+    function updateCurrentDate() {
+      const months = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+      const now = new Date();
+      const month = months[now.getMonth()];
+      const year = now.getFullYear();
+      document.getElementById('current-date').textContent = `${month} ${year}`;
+    }
+    
+    // Ejecutar al cargar la página
+    document.addEventListener('DOMContentLoaded', updateCurrentDate);
+  </script>
 </body>
 </html>

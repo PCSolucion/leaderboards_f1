@@ -19,13 +19,13 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '+547',
+    gap: '+556',
     posicion: 1
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '+492',
+    gap: '+497',
     posicion: 1
   },
   {
@@ -37,49 +37,51 @@ const leaderboard = [
   {
     name: 'X1LENZ',
     team: 'red bull',
-    gap: '+390',
+    gap: '+391',
     posicion: 1
   },
   {
     name: 'BROXA24',
     team: 'ferrari',
-    gap: '+375',
-    posicion: 1
-  },
-  {
-    name: 'MANGUERAZO',
-    team: 'red bull',
-    gap: '+335',
+    gap: '+378',
     posicion: 1
   },
   {
     name: 'RACTOR09',
-    team: 'alpine',
-    gap: '+330',
+    team: 'mclaren',
+    gap: '+345',
     posicion: 2
-  }, 
+  },
+  {
+    name: 'MANGUERAZO',
+    team: 'red bull',
+    gap: '+339',
+    posicion: 1
+  },
+   
   {
     name: 'MACUSAM',
     team: 'astonmartin',
-    gap: '+320',
+    gap: '+323',
     posicion: 3
-  },
-  {
-    name: 'CCXSNOP',
-    team: 'mclaren',
-    gap: '+299',
-    posicion: 1
   },
   {
     name: 'XROOCKK',
     team: 'toroRosso',
-    gap: '+289',
+    gap: '+304',
     posicion: 1
   },
   {
-    name: 'LINKH_RP',
+    name: 'CCXSNOP',
     team: 'mclaren',
-    gap: '+284',
+    gap: '+301',
+    posicion: 1
+  },
+ 
+  {
+    name: 'LINKH_RP',
+    team: 'alpine',
+    gap: '+291',
     posicion: 1
   },
   {
@@ -91,49 +93,49 @@ const leaderboard = [
   {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '+232',
+    gap: '+238',
     posicion: 1
   },
   {
     name: 'TONYFORYU',
     team: 'alpine',
-    gap: '+229',
+    gap: '+230',
     posicion: 1
   },
   {
-    name: 'Antonio Giovinazzi',
-    team: 'alfa romeo',
-    gap: '+1 lap',
-    posicion: 1
-  },
-  {
-    name: 'George Russell',
+    name: 'YISUS86',
     team: 'williams',
-    gap: '+2 laps',
+    gap: '+203',
     posicion: 1
   },
   {
-    name: 'Robert Kubica',
+    name: 'PANICSHOW_12',
+    team: 'haas',
+    gap: '+191',
+    posicion: 1
+  },
+  {
+    name: 'EMMA1403',
+    team: 'alfaRomeo',
+    gap: '+186',
+    posicion: 1
+  },
+  {
+    name: 'MAMBITTV',
+    team: 'alfaRomeo',
+    gap: '+175',
+    posicion: 1
+  },
+  {
+    name: 'BITTERBITZ',
     team: 'williams',
-    gap: '+2 laps',
+    gap: '+163',
     posicion: 1
   },
   {
-    name: 'Lando Norris',
-    team: 'mclaren',
-    gap: 'DNF',
-    posicion: 1
-  },
-  {
-    name: 'Daniil Kvyat',
-    team: 'toro rosso',
-    gap: 'DNF',
-    posicion: 1
-  },
-  {
-    name: 'Nico Hulkenberg',
-    team: 'renault',
-    gap: 'DNF',
+    name: 'CAROLINAG',
+    team: 'haas',
+    gap: '+152',
     posicion: 1
   }
 ];
@@ -173,19 +175,19 @@ drivers
   .append('td')
   .attr('class', 'position')
   .html((d, i) => {
-    const positionImage = d.posicion === 2 
-      ? '<img class="up" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Up_gbv0y4.png" alt="Position Up" style="height: 1em; vertical-align: middle; display: block; margin-bottom: 2px;">'
-      : d.posicion === 3
+    // Se eliminó la funcionalidad de la imagen up completamente
+    const positionImage = d.posicion === 3
       ? '<img class="down" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Down_jjm0ha.png" alt="Position Down" style="height: 1em; vertical-align: middle; display: none; margin-bottom: 2px;">'
       : '';
     return `${positionImage}${i + 1}`;
   })
   .style('background-color', (d, i) => {
+    // Restaurar el color morado para la posición 1
     if ((i + 1) === 1) return '#8714cb';
     if ((i + 1) >= 2 && (i + 1) <= 20) return 'rgba(5, 5, 5, 0.5)';
     return null;
   })
-  .style('width', (d, i) => (i + 1) === 1 ? '37px' : null);
+  .style('width', '45px'); // Ancho fijo para todas las posiciones
 
 // nombre seguido del equipo
 drivers
@@ -193,30 +195,35 @@ drivers
   .html(({name, team}) => {
     // Verificar si el equipo es Mercedes y mostrar la imagen
     const teamName = team === 'mercedes' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742785431/Mercedes-Logo.svg_obpxws.png" alt="Mercedes" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">' 
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742785431/Mercedes-Logo.svg_obpxws.png" alt="Mercedes" style="height: 1.2em; width: 1.6em; object-fit: contain; vertical-align: middle; margin-right: 3px;">' 
       : team === 'ferrari' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742785952/Ferrari-Logo_l17w2e.png" alt="Ferrari" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">' 
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742785952/Ferrari-Logo_l17w2e.png" alt="Ferrari" style="height: 1.2em; width: 1.6em; object-fit: contain; vertical-align: middle; margin-right: 3px;">' 
       : team === 'red bull' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786100/rb_x5pwuu.png" alt="Red Bull" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">' 
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786100/rb_x5pwuu.png" alt="Red Bull" style="height: 1.2em; width: 1.6em; object-fit: contain; vertical-align: middle; margin-right: 3px;">' 
       : team === 'alpine' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786254/imgbin_alpine-a110-sports-car-renault-png_upq6ni.png" alt="Alpine" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786254/imgbin_alpine-a110-sports-car-renault-png_upq6ni.png" alt="Alpine" style="height: 1.2em; width: 1.6em; object-fit: contain; vertical-align: middle; margin-right: 3px;">'
       : team === 'astonmartin' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1745062238/am_pwkxij.png" alt="Aston Martin" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1745062238/am_pwkxij.png" alt="Aston Martin" style="height: 1.2em; width: 1.6em; object-fit: contain; vertical-align: middle; margin-right: 3px;">'
       : team === 'alfaRomeo' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786780/20210106191506_Alfa_Romeo_Racing__Logo_fly4r8.svg" alt="Alfa Romeo" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786780/20210106191506_Alfa_Romeo_Racing__Logo_fly4r8.svg" alt="Alfa Romeo" style="height: 1.2em; width: 1.6em; object-fit: contain; vertical-align: middle; margin-right: 3px;">'
       : team === 'toroRosso' 
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786903/racing_bulls-logo_brandlogos.net_bjuef_ygq2em.png" alt="Toro Rosso" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1742786903/racing_bulls-logo_brandlogos.net_bjuef_ygq2em.png" alt="Toro Rosso" style="height: 1.2em; width: 1.6em; object-fit: contain; vertical-align: middle; margin-right: 3px;">'
       : team === 'mclaren'
-      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1745062373/9807_McLaren_Logo_cqwdty.png" alt="McLaren" style="height: 1.43em; width: 1.98em; object-fit: contain; vertical-align: middle;">'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1745062373/9807_McLaren_Logo_cqwdty.png" alt="McLaren" style="height: 1.2em; width: 1.6em; object-fit: contain; vertical-align: middle; margin-right: 3px;">'
+      : team === 'williams'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1745829856/clipart3162470_uki0pk.png" alt="Williams" style="height: 1.1em; width: 1.5em; object-fit: contain; vertical-align: middle; margin-right: 3px;">'
+      : team === 'haas'
+      ? '<img src="https://res.cloudinary.com/pcsolucion/image/upload/v1745828985/Logo_Haas_F1_vekjlj.png" alt="Haas" style="height: 1.2em; width: 1.6em; object-fit: contain; vertical-align: middle; margin-right: 3px;">'
       : team;
     
-    return `<span style="margin-left: -2px; display: inline-block; margin-right: 3px;">${teamName}</span> ${name.split(' ').map((part, index) => index > 0 ? `<strong>${part}</strong>` : `${part}`).join(' ')}`;
+    // Añadir los puntos directamente junto al nombre
+    return `<span style="margin-left: 7px; display: inline-block; margin-right: 0px;">${teamName}</span>${name.split(' ').map((part, index) => index > 0 ? `<strong>${part}</strong>` : `${part}`).join(' ')}`;
   })
   .style('border-left', ({team}) => {
     const color = team.split(' ').map((word, index) => index > 0 ? `${word[0].toUpperCase()}${word.slice(1)}` : `${word}`).join('');
-    return `4px solid ${colors[color]}`;
+    return `3px solid ${colors[color]}`;
   })
-  .style('padding-left', '6px')
+  .style('padding-left', '0px')
   .style('background-color', 'rgba(30, 30, 30, 0.3)')
   .attr('class', 'driver');
 
@@ -224,7 +231,8 @@ drivers
 drivers
   .append('td')
   .attr('class', 'gap')
-  .style('padding-left', '5px')
+  .style('padding-left', '0px')
+  .style('padding-right', '0px')
   .style('background-color', 'rgba(30, 30, 30, 0.3)')
   .append('span')
   .text(({gap}) => gap);

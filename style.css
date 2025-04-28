@@ -1,5 +1,5 @@
-/* importar la fuente Rubik desde Google Fonts */
-@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500');
+/* importar la fuente Titillium Web desde Google Fonts (similar a la usada en F1) */
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap');
 
 /* establecer el modelo de caja para todos los elementos */
 * {
@@ -8,97 +8,240 @@
   padding: 0;
 }
 body {
-  /* borde superior del cuerpo */
-  background: #15151e00;
+  /* fondo con degradado similar al de F1 (rojo a negro) */
+  background: linear-gradient(135deg, #15151E 0%, #15151E 50%, #e10600 200%);
   color: #fff;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Titillium Web', sans-serif;
   /* centrar la tabla horizontalmente */
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
+  overflow: auto; /* Cambio a auto para permitir scroll */
+}
+
+/* Estilos para el header estilo F1 */
+.f1-header {
+  width: calc(60vw - 2rem);
+  max-width: 320px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 5px;
+  background-color: rgba(21, 21, 30, 0.8);
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  margin-bottom: 0; /* Pegado a la tabla */
+}
+
+.f1-header:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+}
+
+.f1-logo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-left: 15px;
+}
+
+.f1-text {
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.f1-text-bold {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #8714cb;
+  text-transform: uppercase;
+}
+
+.f1-race-info {
+  font-size: 14px;
+  font-weight: 400;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Estilos para el footer estilo F1 */
+.f1-footer {
+  width: calc(60vw - 2rem);
+  max-width: 320px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0;
+  padding: 10px 15px;
+  background-color: rgba(21, 21, 30, 0.8);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.timing-powered {
+  font-size: 12px;
+  color: #aaa;
+  letter-spacing: 1px;
+  margin-right: 27px;
+}
+
+.highlight {
+  color: #8714cb;
+  font-weight: 700;
 }
 
 table {
   /* posición relativa para incluir una banda a la izquierda del contenedor */
-  margin: 0rem 1rem;
-  background-color: #15151E;
+  margin: 0;
+  background-color: rgba(21, 21, 30, 0.8);
   position: relative;
   /* limitar el ancho de la tabla */
-  width: calc(90vw - 2rem);
-  max-width: 500px;
+  width: calc(60vw - 2rem); /* Reducir ancho para comprimir elementos */
+  max-width: 320px;
   /* separación entre las filas de la tabla */
-  border-spacing: 0 1rem;
+  border-spacing: 0 0.1rem;
+  border-radius: 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  overflow: visible;
 }
-/* con un pseudo elemento agregar una banda con un degradado lineal repetido */
+/* con un pseudo elemento agregar una banda con un degradado lineal similar al estilo F1 */
 table:before {
   position: absolute;
   content: '';
-  right: calc(100% + 1rem);
+  right: calc(100% + 0.5rem); /* Reducido de 1rem a 0.5rem */
   top: 0;
   height: 100%;
-  width: 1.5rem;
+  width: 4px;
   border-radius: 5px;
   border: 1px solid #38383F;
-  background: repeating-linear-gradient(-45deg, #15151E 0px, #15151E 4px, #38383F 4px, #38383F 8px);
+  background: repeating-linear-gradient(-45deg, #8714cb 0px, #8714cb 4px, #38383F 4px, #38383F 8px);
+  box-shadow: 0 5px 15px rgba(135, 20, 203, 0.3);
 }
+
+/* Agregar un borde superior en la tabla con el color morado */
+table:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #7644a8, #9f7cc2); /* Suavizado a tonalidades moradas más suaves */
+}
+
 /* centrar cada elemento anidado en una fila de la tabla */
 table tr > * {
   text-align: center;
-  padding: 0.5rem;
+  padding: 0.15rem 0.1rem; /* Reducir padding vertical */
 }
-/* alinear cada segundo elemento de cada fila a la izquierda */
+
+/* Regla general para la segunda columna - alineación izquierda */
 table tr > *:nth-child(2) {
   text-align: left;
-  padding-left: 0.05rem;
-  padding-right: 0.05rem;
+  padding-left: 0.5rem;
+  padding-right: 0rem;
+  width: 80%; /* Hacer que la columna de nombres ocupe más espacio */
 }
+
+/* Excepción para el encabezado - alineación centrada */
+table tr:first-child th:nth-child(2) {
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 table tr > *:nth-child(3) {
-  padding-left: 0.05rem;
-  padding-right: 0.05rem;
-  font-size: 1.5rem;
+  padding-left: 0rem;
+  padding-right: 5px;
+  font-size: 1.1rem;
+  text-align: right;
+  width: 0px; /* Reducir al mínimo para que los elementos se junten */
 }
 td.position {
   text-align: center;
+  width: 30px;
+  position: relative;
+  font-size: 0.75rem; /* Reducido de 0.9rem a 0.75rem */
+  font-weight: 700;
 }
+
+/* Quitar el efecto especial para el primer puesto */
+/* Se ha eliminado el estilo especial para la posición 1 */
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(135, 20, 203, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(135, 20, 203, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(135, 20, 203, 0); }
+}
+
 table th{
-  height: 70px;
+  height: 50px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
-.up{
-  position: absolute;
-    margin-top: -12px;
-    margin-left: 1px;
-    width: 20px;
-}
+
 .down{
   position: absolute;
-    margin-top: 14px;
-    margin-left: 10px;
-    width: 20px;
-    display:none;
+  margin-top: 14px;
+  margin-left: 10px;
+  width: 20px;
+  display:none;
+  filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.5));
 }
 /* estilo para los encabezados con títulos en mayúsculas */
 table th {
-  font-weight: 300;
-  letter-spacing: 0.04rem;
-  font-size: 20px;
-  color: #eee;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  font-size: 12px; /* Reducido de 16px a 12px */
+  color: #fff;
   text-transform: uppercase;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Alinear la columna PUNTOS */
+table th:nth-child(3) {
+  text-align: right;
+  width: 25px; /* Aumentado de 15px a 25px */
+  padding-right: 12px; /* Aumentado de 5px a 12px */
 }
 
 /* aumentar ligeramente el peso de la celda que describe la posición */
 table td.position {
-  font-weight: 500;
+  font-weight: 700;
+  border-radius: 5px 0 0 5px;
+  width: 30px; /* Reducido de 45px a 30px */
 }
 
 /* estilo para la celda con el conductor, separando el nombre y el equipo */
 table td.driver {
-  padding-left: 1rem;
-  font-size: 1.1rem;
+  padding-left: 0.5rem;
+  font-size: 0.95rem;
   letter-spacing: 0.05rem;
+  transition: all 0.3s ease;
+  width: 60%; /* Aumentar el ancho proporcional para que el nombre ocupe más espacio */
 }
+
+/* Efecto hover para las filas */
+tr.driver:hover td.driver {
+  transform: translateX(5px);
+}
+
 table td.driver strong {
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 700;
 }
 table td.driver span {
   text-transform: capitalize;
@@ -111,10 +254,13 @@ table td.driver span {
 /* estilo para el span anidado en la última celda con un fondo en rectángulo redondeado */
 table td.gap span {
   border-radius: 30px;
-  padding: 0.5rem 0.75rem;
-  font-size: 17px;
+  padding: 0.4rem 0.6rem;
+  font-size: 15px;
   text-transform: uppercase;
-  margin-left: -408px;
+  margin-left: -120px; /* Valor negativo extremo para juntar completamente con el nombre */
+  background-color: rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+  font-weight: 600;
 }
 
 /* en pantallas más pequeñas, ocultar la tercera columna */
@@ -127,10 +273,29 @@ table td.gap span {
 #table-container {
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   background: transparent;
+  position: relative;
+  overflow: visible;
+  padding: 20px 0;
+}
+
+/* Agregar efecto de cuadrícula de F1 */
+#table-container:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  z-index: -1;
 }
 
 @keyframes slideOut {
@@ -171,14 +336,38 @@ table td.gap span {
   animation: slideIn 1s ease-in-out forwards;
 }
 
-/* Asegúrate de que estas propiedades estén en tu tabla */
-table {
-  margin: 0rem 1rem;
+/* Mejorar el aspecto de las filas de la tabla */
+tr.driver {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  height: 30px;
+  line-height: 1.2;
+}
+
+tr.driver:hover {
+  background-color: rgba(225, 6, 0, 0.1);
+  transform: scale(1.02);
+}
+
+/* Dar estilo F1 a los tiempos de gap */
+td.gap {
+  border-radius: 0 5px 5px 0;
   position: relative;
-  width: calc(90vw - 2rem);
-  max-width: 500px;
-  border-spacing: 0 1rem;
-  transition: transform 1s ease-in-out;
-  transform: translateX(0);
-  border-top-left-radius: 40px;
+  text-align: right;
+  padding-right: 30px !important; /* Añadido !important para forzar su aplicación */
+}
+
+/* Añadir logos F1 en el header */
+table th:nth-child(2) {
+  position: relative;
+}
+
+/* Estilo para el encabezado principal RANK CANAL */
+table tr:first-child th {
+  padding-bottom: 5px;
+}
+
+/* Restaurar el borde superior morado */
+table:after {
+  display: block;
 }

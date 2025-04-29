@@ -9,7 +9,7 @@
 }
 body {
   /* fondo con degradado similar al de F1 (rojo a negro) */
-  background: linear-gradient(135deg, #15151E 0%, #15151E 50%, #e10600 200%);
+  background: rgba(0, 0, 0, 0);
   color: #fff;
   font-family: 'Titillium Web', sans-serif;
   /* centrar la tabla horizontalmente */

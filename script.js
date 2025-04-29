@@ -144,7 +144,7 @@ const leaderboard = [
 const main = d3
   .select('table')
   .style('border-collapse', 'separate')
-  .style('border-spacing', '0 8px');
+  .style('border-spacing', '0 1px');
 
 // Estilizar el encabezado y redondear borde superior izquierdo
 main.select('thead th:first-child')

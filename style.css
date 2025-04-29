@@ -109,7 +109,7 @@ table {
   background-color: rgba(21, 21, 30, 0.8);
   position: relative;
   /* limitar el ancho de la tabla */
-  width: calc(60vw - 2rem); /* Reducir ancho para comprimir elementos */
+  width: calc(60vw - 2rem);
   max-width: 320px;
   /* separación entre las filas de la tabla */
   border-spacing: 0 0.1rem;
@@ -146,7 +146,7 @@ table:after {
 /* centrar cada elemento anidado en una fila de la tabla */
 table tr > * {
   text-align: center;
-  padding: 0.15rem 0.1rem; /* Reducir padding vertical */
+  padding: 0.15rem 0.1rem;
 }
 
 /* Regla general para la segunda columna - alineación izquierda */
@@ -255,12 +255,10 @@ table td.driver span {
 table td.gap span {
   border-radius: 30px;
   padding: 0.4rem 0.6rem;
-  font-size: 15px;
+  font-size: 14px;
   text-transform: uppercase;
-  margin-left: -120px; /* Valor negativo extremo para juntar completamente con el nombre */
-  background-color: rgba(0, 0, 0, 0.2);
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
-  font-weight: 600;
+  margin-left: -120px;
+  font-weight: 500;
 }
 
 /* en pantallas más pequeñas, ocultar la tercera columna */
@@ -340,8 +338,10 @@ table td.gap span {
 tr.driver {
   transition: all 0.3s ease;
   border-radius: 8px;
-  height: 30px;
+  height: 33px;
   line-height: 1.2;
+  margin-top: -5px; /* Margen negativo para juntar las filas */
+  margin-bottom: -5px; /* Margen negativo para juntar las filas */
 }
 
 tr.driver:hover {

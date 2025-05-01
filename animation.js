@@ -17,8 +17,8 @@ function animateTable() {
         }, 300000); // 300000 ms = 5 minutos
     }
     
-    // Iniciar el ciclo cada 20 minutos (15 minutos visible + 5 minutos de animación)
-    setInterval(cycle, 1200000); // 1200000 ms = 20 minutos
+    // Iniciar el ciclo cada 60 minutos (55 minutos visible + 5 minutos de animación)
+    setInterval(cycle, 3600000); // 3600000 ms = 60 minutos
 }
 
 // Iniciar la animación cuando la página se cargue

@@ -9,7 +9,7 @@
 }
 body {
   /* fondo con degradado similar al de F1 (rojo a negro) */
-  background: rgba(0, 0, 0, 0);
+  background: #00000000;
   color: #fff;
   font-family: 'Titillium Web', sans-serif;
   /* centrar la tabla horizontalmente */
@@ -106,15 +106,14 @@ body {
 table {
   /* posición relativa para incluir una banda a la izquierda del contenedor */
   margin: 0;
-  background-color: rgba(21, 21, 30, 0.8);
+  background-color: rgb(21, 21, 30);
   position: relative;
   /* limitar el ancho de la tabla */
   width: calc(60vw - 2rem);
   max-width: 320px;
   /* separación entre las filas de la tabla */
   border-spacing: 0 0.1rem;
-  border-radius: 24px 0 0 0;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border-radius: 45px 0 0 0;
   backdrop-filter: blur(5px);
   overflow: visible;
 }
@@ -190,7 +189,7 @@ td.position {
 
 table th{
   height: 50px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+ 
 }
 
 .down{
@@ -208,7 +207,7 @@ table th {
   font-size: 12px; /* Reducido de 16px a 12px */
   color: #fff;
   text-transform: uppercase;
-  background-color: rgba(0, 0, 0, 0.3);
+  
 }
 
 /* Alinear la columna PUNTOS */
@@ -338,7 +337,7 @@ table td.gap span {
 tr.driver {
   transition: all 0.3s ease;
   border-radius: 8px;
-  height: 33px;
+  height: 40px;
   line-height: 1.2;
   margin-top: -5px; /* Margen negativo para juntar las filas */
   margin-bottom: -5px; /* Margen negativo para juntar las filas */
@@ -364,7 +363,9 @@ table th:nth-child(2) {
 
 /* Estilo para el encabezado principal RANK CANAL */
 table tr:first-child th {
-  padding-bottom: 5px;
+  padding-bottom: 16px;
+  /* margin-top: 37px; */
+  padding-top: 9px;
 }
 
 /* Restaurar el borde superior morado */

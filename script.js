@@ -144,7 +144,7 @@ const leaderboard = [
 const main = d3
   .select('table')
   .style('border-collapse', 'separate')
-  .style('border-spacing', '0 1px');
+  .style('border-spacing', '0 6px');
 
 // Estilizar el encabezado y redondear borde superior izquierdo
 main.select('thead th:first-child')
@@ -183,7 +183,7 @@ drivers
   })
   .style('background-color', (d, i) => {
     // Restaurar el color morado para la posición 1
-    if ((i + 1) === 1) return '#8714cb';
+    if ((i + 1) === 1) return '#ff0000';
     if ((i + 1) >= 2 && (i + 1) <= 20) return 'rgba(5, 5, 5, 0.5)';
     return null;
   })

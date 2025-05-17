@@ -227,7 +227,7 @@ table td.position {
 /* estilo para la celda con el conductor, separando el nombre y el equipo */
 table td.driver {
   padding-left: 0.5rem;
-  font-size: 0.95rem;
+  font-size: 16px;
   letter-spacing: 0.05rem;
   transition: all 0.3s ease;
   width: 60%; /* Aumentar el ancho proporcional para que el nombre ocupe más espacio */

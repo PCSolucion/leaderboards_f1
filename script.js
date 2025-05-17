@@ -19,13 +19,13 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '+556',
+    gap: '+583',
     posicion: 1
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '+497',
+    gap: '+509',
     posicion: 1
   },
   {
@@ -37,51 +37,50 @@ const leaderboard = [
   {
     name: 'X1LENZ',
     team: 'red bull',
-    gap: '+391',
+    gap: '+392',
     posicion: 1
   },
   {
     name: 'BROXA24',
     team: 'ferrari',
-    gap: '+378',
+    gap: '+382',
     posicion: 1
   },
   {
     name: 'RACTOR09',
     team: 'mclaren',
-    gap: '+345',
+    gap: '+375',
     posicion: 2
   },
   {
     name: 'MANGUERAZO',
     team: 'red bull',
-    gap: '+339',
+    gap: '+347',
     posicion: 1
   },
-   
   {
     name: 'MACUSAM',
     team: 'astonmartin',
-    gap: '+323',
+    gap: '+326',
     posicion: 3
   },
   {
     name: 'XROOCKK',
     team: 'toroRosso',
-    gap: '+304',
+    gap: '+324',
     posicion: 1
   },
   {
     name: 'CCXSNOP',
     team: 'mclaren',
-    gap: '+301',
+    gap: '+311',
     posicion: 1
   },
  
   {
     name: 'LINKH_RP',
     team: 'alpine',
-    gap: '+291',
+    gap: '+307',
     posicion: 1
   },
   {
@@ -93,19 +92,19 @@ const leaderboard = [
   {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '+238',
+    gap: '+252',
     posicion: 1
   },
   {
     name: 'TONYFORYU',
     team: 'alpine',
-    gap: '+230',
+    gap: '+234',
     posicion: 1
   },
   {
     name: 'YISUS86',
     team: 'williams',
-    gap: '+203',
+    gap: '+223',
     posicion: 1
   },
   {
@@ -117,25 +116,25 @@ const leaderboard = [
   {
     name: 'EMMA1403',
     team: 'alfaRomeo',
-    gap: '+186',
+    gap: '+187',
     posicion: 1
   },
   {
     name: 'MAMBITTV',
     team: 'alfaRomeo',
-    gap: '+175',
+    gap: '+179',
     posicion: 1
   },
   {
     name: 'BITTERBITZ',
     team: 'williams',
-    gap: '+163',
+    gap: '+167',
     posicion: 1
   },
   {
     name: 'CAROLINAG',
     team: 'haas',
-    gap: '+152',
+    gap: '+153',
     posicion: 1
   }
 ];
@@ -221,7 +220,7 @@ drivers
   })
   .style('border-left', ({team}) => {
     const color = team.split(' ').map((word, index) => index > 0 ? `${word[0].toUpperCase()}${word.slice(1)}` : `${word}`).join('');
-    return `3px solid ${colors[color]}`;
+    return `4px solid ${colors[color]}`;
   })
   .style('padding-left', '0px')
   .style('background-color', 'rgba(30, 30, 30, 0.3)')

@@ -19,13 +19,19 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '+583',
+    gap: '+597',
     posicion: 1
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '+509',
+    gap: '+526',
+    posicion: 1
+  },
+  {
+    name: 'X1LENZ',
+    team: 'red bull',
+    gap: '+393',
     posicion: 1
   },
   {
@@ -35,76 +41,69 @@ const leaderboard = [
     posicion: 1
   },
   {
-    name: 'X1LENZ',
-    team: 'red bull',
-    gap: '+392',
+    name: 'RACTOR09',
+    team: 'mclaren',
+    gap: '+391',
     posicion: 1
   },
   {
     name: 'BROXA24',
     team: 'ferrari',
-    gap: '+382',
+    gap: '+387',
     posicion: 1
-  },
-  {
-    name: 'RACTOR09',
-    team: 'mclaren',
-    gap: '+375',
-    posicion: 2
   },
   {
     name: 'MANGUERAZO',
     team: 'red bull',
-    gap: '+347',
+    gap: '+354',
+    posicion: 1
+  },
+  {
+    name: 'XROOCKK',
+    team: 'toroRosso',
+    gap: '+335',
     posicion: 1
   },
   {
     name: 'MACUSAM',
     team: 'astonmartin',
-    gap: '+326',
-    posicion: 3
+    gap: '+328',
+    posicion: 1
   },
   {
-    name: 'XROOCKK',
-    team: 'toroRosso',
-    gap: '+324',
+    name: 'LINKH_RP',
+    team: 'alpine',
+    gap: '+326',
     posicion: 1
   },
   {
     name: 'CCXSNOP',
     team: 'mclaren',
-    gap: '+311',
-    posicion: 1
-  },
- 
-  {
-    name: 'LINKH_RP',
-    team: 'alpine',
-    gap: '+307',
-    posicion: 1
-  },
-  {
-    name: 'NANUSSO',
-    team: 'toroRosso',
-    gap: '+253',
+    gap: '+321',
     posicion: 1
   },
   {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '+252',
+    gap: '+266',
+    posicion: 1
+  },
+  {
+    name: 'NANUSSO',
+    team: 'toroRosso',
+    gap: '+254',
     posicion: 1
   },
   {
     name: 'TONYFORYU',
     team: 'alpine',
-    gap: '+234',
+    gap: '+235',
     posicion: 1
   },
   {
     name: 'YISUS86',
     team: 'williams',
-    gap: '+223',
+    gap: '+230',
     posicion: 1
   },
   {
@@ -114,27 +113,27 @@ const leaderboard = [
     posicion: 1
   },
   {
+    name: 'MAMBITTV',
+    team: 'alfaRomeo',
+    gap: '+187',
+    posicion: 1
+  },
+  {
     name: 'EMMA1403',
     team: 'alfaRomeo',
     gap: '+187',
     posicion: 1
   },
   {
-    name: 'MAMBITTV',
-    team: 'alfaRomeo',
-    gap: '+179',
-    posicion: 1
-  },
-  {
     name: 'BITTERBITZ',
     team: 'williams',
-    gap: '+167',
+    gap: '+181',
     posicion: 1
   },
   {
     name: 'CAROLINAG',
     team: 'haas',
-    gap: '+153',
+    gap: '+159',
     posicion: 1
   }
 ];

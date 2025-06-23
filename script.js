@@ -19,19 +19,25 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '+597',
+    gap: '+600',
     posicion: 1
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '+526',
+    gap: '+534',
+    posicion: 1
+  },
+  {
+    name: 'RACTOR09',
+    team: 'mclaren',
+    gap: '+395',
     posicion: 1
   },
   {
     name: 'X1LENZ',
     team: 'red bull',
-    gap: '+393',
+    gap: '+394',
     posicion: 1
   },
   {
@@ -41,51 +47,45 @@ const leaderboard = [
     posicion: 1
   },
   {
-    name: 'RACTOR09',
-    team: 'mclaren',
-    gap: '+391',
-    posicion: 1
-  },
-  {
     name: 'BROXA24',
     team: 'ferrari',
-    gap: '+387',
+    gap: '+388',
     posicion: 1
   },
   {
     name: 'MANGUERAZO',
     team: 'red bull',
-    gap: '+354',
+    gap: '+355',
     posicion: 1
   },
   {
     name: 'XROOCKK',
     team: 'toroRosso',
-    gap: '+335',
-    posicion: 1
-  },
-  {
-    name: 'MACUSAM',
-    team: 'astonmartin',
-    gap: '+328',
+    gap: '+342',
     posicion: 1
   },
   {
     name: 'LINKH_RP',
     team: 'alpine',
-    gap: '+326',
+    gap: '+331',
+    posicion: 1
+  },
+  {
+    name: 'MACUSAM',
+    team: 'astonmartin',
+    gap: '+329',
     posicion: 1
   },
   {
     name: 'CCXSNOP',
     team: 'mclaren',
-    gap: '+321',
+    gap: '+324',
     posicion: 1
   },
   {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '+266',
+    gap: '+272',
     posicion: 1
   },
   {
@@ -103,7 +103,13 @@ const leaderboard = [
   {
     name: 'YISUS86',
     team: 'williams',
-    gap: '+230',
+    gap: '+231',
+    posicion: 1
+  },
+  {
+    name: 'MAMBIITV',
+    team: 'alfaRomeo',
+    gap: '+192',
     posicion: 1
   },
   {
@@ -113,9 +119,9 @@ const leaderboard = [
     posicion: 1
   },
   {
-    name: 'MAMBITTV',
-    team: 'alfaRomeo',
-    gap: '+187',
+    name: 'BITTERBITZ',
+    team: 'williams',
+    gap: '+188',
     posicion: 1
   },
   {
@@ -125,13 +131,7 @@ const leaderboard = [
     posicion: 1
   },
   {
-    name: 'BITTERBITZ',
-    team: 'williams',
-    gap: '+181',
-    posicion: 1
-  },
-  {
-    name: 'CAROLINAG',
+    name: 'ICAROLINAGI',
     team: 'haas',
     gap: '+159',
     posicion: 1

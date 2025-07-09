@@ -19,25 +19,25 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '+600',
+    gap: '+606',
     posicion: 1
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '+534',
+    gap: '+548',
     posicion: 1
   },
   {
     name: 'RACTOR09',
     team: 'mclaren',
-    gap: '+395',
+    gap: '+404',
     posicion: 1
   },
   {
     name: 'X1LENZ',
     team: 'red bull',
-    gap: '+394',
+    gap: '+397',
     posicion: 1
   },
   {
@@ -55,37 +55,37 @@ const leaderboard = [
   {
     name: 'MANGUERAZO',
     team: 'red bull',
-    gap: '+355',
+    gap: '+360',
     posicion: 1
   },
   {
     name: 'XROOCKK',
     team: 'toroRosso',
-    gap: '+342',
+    gap: '+354',
     posicion: 1
   },
   {
-    name: 'LINKH_RP',
+    name: 'CHADAIF',
     team: 'alpine',
-    gap: '+331',
+    gap: '+338',
     posicion: 1
   },
   {
     name: 'MACUSAM',
     team: 'astonmartin',
-    gap: '+329',
+    gap: '+330',
     posicion: 1
   },
   {
     name: 'CCXSNOP',
     team: 'mclaren',
-    gap: '+324',
+    gap: '+327',
     posicion: 1
   },
   {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '+272',
+    gap: '+279',
     posicion: 1
   },
   {
@@ -234,3 +234,89 @@ drivers
   .style('background-color', 'rgba(30, 30, 30, 0.3)')
   .append('span')
   .text(({gap}) => gap);
+
+// === NUEVO CÓDIGO PARA ICONO MORADO ===
+// Puntos anteriores (antes de la actualización)
+const puntosPrevios = {
+  'JAMES_193': 600,
+  'TAKERU_XIII': 534,
+  'RACTOR09': 395,
+  'X1LENZ': 394,
+  'DARKOUS666': 392,
+  'BROXA24': 388,
+  'MANGUERAZO': 355,
+  'XROOCKK': 342,
+  'LINKH_RP': 331,
+  'MACUSAM': 329,
+  'CCXSNOP': 324,
+  'URIMAS82': 272,
+  'NANUSSO': 254,
+  'TONYFORYU': 235,
+  'YISUS86': 231
+};
+
+// Puntos actuales (después de la actualización)
+const puntosActuales = {
+  'JAMES_193': 606,
+  'TAKERU_XIII': 548,
+  'RACTOR09': 404,
+  'X1LENZ': 397,
+  'DARKOUS666': 392,
+  'BROXA24': 388,
+  'MANGUERAZO': 360,
+  'XROOCKK': 354,
+  'CHADAIF': 338, // LINKH_RP ahora es CHADAIF
+  'MACUSAM': 330,
+  'CCXSNOP': 327,
+  'URIMAS82': 279,
+  'NANUSSO': 254,
+  'TONYFORYU': 235,
+  'YISUS86': 231
+};
+
+// Calcular quién sumó más puntos
+let maxDiff = -Infinity;
+let pilotoDestacado = null;
+Object.keys(puntosActuales).forEach(nombre => {
+  let nombrePrevio = nombre === 'CHADAIF' ? 'LINKH_RP' : nombre;
+  const prev = puntosPrevios[nombrePrevio] || 0;
+  const actual = puntosActuales[nombre];
+  const diff = actual - prev;
+  if (diff > maxDiff) {
+    maxDiff = diff;
+    pilotoDestacado = nombre;
+  }
+});
+
+// Esperar a que la tabla esté renderizada para insertar el icono
+window.addEventListener('DOMContentLoaded', () => {
+  // Buscar la fila del piloto destacado
+  const filas = document.querySelectorAll('tr.driver');
+  let filaDestacada = null;
+  filas.forEach(fila => {
+    const nombreCelda = fila.querySelector('td.driver');
+    if (nombreCelda && nombreCelda.textContent.trim().toUpperCase().includes(pilotoDestacado)) {
+      filaDestacada = fila;
+    }
+  });
+  if (filaDestacada) {
+    // Buscar la celda de puntos (gap)
+    const celdaGap = filaDestacada.querySelector('td.gap');
+    if (celdaGap) {
+      // Crear el icono morado
+      const icono = document.createElement('img');
+      icono.src = 'https://res.cloudinary.com/pcsolucion/image/upload/v1752070038/Screenshot_1_wespu3.jpg';
+      icono.alt = 'Icono Morado';
+      icono.style.height = '39px';
+      icono.style.marginLeft = '0px';
+      icono.style.verticalAlign = 'middle';
+      icono.style.position = 'absolute';
+      icono.style.left = '100%';
+      icono.style.top = '50%';
+      icono.style.transform = 'translateY(-50%)';
+      // Crear un contenedor relativo para la celda si no lo tiene
+      celdaGap.style.position = 'relative';
+      celdaGap.appendChild(icono);
+    }
+  }
+});

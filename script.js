@@ -185,7 +185,7 @@ drivers
     if ((i + 1) >= 2 && (i + 1) <= 20) return 'rgba(5, 5, 5, 0.5)';
     return null;
   })
-  .style('width', '45px'); // Ancho fijo para todas las posiciones
+  .style('width', '12px'); // Ancho fijo para todas las posiciones, reducido a 12px
 
 // nombre seguido del equipo
 drivers
@@ -307,7 +307,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const icono = document.createElement('img');
       icono.src = 'https://res.cloudinary.com/pcsolucion/image/upload/v1752070038/Screenshot_1_wespu3.jpg';
       icono.alt = 'Icono Morado';
-      icono.style.height = '39px';
+      icono.style.height = '31px';
       icono.style.marginLeft = '0px';
       icono.style.verticalAlign = 'middle';
       icono.style.position = 'absolute';

@@ -19,121 +19,121 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '+606',
+    gap: '608 Exp.',
     posicion: 1
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '+548',
+    gap: '560 Exp.',
     posicion: 1
   },
   {
     name: 'RACTOR09',
     team: 'mclaren',
-    gap: '+404',
+    gap: '410 Exp.',
     posicion: 1
   },
   {
     name: 'X1LENZ',
     team: 'red bull',
-    gap: '+397',
+    gap: '397 Exp.',
     posicion: 1
   },
   {
     name: 'DARKOUS666',
     team: 'ferrari',
-    gap: '+392',
+    gap: '392 Exp.',
     posicion: 1
   },
   {
     name: 'BROXA24',
     team: 'ferrari',
-    gap: '+388',
-    posicion: 1
-  },
-  {
-    name: 'MANGUERAZO',
-    team: 'red bull',
-    gap: '+360',
+    gap: '388 Exp.',
     posicion: 1
   },
   {
     name: 'XROOCKK',
     team: 'toroRosso',
-    gap: '+354',
+    gap: '365 Exp.',
+    posicion: 1
+  },
+  {
+    name: 'MANGUERAZO',
+    team: 'red bull',
+    gap: '362 Exp.',
     posicion: 1
   },
   {
     name: 'CHADAIF',
     team: 'alpine',
-    gap: '+338',
-    posicion: 1
-  },
-  {
-    name: 'MACUSAM',
-    team: 'astonmartin',
-    gap: '+330',
+    gap: '344 Exp.',
     posicion: 1
   },
   {
     name: 'CCXSNOP',
     team: 'mclaren',
-    gap: '+327',
+    gap: '333 Exp.',
+    posicion: 1
+  },
+  {
+    name: 'MACUSAM',
+    team: 'astonmartin',
+    gap: '330 Exp.',
     posicion: 1
   },
   {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '+279',
+    gap: '291 Exp.',
     posicion: 1
   },
   {
     name: 'NANUSSO',
     team: 'toroRosso',
-    gap: '+254',
+    gap: '254 Exp.',
     posicion: 1
   },
   {
     name: 'TONYFORYU',
     team: 'alpine',
-    gap: '+235',
+    gap: '235 Exp.',
     posicion: 1
   },
   {
     name: 'YISUS86',
     team: 'williams',
-    gap: '+231',
+    gap: '231 Exp.',
     posicion: 1
   },
   {
     name: 'MAMBIITV',
     team: 'alfaRomeo',
-    gap: '+192',
+    gap: '198 Exp.',
     posicion: 1
   },
   {
     name: 'PANICSHOW_12',
     team: 'haas',
-    gap: '+191',
+    gap: '191 Exp.',
     posicion: 1
   },
   {
     name: 'BITTERBITZ',
     team: 'williams',
-    gap: '+188',
+    gap: '190 Exp.',
     posicion: 1
   },
   {
     name: 'EMMA1403',
     team: 'alfaRomeo',
-    gap: '+187',
+    gap: '187 Exp.',
     posicion: 1
   },
   {
     name: 'ICAROLINAGI',
     team: 'haas',
-    gap: '+159',
+    gap: '163 Exp.',
     posicion: 1
   }
 ];

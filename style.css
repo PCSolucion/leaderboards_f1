@@ -113,7 +113,7 @@ table {
   max-width: 320px;
   /* separación entre las filas de la tabla */
   border-spacing: 0 0.1rem;
-  border-radius: 0 0 0 0;
+  border-radius: 20px 0 0 0;
   backdrop-filter: blur(5px);
   overflow: visible;
 }
@@ -172,15 +172,15 @@ table tr > *:nth-child(3) {
 }
 td.position {
   text-align: center;
-  width: 8px !important;
-  min-width: 0 !important;
-  max-width: 8px !important;
-  font-size: 8px !important;
+  width: 22px !important;
+  min-width: 22px !important;
+  max-width: 22px !important;
+  font-size: 14px !important;
 }
 
 table td.position img {
-  max-width: 8px !important;
-  height: 8px !important;
+  max-width: 12px !important;
+  height: 12px !important;
 }
 
 /* Quitar el efecto especial para el primer puesto */
@@ -373,9 +373,22 @@ table tr:first-child th {
   padding-top: 9px;
 }
 
+/* Redondear la esquina superior izquierda igual que la inferior izquierda */
+table tr:first-child th:first-child {
+  border-top-left-radius: 8px;
+}
+
+/* Asegurar que el texto y el logo estén en la misma línea */
+.header-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
 /* Restaurar el borde superior morado */
 table:after {
-  display: block;
+  display: none;
 }
 
 table td.position,

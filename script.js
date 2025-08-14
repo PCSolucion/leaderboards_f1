@@ -182,10 +182,13 @@ drivers
   .style('background-color', (d, i) => {
     // Restaurar el color morado para la posición 1
     if ((i + 1) === 1) return '#ff0000';
-    if ((i + 1) >= 2 && (i + 1) <= 20) return 'rgba(5, 5, 5, 0.5)';
+    if ((i + 1) >= 2 && (i + 1) <= 20) return 'rgba(5, 5, 5, 0.3)';
     return null;
   })
-  .style('width', '12px'); // Ancho fijo para todas las posiciones, reducido a 12px
+  .style('width', '22px')
+  .style('min-width', '22px')
+  .style('max-width', '22px')
+  .style('font-size', '14px');
 
 // nombre seguido del equipo
 drivers

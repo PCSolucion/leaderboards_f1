@@ -55,6 +55,7 @@ body {
   font-size: 24px;
   font-weight: 400;
   letter-spacing: 1px;
+  margin-left: -16px;
   color: #fff;
   text-transform: uppercase;
 }
@@ -101,6 +102,10 @@ body {
 .highlight {
   color: #8714cb;
   font-weight: 700;
+}
+.logo{
+  position:absolute;
+  margin-left: 118px !important;
 }
 
 table {
@@ -172,9 +177,9 @@ table tr > *:nth-child(3) {
 }
 td.position {
   text-align: center;
-  width: 22px !important;
-  min-width: 22px !important;
-  max-width: 22px !important;
+  width: 11px !important;
+  min-width: 11px !important;
+  max-width: 11px !important;
   font-size: 14px !important;
 }
 

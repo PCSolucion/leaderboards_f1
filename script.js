@@ -19,19 +19,19 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '609 Exp.',
+    gap: '613 Exp.',
     posicion: 1
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '569 Exp.',
+    gap: '578 Exp.',
     posicion: 1
   },
   {
     name: 'RACTOR09',
     team: 'mclaren',
-    gap: '428 Exp.',
+    gap: '438 Exp.',
     posicion: 1
   },
   {
@@ -41,17 +41,18 @@ const leaderboard = [
     posicion: 1
   },
   {
+    name: 'BROXA24',
+    team: 'ferrari',
+    gap: '396 Exp.',
+    posicion: 1
+  },
+  {
     name: 'DARKOUS666',
     team: 'ferrari',
     gap: '392 Exp.',
     posicion: 1
   },
-  {
-    name: 'BROXA24',
-    team: 'ferrari',
-    gap: '391 Exp.',
-    posicion: 1
-  },
+  
   {
     name: 'XROOCKK',
     team: 'toroRosso',
@@ -61,31 +62,32 @@ const leaderboard = [
   {
     name: 'MANGUERAZO',
     team: 'red bull',
-    gap: '364 Exp.',
+    gap: '365 Exp.',
     posicion: 1
   },
   {
     name: 'CHADAIF',
     team: 'alpine',
-    gap: '352 Exp.',
-    posicion: 1
-  },
-  {
-    name: 'CCXSNOP',
-    team: 'mclaren',
-    gap: '333 Exp.',
+    gap: '356 Exp.',
     posicion: 1
   },
   {
     name: 'MACUSAM',
     team: 'astonmartin',
-    gap: '332 Exp.',
+    gap: '335 Exp.',
     posicion: 1
   },
   {
+    name: 'CCXSNOP',
+    team: 'mclaren',
+    gap: '335 Exp.',
+    posicion: 1
+  },
+  
+  {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '301 Exp.',
+    gap: '304 Exp.',
     posicion: 1
   },
   {

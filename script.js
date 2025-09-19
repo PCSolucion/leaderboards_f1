@@ -19,19 +19,19 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '613 Exp.',
+    gap: '617 Exp.',
     posicion: 1
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '578 Exp.',
+    gap: '585 Exp.',
     posicion: 1
   },
   {
     name: 'RACTOR09',
     team: 'mclaren',
-    gap: '438 Exp.',
+    gap: '450 Exp.',
     posicion: 1
   },
   {
@@ -43,7 +43,7 @@ const leaderboard = [
   {
     name: 'BROXA24',
     team: 'ferrari',
-    gap: '396 Exp.',
+    gap: '398 Exp.',
     posicion: 1
   },
   {
@@ -56,19 +56,25 @@ const leaderboard = [
   {
     name: 'XROOCKK',
     team: 'toroRosso',
-    gap: '366 Exp.',
+    gap: '370 Exp.',
     posicion: 1
   },
   {
     name: 'MANGUERAZO',
     team: 'red bull',
-    gap: '365 Exp.',
+    gap: '366 Exp.',
     posicion: 1
   },
   {
     name: 'CHADAIF',
     team: 'alpine',
-    gap: '356 Exp.',
+    gap: '359 Exp.',
+    posicion: 1
+  },
+  {
+    name: 'CCXSNOP',
+    team: 'mclaren',
+    gap: '337 Exp.',
     posicion: 1
   },
   {
@@ -77,17 +83,11 @@ const leaderboard = [
     gap: '335 Exp.',
     posicion: 1
   },
-  {
-    name: 'CCXSNOP',
-    team: 'mclaren',
-    gap: '335 Exp.',
-    posicion: 1
-  },
   
   {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '304 Exp.',
+    gap: '308 Exp.',
     posicion: 1
   },
   {
@@ -105,37 +105,37 @@ const leaderboard = [
   {
     name: 'YISUS86',
     team: 'williams',
-    gap: '232 Exp.',
-    posicion: 1
-  },
-  {
-    name: 'MAMBIITV',
-    team: 'alfaRomeo',
-    gap: '203 Exp.',
+    gap: '233 Exp.',
     posicion: 1
   },
   {
     name: 'BITTERBITZ',
     team: 'williams',
-    gap: '198 Exp.',
+    gap: '208 Exp.',
+    posicion: 1
+  },
+  {
+    name: 'MAMBIITV',
+    team: 'alfaRomeo',
+    gap: '206 Exp.',
     posicion: 1
   },
   {
     name: 'PANICSHOW_12',
     team: 'haas',
-    gap: '191 Exp.',
+    gap: '193 Exp.',
     posicion: 1
   },
   {
     name: 'EMMA1403',
     team: 'alfaRomeo',
-    gap: '188 Exp.',
+    gap: '191 Exp.',
     posicion: 1
   },
   {
-    name: 'ICAROLINAGI',
+    name: 'IFLEKY',
     team: 'haas',
-    gap: '163 Exp.',
+    gap: '167 Exp.',
     posicion: 1
   }
 ];
@@ -243,50 +243,50 @@ drivers
 // === NUEVO CÓDIGO PARA ICONO MORADO ===
 // Puntos anteriores (antes de la actualización)
 const puntosPrevios = {
-  'JAMES_193': 608,
-  'TAKERU_XIII': 560,
-  'RACTOR09': 410,
-  'X1LENZ': 397,
+  'JAMES_193': 613,
+  'TAKERU_XIII': 578,
+  'RACTOR09': 438,
+  'X1LENZ': 398,
+  'BROXA24': 396,
   'DARKOUS666': 392,
-  'BROXA24': 388,
-  'XROOCKK': 365,
-  'MANGUERAZO': 362,
-  'CHADAIF': 344,
-  'CCXSNOP': 333,
-  'MACUSAM': 330,
-  'URIMAS82': 291,
+  'XROOCKK': 366,
+  'MANGUERAZO': 365,
+  'CHADAIF': 356,
+  'CCXSNOP': 335,
+  'MACUSAM': 335,
+  'URIMAS82': 304,
   'NANUSSO': 254,
   'TONYFORYU': 235,
-  'YISUS86': 231,
-  'MAMBIITV': 198,
-  'BITTERBITZ': 190,
+  'YISUS86': 232,
+  'BITTERBITZ': 198,
+  'MAMBIITV': 203,
   'PANICSHOW_12': 191,
-  'EMMA1403': 187,
-  'ICAROLINAGI': 163
+  'EMMA1403': 188,
+  'IFLEKY': 163
 };
 
 // Puntos actuales (después de la actualización)
 const puntosActuales = {
-  'JAMES_193': 609,
-  'TAKERU_XIII': 569,
-  'RACTOR09': 428,
+  'JAMES_193': 617,
+  'TAKERU_XIII': 585,
+  'RACTOR09': 450,
   'X1LENZ': 398,
+  'BROXA24': 398,
   'DARKOUS666': 392,
-  'BROXA24': 391,
-  'XROOCKK': 366,
-  'MANGUERAZO': 364,
-  'CHADAIF': 352,
-  'CCXSNOP': 333,
-  'MACUSAM': 332,
-  'URIMAS82': 301,
+  'XROOCKK': 370,
+  'MANGUERAZO': 366,
+  'CHADAIF': 359,
+  'CCXSNOP': 337,
+  'MACUSAM': 335,
+  'URIMAS82': 308,
   'NANUSSO': 254,
   'TONYFORYU': 235,
-  'YISUS86': 232,
-  'MAMBIITV': 203,
-  'BITTERBITZ': 198,
-  'PANICSHOW_12': 191,
-  'EMMA1403': 188,
-  'ICAROLINAGI': 163
+  'YISUS86': 233,
+  'BITTERBITZ': 208,
+  'MAMBIITV': 206,
+  'PANICSHOW_12': 193,
+  'EMMA1403': 191,
+  'IFLEKY': 167
 };
 
 // Calcular quién sumó más puntos

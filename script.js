@@ -19,93 +19,96 @@ const leaderboard = [
   {
     name: 'JAMES_193',
     team: 'mercedes',
-    gap: '617 Exp.',
+    gap: '631 Exp.',
     posicion: 1
   },
   {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '585 Exp.',
+    gap: '627 Exp.',
     posicion: 1
   },
   {
     name: 'RACTOR09',
     team: 'mclaren',
-    gap: '450 Exp.',
+    gap: '504 Exp.',
     posicion: 1
   },
   {
-    name: 'X1LENZ',
-    team: 'red bull',
-    gap: '398 Exp.',
+    name: 'XROOCKK',
+    team: 'toroRosso',
+    gap: '414 Exp.',
     posicion: 1
   },
   {
     name: 'BROXA24',
     team: 'ferrari',
-    gap: '398 Exp.',
+    gap: '412 Exp.',
     posicion: 1
   },
+  {
+    name: 'X1LENZ',
+    team: 'red bull',
+    gap: '407 Exp.',
+    posicion: 1
+  },
+  
   {
     name: 'DARKOUS666',
     team: 'ferrari',
     gap: '392 Exp.',
     posicion: 1
   },
-  
   {
-    name: 'XROOCKK',
-    team: 'toroRosso',
-    gap: '370 Exp.',
+    name: 'CHADALF',
+    team: 'alpine',
+    gap: '376 Exp.',
     posicion: 1
   },
+  
+  
   {
     name: 'MANGUERAZO',
     team: 'red bull',
-    gap: '366 Exp.',
+    gap: '375 Exp.',
     posicion: 1
   },
-  {
-    name: 'CHADAIF',
-    team: 'alpine',
-    gap: '359 Exp.',
-    posicion: 1
-  },
+  
   {
     name: 'CCXSNOP',
     team: 'mclaren',
-    gap: '337 Exp.',
+    gap: '355 Exp.',
     posicion: 1
   },
   {
     name: 'MACUSAM',
     team: 'astonmartin',
-    gap: '335 Exp.',
+    gap: '343 Exp.',
     posicion: 1
   },
   
   {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '308 Exp.',
+    gap: '327 Exp.',
     posicion: 1
   },
   {
     name: 'NANUSSO',
     team: 'toroRosso',
-    gap: '254 Exp.',
+    gap: '267 Exp.',
+    posicion: 1
+  },
+  {
+    name: 'REICHSKANZ',
+    team: 'alpine',
+    gap: '237 Exp.',
     posicion: 1
   },
   {
     name: 'TONYFORYU',
-    team: 'alpine',
-    gap: '235 Exp.',
-    posicion: 1
-  },
-  {
-    name: 'YISUS86',
     team: 'williams',
-    gap: '233 Exp.',
+    gap: '237 Exp.',
     posicion: 1
   },
   {

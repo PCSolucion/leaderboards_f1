@@ -23,7 +23,7 @@ body {
 /* Estilos para el header estilo F1 */
 .f1-header {
   width: calc(60vw - 2rem);
-  max-width: 320px;
+  max-width: 280px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -82,7 +82,7 @@ body {
 /* Estilos para el footer estilo F1 */
 .f1-footer {
   width: calc(60vw - 2rem);
-  max-width: 320px;
+  max-width: 280px;
   display: flex;
   justify-content: flex-end;
   margin-top: 0;
@@ -111,11 +111,11 @@ body {
 table {
   /* posición relativa para incluir una banda a la izquierda del contenedor */
   margin: 0;
-  background-color: rgb(21, 21, 30);
+  background-color: #0c0c11;
   position: relative;
   /* limitar el ancho de la tabla */
   width: calc(60vw - 2rem);
-  max-width: 320px;
+  max-width: 280px;
   /* separación entre las filas de la tabla */
   border-spacing: 0 0.1rem;
   border-radius: 20px 0 0 0;
@@ -131,8 +131,7 @@ table:before {
   height: 100%;
   width: 4px;
   border-radius: 5px;
-  border: 1px solid #38383F;
-  background: repeating-linear-gradient(-45deg, #8714cb 0px, #8714cb 4px, #38383F 4px, #38383F 8px);
+  border: 1px solid #0c0c11;
   box-shadow: 0 5px 15px rgba(135, 20, 203, 0.3);
 }
 
@@ -156,9 +155,9 @@ table tr > * {
 /* Regla general para la segunda columna - alineación izquierda */
 table tr > *:nth-child(2) {
   text-align: left;
-  padding-left: 0.5rem;
-  padding-right: 0rem;
-  width: 48%; /* Reducido para que ocupe un 40% menos de espacio */
+  padding-left: 0.4rem;
+  padding-right: 0.5rem;
+  width: 45%; /* Reducido para que ocupe menos espacio */
 }
 
 /* Excepción para el encabezado - alineación centrada */
@@ -169,7 +168,7 @@ table tr:first-child th:nth-child(2) {
 }
 
 table tr > *:nth-child(3) {
-  padding-left: 0rem;
+  padding-left: 1rem;
   padding-right: 5px;
   font-size: 1.1rem;
   text-align: right;
@@ -181,10 +180,12 @@ td.position {
   min-width: 11px !important;
   max-width: 11px !important;
   font-size: 14px !important;
+  position: relative !important;
+  overflow: visible !important;
 }
 
 table td.position img {
-  max-width: 12px !important;
+  /*max-width: 12px !important;*/
   height: 12px !important;
 }
 
@@ -202,13 +203,28 @@ table th{
  
 }
 
+.up{
+  position: absolute !important;
+  top: 2px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 15px !important;
+  height: 10px !important;
+  filter: drop-shadow(0 0 2px rgba(0, 255, 0, 0.5));
+  z-index: 10;
+  pointer-events: none;
+}
+
 .down{
-  position: absolute;
-  margin-top: 14px;
-  margin-left: 10px;
-  width: 20px;
-  display:none;
-  filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.5));
+  position: absolute !important;
+  bottom: 1px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 15px !important;
+  height: 10px !important;
+  filter: drop-shadow(0 0 2px rgba(255, 0, 0, 0.5));
+  z-index: 10;
+  pointer-events: none;
 }
 /* estilo para los encabezados con títulos en mayúsculas */
 table th {
@@ -236,11 +252,11 @@ table td.position {
 
 /* estilo para la celda con el conductor, separando el nombre y el equipo */
 table td.driver {
-  padding-left: 0.5rem;
-  font-size: 16px;
+  padding-left: 0.4rem;
+  font-size: 15px;
   letter-spacing: 0.05rem;
   transition: all 0.3s ease;
-  width: 36%; /* Reducido para que ocupe un 40% menos de espacio */
+  width: 33%; /* Reducido para que ocupe menos espacio */
 }
 
 /* Efecto hover para las filas */
@@ -254,10 +270,17 @@ table td.driver strong {
 }
 table td.driver span {
   text-transform: capitalize;
-  margin-left: 0.75rem;
-  font-size: 0.8rem;
-  color: #999;
+  font-size: 13px;
+  color: #ffffff;
   letter-spacing: initial;
+}
+
+/* Estilos para el nombre del conductor */
+.driver-name {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.05rem;
 }
 
 /* estilo para el span anidado en la última celda con un fondo en rectángulo redondeado */
@@ -290,20 +313,6 @@ table td.gap span {
   padding: 20px 0;
 }
 
-/* Agregar efecto de cuadrícula de F1 */
-#table-container:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
-  z-index: -1;
-}
 
 @keyframes slideOut {
   0% {
@@ -363,7 +372,8 @@ td.gap {
   border-radius: 0 5px 5px 0;
   position: relative;
   text-align: right;
-  padding-right: 30px !important; /* Añadido !important para forzar su aplicación */
+  padding-left: 1rem !important;
+  padding-right: 3px !important; /* Añadido !important para forzar su aplicación */
 }
 
 /* Añadir logos F1 en el header */

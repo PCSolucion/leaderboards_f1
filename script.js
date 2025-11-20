@@ -17,42 +17,41 @@ const colors = {
 // para los iconos de subir o bajar puestos se ha añadido posicion. 1 para que no aparezca nada, 2 para la flecha verde de subir y 3 para la roja de bajar
 const leaderboard = [
   {
-    name: 'JAMES_193',
-    team: 'mercedes',
-    gap: '631 Exp.',
-    posicion: 1
-  },
-  {
     name: 'TAKERU_XIII',
     team: 'mercedes',
-    gap: '627 Exp.',
-    posicion: 1
+    gap: '640 Exp.',
+    posicion: 2
+  },
+  {
+    name: 'JAMES_193',
+    team: 'mercedes',
+    gap: '636 Exp.',
+    posicion: 3
   },
   {
     name: 'RACTOR09',
     team: 'mclaren',
-    gap: '504 Exp.',
+    gap: '545 Exp.',
     posicion: 1
   },
   {
     name: 'XROOCKK',
     team: 'toroRosso',
-    gap: '414 Exp.',
+    gap: '438 Exp.',
     posicion: 1
   },
   {
     name: 'BROXA24',
     team: 'ferrari',
-    gap: '412 Exp.',
+    gap: '416 Exp.',
     posicion: 1
   },
   {
     name: 'X1LENZ',
     team: 'red bull',
-    gap: '407 Exp.',
+    gap: '414 Exp.',
     posicion: 1
   },
-  
   {
     name: 'DARKOUS666',
     team: 'ferrari',
@@ -60,86 +59,94 @@ const leaderboard = [
     posicion: 1
   },
   {
-    name: 'CHADALF',
+    name: 'CHANDALF',
     team: 'alpine',
-    gap: '376 Exp.',
+    gap: '383 Exp.',
     posicion: 1
   },
-  
-  
   {
     name: 'MANGUERAZO',
     team: 'red bull',
-    gap: '375 Exp.',
+    gap: '383 Exp.',
     posicion: 1
   },
-  
   {
     name: 'CCXSNOP',
     team: 'mclaren',
-    gap: '355 Exp.',
+    gap: '362 Exp.',
     posicion: 1
   },
   {
     name: 'MACUSAM',
     team: 'astonmartin',
-    gap: '343 Exp.',
+    gap: '348 Exp.',
     posicion: 1
   },
-  
   {
     name: 'URIMAS82',
     team: 'astonmartin',
-    gap: '327 Exp.',
+    gap: '346 Exp.',
     posicion: 1
   },
   {
     name: 'NANUSSO',
     team: 'toroRosso',
-    gap: '267 Exp.',
-    posicion: 1
-  },
-  {
-    name: 'REICHSKANZ',
-    team: 'alpine',
-    gap: '237 Exp.',
-    posicion: 1
-  },
-  {
-    name: 'TONYFORYU',
-    team: 'williams',
-    gap: '237 Exp.',
+    gap: '279 Exp.',
     posicion: 1
   },
   {
     name: 'BITTERBITZ',
     team: 'williams',
-    gap: '208 Exp.',
-    posicion: 1
+    gap: '253 Exp.',
+    posicion: 2
+  },
+  {
+    name: 'REICHSKANZ',
+    team: 'alpine',
+    gap: '249 Exp.',
+    posicion: 3
+  },
+  {
+    name: 'YISUS86',
+    team: 'williams',
+    gap: '240 Exp.',
+    posicion: 2
+  },
+  {
+    name: 'TONYFORYU',
+    team: 'williams',
+    gap: '238 Exp.',
+    posicion: 3
   },
   {
     name: 'MAMBIITV',
     team: 'alfaRomeo',
-    gap: '206 Exp.',
-    posicion: 1
-  },
-  {
-    name: 'PANICSHOW_12',
-    team: 'haas',
-    gap: '193 Exp.',
+    gap: '234 Exp.',
     posicion: 1
   },
   {
     name: 'EMMA1403',
     team: 'alfaRomeo',
-    gap: '191 Exp.',
+    gap: '205 Exp.',
     posicion: 1
+  },
+  {
+    name: 'FABIRULES',
+    team: 'haas',
+    gap: '198 Exp.',
+    posicion: 2
+  },
+  {
+    name: 'PANICSHOW_12',
+    team: 'haas',
+    gap: '195 Exp.',
+    posicion: 3
   },
   {
     name: 'IFLEKY',
     team: 'haas',
-    gap: '167 Exp.',
-    posicion: 1
+    gap: '186 Exp.',
+    posicion: 3
   }
 ];
 
@@ -177,11 +184,20 @@ const drivers = main
 drivers
   .append('td')
   .attr('class', 'position')
+  .style('position', 'relative')
   .html((d, i) => {
-    // Se eliminó la funcionalidad de la imagen up completamente
-    const positionImage = d.posicion === 3
-      ? '<img class="down" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Down_jjm0ha.png" alt="Position Down" style="height: 1em; vertical-align: middle; display: none; margin-bottom: 2px;">'
-      : '';
+    let positionImage = '';
+    // El top 1 nunca muestra iconos de cambio de posición
+    if ((i + 1) !== 1) {
+      // Flecha verde arriba si subió (posicion === 2)
+      if (d.posicion === 2) {
+        positionImage = '<img class="up" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Up_gbv0y4.png" alt="Position Up">';
+      }
+      // Flecha roja abajo si bajó (posicion === 3)
+      if (d.posicion === 3) {
+        positionImage = '<img class="down" src="https://res.cloudinary.com/pcsolucion/image/upload/v1743585029/Position_Down_jjm0ha.png" alt="Position Down">';
+      }
+    }
     return `${positionImage}${i + 1}`;
   })
   .style('background-color', (d, i) => {
@@ -223,7 +239,8 @@ drivers
       : team;
     
     // Añadir los puntos directamente junto al nombre
-    return `<span style="margin-left: 7px; display: inline-block; margin-right: 0px;">${teamName}</span>${name.split(' ').map((part, index) => index > 0 ? `<strong>${part}</strong>` : `${part}`).join(' ')}`;
+    const nombreFormateado = name.split(' ').map((part, index) => index > 0 ? `<strong>${part}</strong>` : `${part}`).join(' ');
+    return `<span style="margin-left: 7px; display: inline-block; margin-right: 0px;">${teamName}</span><span class="driver-name" style="display: inline;">${nombreFormateado}</span>`;
   })
   .style('border-left', ({team}) => {
     const color = team.split(' ').map((word, index) => index > 0 ? `${word[0].toUpperCase()}${word.slice(1)}` : `${word}`).join('');
@@ -246,78 +263,116 @@ drivers
 // === NUEVO CÓDIGO PARA ICONO MORADO ===
 // Puntos anteriores (antes de la actualización)
 const puntosPrevios = {
-  'JAMES_193': 613,
-  'TAKERU_XIII': 578,
-  'RACTOR09': 438,
-  'X1LENZ': 398,
-  'BROXA24': 396,
+  'TAKERU_XIII': 627,
+  'JAMES_193': 631,
+  'RACTOR09': 504,
+  'XROOCKK': 414,
+  'BROXA24': 412,
+  'X1LENZ': 407,
   'DARKOUS666': 392,
-  'XROOCKK': 366,
-  'MANGUERAZO': 365,
-  'CHADAIF': 356,
-  'CCXSNOP': 335,
-  'MACUSAM': 335,
-  'URIMAS82': 304,
-  'NANUSSO': 254,
-  'TONYFORYU': 235,
-  'YISUS86': 232,
-  'BITTERBITZ': 198,
-  'MAMBIITV': 203,
-  'PANICSHOW_12': 191,
-  'EMMA1403': 188,
-  'IFLEKY': 163
+  'C_H_A_N_D_A_L_F': 376,
+  'MANGUERAZO': 375,
+  'CCXSNOP': 355,
+  'MACUSAM': 343,
+  'URIMAS82': 327,
+  'NANUSSO': 267,
+  'BITTERBITZ': 208,
+  'REICHSKANZ': 237,
+  'YISUS86': 0,
+  'TONYFORYU': 237,
+  'MAMBIITV': 206,
+  'EMMA1403': 191,
+  'FABIRULES': 0,
+  'PANICSHOW_12': 193,
+  'IFLEKY': 167
 };
 
 // Puntos actuales (después de la actualización)
 const puntosActuales = {
-  'JAMES_193': 617,
-  'TAKERU_XIII': 585,
-  'RACTOR09': 450,
-  'X1LENZ': 398,
-  'BROXA24': 398,
+  'TAKERU_XIII': 640,
+  'JAMES_193': 636,
+  'RACTOR09': 545,
+  'XROOCKK': 438,
+  'BROXA24': 416,
+  'X1LENZ': 414,
   'DARKOUS666': 392,
-  'XROOCKK': 370,
-  'MANGUERAZO': 366,
-  'CHADAIF': 359,
-  'CCXSNOP': 337,
-  'MACUSAM': 335,
-  'URIMAS82': 308,
-  'NANUSSO': 254,
-  'TONYFORYU': 235,
-  'YISUS86': 233,
-  'BITTERBITZ': 208,
-  'MAMBIITV': 206,
-  'PANICSHOW_12': 193,
-  'EMMA1403': 191,
-  'IFLEKY': 167
+  'C_H_A_N_D_A_L_F': 383,
+  'MANGUERAZO': 383,
+  'CCXSNOP': 362,
+  'MACUSAM': 348,
+  'URIMAS82': 346,
+  'NANUSSO': 279,
+  'BITTERBITZ': 253,
+  'REICHSKANZ': 249,
+  'YISUS86': 240,
+  'TONYFORYU': 238,
+  'MAMBIITV': 234,
+  'EMMA1403': 205,
+  'FABIRULES': 198,
+  'PANICSHOW_12': 195,
+  'IFLEKY': 186
 };
 
-// Calcular quién sumó más puntos
-let maxDiff = -Infinity;
-let pilotoDestacado = null;
-Object.keys(puntosActuales).forEach(nombre => {
-  let nombrePrevio = nombre === 'CHADAIF' ? 'LINKH_RP' : nombre;
-  const prev = puntosPrevios[nombrePrevio] || 0;
-  const actual = puntosActuales[nombre];
-  const diff = actual - prev;
-  if (diff > maxDiff) {
-    maxDiff = diff;
-    pilotoDestacado = nombre;
-  }
-});
+// Mapeo de nombres para coincidir con el leaderboard
+const nombreMapping = {
+  'C_H_A_N_D_A_L_F': 'CHANDALF'
+};
+
+// Función para normalizar nombres
+function normalizarNombre(nombre) {
+  return nombreMapping[nombre] || nombre;
+}
+
+// Función para obtener el nombre del leaderboard desde el nombre de puntos
+function obtenerNombreLeaderboard(nombrePuntos) {
+  return normalizarNombre(nombrePuntos);
+}
 
 // Esperar a que la tabla esté renderizada para insertar el icono
 window.addEventListener('DOMContentLoaded', () => {
-  // Buscar la fila del piloto destacado
+  // Obtener los nombres de los pilotos del top 15
   const filas = document.querySelectorAll('tr.driver');
-  let filaDestacada = null;
-  filas.forEach(fila => {
-    const nombreCelda = fila.querySelector('td.driver');
-    if (nombreCelda && nombreCelda.textContent.trim().toUpperCase().includes(pilotoDestacado)) {
-      filaDestacada = fila;
+  const pilotosTop15 = [];
+  
+  filas.forEach((fila, index) => {
+    if (index < 15) { // Solo las primeras 15 posiciones
+      const nombreCelda = fila.querySelector('td.driver');
+      if (nombreCelda) {
+        const nombreEnTabla = nombreCelda.textContent.trim().toUpperCase();
+        pilotosTop15.push({
+          nombre: nombreEnTabla,
+          fila: fila,
+          posicion: index + 1
+        });
+      }
     }
   });
-  if (filaDestacada) {
+  
+  // Calcular quién sumó más puntos entre los del top 15
+  let maxDiff = -Infinity;
+  let pilotoDestacado = null;
+  let filaDestacada = null;
+  
+  pilotosTop15.forEach(({nombre, fila}) => {
+    // Buscar el nombre en puntosActuales (puede tener formato diferente)
+    Object.keys(puntosActuales).forEach(nombrePuntos => {
+      const nombreNormalizado = obtenerNombreLeaderboard(nombrePuntos).toUpperCase();
+      // Verificar si coincide con el nombre de la tabla
+      if (nombre === nombreNormalizado || nombre.includes(nombreNormalizado) || nombreNormalizado.includes(nombre.replace(/\s+/g, '_'))) {
+        const prev = puntosPrevios[nombrePuntos] || 0;
+        const actual = puntosActuales[nombrePuntos];
+        const diff = actual - prev;
+        if (diff > maxDiff) {
+          maxDiff = diff;
+          pilotoDestacado = nombre;
+          filaDestacada = fila;
+        }
+      }
+    });
+  });
+  
+  // Mostrar el icono morado en el piloto destacado del top 15
+  if (filaDestacada && pilotoDestacado) {
     // Buscar la celda de puntos (gap)
     const celdaGap = filaDestacada.querySelector('td.gap');
     if (celdaGap) {

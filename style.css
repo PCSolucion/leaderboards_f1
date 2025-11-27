@@ -65,6 +65,49 @@ tr.driver.rank-1 {
   position: relative;
 }
 
+/* Estilo especial para el Top 2 (Plata) */
+tr.driver.rank-2 {
+  background: linear-gradient(90deg, rgba(192, 192, 192, 0.1), rgba(0, 0, 0, 0));
+  border-left: 4px solid #C0C0C0 !important;
+  /* Borde plateado */
+  box-shadow: 0 0 10px rgba(192, 192, 192, 0.05);
+  z-index: 2;
+  position: relative;
+}
+
+/* Estilo especial para el Top 3 (Bronce) */
+tr.driver.rank-3 {
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.1), rgba(0, 0, 0, 0));
+  border-left: 4px solid #CD7F32 !important;
+  /* Borde bronce */
+  box-shadow: 0 0 10px rgba(205, 127, 50, 0.05);
+  z-index: 2;
+  position: relative;
+}
+
+/* Efecto Hot Streak (Racha) */
+tr.driver.hot-streak {
+  animation: slideInRow 0.5s ease-out forwards, greenPulse 2s infinite;
+  z-index: 1;
+}
+
+@keyframes greenPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+    background-color: rgba(0, 255, 0, 0.05);
+  }
+
+  50% {
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+    background-color: rgba(0, 255, 0, 0.15);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+    background-color: rgba(0, 255, 0, 0.05);
+  }
+}
+
 @keyframes slideInRow {
   from {
     opacity: 0;

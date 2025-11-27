@@ -23,7 +23,17 @@ const drivers = main
   .data(driversData) // Usamos driversData de data.js
   .enter()
   .append('tr')
-  .attr('class', (d, i) => i === 0 ? 'driver rank-1' : 'driver') // Clase especial para el Top 1
+  .attr('class', (d, i) => {
+    let classes = 'driver';
+    if (i === 0) classes += ' rank-1';
+    if (i === 1) classes += ' rank-2';
+    if (i === 2) classes += ' rank-3';
+
+    // Hot Streak: Si subió de posición (trend === 2), añadir clase hot-streak
+    if (d.trend === 2) classes += ' hot-streak';
+
+    return classes;
+  }) // Clases especiales para el Top 3 y Hot Streak
   .style('animation-delay', (d, i) => `${i * 0.1}s`); // Retraso en cascada (0.1s por fila)
 
 // en cada fila agregar la información especificada por el conjunto de datos en elementos td
@@ -96,7 +106,59 @@ drivers
   .style('padding-right', '0px')
   .style('background-color', 'rgba(30, 30, 30, 0.0)')
   .append('span')
-  .text(({ points }) => `${points} Exp.`);
+  .each(function (d) {
+    // Animación de conteo inicial
+    const el = d3.select(this);
+    const finalValue = d.points;
+
+    el.transition()
+      .duration(1500) // Duración de 1.5 segundos
+      .ease(d3.easeCubicOut) // Efecto de desaceleración al final
+      .tween("text", function () {
+        const i = d3.interpolateRound(0, finalValue);
+        return function (t) {
+          this.textContent = `${i(t)} Exp.`;
+        };
+      });
+  });
+
+// === LÓGICA DE INTERVALO (GAP) ===
+let showInterval = false;
+
+function togglePointsInterval() {
+  showInterval = !showInterval;
+
+  // Actualizar encabezado (si existiera una celda específica, aquí la seleccionamos)
+  // Como no hay texto en el th de puntos, no cambiamos nada visualmente en el header por ahora
+
+  const gapCells = d3.selectAll('td.gap span');
+
+  gapCells.each(function (d, i) {
+    const el = d3.select(this);
+
+    if (showInterval) {
+      // Mostrar GAP
+      if (i === 0) {
+        el.text("LIDER");
+      } else {
+        const leader = driversData[0];
+        const gap = leader.points - d.points;
+        el.text(`+${gap}`);
+      }
+    } else {
+      // Mostrar PUNTOS
+      el.text(`${d.points} Exp.`);
+    }
+  });
+}
+
+// Iniciar el ciclo de intervalo cada 10 segundos
+setInterval(togglePointsInterval, 10000);
+
+// Remover la clase hot-streak después de 6 segundos
+setTimeout(() => {
+  d3.selectAll('.hot-streak').classed('hot-streak', false);
+}, 6000);
 
 // === LÓGICA SIMPLIFICADA PARA ICONO MORADO ===
 window.addEventListener('DOMContentLoaded', () => {

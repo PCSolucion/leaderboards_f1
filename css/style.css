@@ -268,6 +268,83 @@ tr.driver.hot-streak {
   margin-left: 118px !important;
 }
 
+/* Estilos para el cronómetro de sesión */
+.timer-row {
+  height: auto !important;
+  border-bottom: none !important;
+}
+
+.timer-row td {
+  padding: 0 !important;
+}
+
+.session-timer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 15px;
+  background: linear-gradient(90deg, rgba(135, 20, 203, 0.15), rgba(21, 21, 30, 0.95));
+  border-left: 3px solid #8714cb;
+  border-right: 1px solid rgba(135, 20, 203, 0.3);
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.session-timer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, #8714cb, transparent);
+  opacity: 0.5;
+}
+
+.session-timer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, #8714cb, transparent);
+  opacity: 0.3;
+}
+
+.timer-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #bbb;
+  text-transform: uppercase;
+  font-family: 'Titillium Web', sans-serif;
+}
+
+.timer-display {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+  font-family: 'Titillium Web', sans-serif;
+  text-shadow: 0 0 10px rgba(135, 20, 203, 0.4);
+  animation: timerPulse 2s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+
+  0%,
+  100% {
+    text-shadow: 0 0 10px rgba(135, 20, 203, 0.4);
+  }
+
+  50% {
+    text-shadow: 0 0 15px rgba(135, 20, 203, 0.6), 0 0 20px rgba(135, 20, 203, 0.3);
+  }
+}
+
 table {
   margin: 0;
   background-color: #0c0c11;

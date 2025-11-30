@@ -65,7 +65,10 @@ class SessionTimer {
 }
 
 // Inicializar el cronómetro cuando se carga el DOM
+// DESHABILITADO: Ahora se usa StreamInfoRotator que maneja el cronómetro
+/*
 document.addEventListener('DOMContentLoaded', () => {
     const sessionTimer = new SessionTimer('session-time');
     sessionTimer.start();
 });
+*/

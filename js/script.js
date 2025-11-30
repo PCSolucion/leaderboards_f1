@@ -2,6 +2,8 @@
  * DriverService (Business Logic Layer)
  * Responsabilidad: Gestionar los datos, cálculos y reglas de negocio.
  */
+
+
 class DriverService {
   constructor(data, config) {
     this.drivers = data;
@@ -50,6 +52,7 @@ class TableRenderer {
     this.tableSelector = tableSelector;
     this.config = config;
     this.main = d3.select(tableSelector);
+
   }
 
   initTable() {
@@ -162,19 +165,31 @@ class TableRenderer {
   }
 
   updateGapColumn(showInterval, leaderPoints) {
-    const gapCells = d3.selectAll('td.gap span');
+    // Usar querySelectorAll para asegurar que capturamos todos los elementos en el DOM actual
+    const rows = document.querySelectorAll('tr.driver');
 
-    gapCells.each(function (d, i) {
-      const el = d3.select(this);
+    rows.forEach((row, index) => {
+      const gapCell = row.querySelector('td.gap span');
+      if (!gapCell) return;
+
+      // Obtener los puntos directamente de los datos adjuntos al nodo por D3
+      // D3 adjunta los datos a la propiedad __data__ del elemento DOM
+      const d = row.__data__;
+
+      if (!d) return;
+
       if (showInterval) {
-        if (i === 0) {
-          el.text("LIDER");
+        if (index === 0) {
+          gapCell.textContent = "LIDER";
         } else {
-          const gap = leaderPoints - d.points;
-          el.text(`+${gap}`);
+          // Asegurar que leaderPoints y d.points sean números
+          const points = parseInt(d.points) || 0;
+          const leader = parseInt(leaderPoints) || 0;
+          const gap = leader - points;
+          gapCell.textContent = `+${gap}`;
         }
       } else {
-        el.text(`${d.points} Exp.`);
+        gapCell.textContent = `${d.points} Exp.`;
       }
     });
   }
@@ -200,6 +215,8 @@ class TableRenderer {
       }
     }
   }
+
+
 }
 
 /**
@@ -212,13 +229,16 @@ class LeaderboardApp {
     this.renderer = renderer;
     this.config = config;
     this.showInterval = false;
+
   }
 
   init() {
     this.renderer.initTable();
-    this.renderer.renderRows(this.driverService.getDrivers());
+    // LIMIT TO 18 DRIVERS
+    this.renderer.renderRows(this.driverService.getTopDrivers(15));
     this.applyPurpleIcon();
     this.startTimers();
+
   }
 
   applyPurpleIcon() {
@@ -243,6 +263,8 @@ class LeaderboardApp {
     const leaderPoints = this.driverService.getLeaderPoints();
     this.renderer.updateGapColumn(this.showInterval, leaderPoints);
   }
+
+
 }
 
 // Inicialización de la aplicación

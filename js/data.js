@@ -75,7 +75,8 @@ const appConfig = {
         left: '100%',
         top: '50%',
         transform: 'translateY(-50%)'
-    }
+    },
+
 };
 
 // Datos unificados de los conductores

@@ -8,7 +8,7 @@ const CHAT_CONFIG = {
     TWITCH_CHANNEL: 'liiukiin',
 
     // Tiempos (en milisegundos)
-    MESSAGE_DISPLAY_TIME: 5000,
+    MESSAGE_DISPLAY_TIME: 2500,
     TRANSITION_DURATION: 700,
 
     // Audio

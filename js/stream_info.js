@@ -13,12 +13,13 @@ class StreamInfoRotator {
         this.sessionStartTime = Date.now();
         this.updateIntervalId = null;
 
-        // 4 vistas: DIRECTO + tiempo, Título stream, Fecha, Horario
+        // 5 vistas: DIRECTO + tiempo, Título stream, Fecha, Horario, Mensajes totales
         this.views = [
             this.getTimeView.bind(this),
             this.getStreamTitleView.bind(this),
             this.getDateView.bind(this),
-            this.getScheduleView.bind(this)
+            this.getScheduleView.bind(this),
+            this.getTotalMessagesView.bind(this)
         ];
     }
 
@@ -70,7 +71,17 @@ class StreamInfoRotator {
 
     getScheduleView() {
         return {
-            label: 'Directo todos los días a las 20:00',
+            label: 'Directo todos los días a las 15:00',
+            display: '',
+            needsUpdate: false
+        };
+    }
+
+    getTotalMessagesView() {
+        // Obtener el contador global de mensajes del chat
+        const totalMessages = window.chatMessageStats ? window.chatMessageStats.totalMessages : 0;
+        return {
+            label: `💬 ${totalMessages} MENSAJES HOY`,
             display: '',
             needsUpdate: false
         };

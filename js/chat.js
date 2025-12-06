@@ -204,10 +204,11 @@ class ChatUIManager {
         }
     }
 
-    displayMessage(username, message, emotes, userNumber, team) {
+    displayMessage(username, message, emotes, userNumber, team, isOnStreak = false) {
         try {
-            // Actualizar contenido
-            this.dom.username.textContent = username.toUpperCase();
+            // Actualizar contenido - añadir 🔥 si está en racha
+            const streakIndicator = isOnStreak ? ' 🔥' : '';
+            this.dom.username.textContent = username.toUpperCase() + streakIndicator;
             this.dom.number.textContent = userNumber;
             this.dom.root.style.setProperty('--chat-team-color', team.color);
             this.dom.teamLogo.style.backgroundImage = `url('${team.logo}')`;
@@ -218,12 +219,20 @@ class ChatUIManager {
 
             // Accesibilidad
             if (this.config.ACCESSIBILITY.ENABLE_ARIA) {
-                this.dom.message.setAttribute('aria-label', `Mensaje de ${username}: ${message}`);
+                const streakText = isOnStreak ? ' (en racha)' : '';
+                this.dom.message.setAttribute('aria-label', `Mensaje de ${username}${streakText}: ${message}`);
             }
 
             // Mostrar
             this.dom.container.style.opacity = '1';
             this.dom.container.style.visibility = 'visible';
+
+            // Añadir/quitar clase de racha al contenedor
+            if (isOnStreak) {
+                this.dom.container.classList.add('streak-active');
+            } else {
+                this.dom.container.classList.remove('streak-active');
+            }
 
             // Resetear timer
             if (this.hideTimeout) clearTimeout(this.hideTimeout);
@@ -242,6 +251,70 @@ class ChatUIManager {
 }
 
 // ============================================
+// SISTEMA DE ESTADÍSTICAS DE MENSAJES
+// ============================================
+
+/**
+ * Clase para rastrear estadísticas de mensajes del chat
+ */
+class ChatMessageTracker {
+    constructor() {
+        this.totalMessages = 0;
+        this.userMessages = {}; // { username: [timestamp1, timestamp2, ...] }
+        this.STREAK_THRESHOLD = 10; // Mensajes necesarios para racha
+        this.STREAK_WINDOW = 5 * 60 * 1000; // 5 minutos en ms
+
+        // Exponer estadísticas globalmente para stream_info.js
+        window.chatMessageStats = this;
+    }
+
+    /**
+     * Registra un mensaje de un usuario
+     * @param {string} username 
+     * @returns {boolean} true si el usuario está en racha
+     */
+    trackMessage(username) {
+        const now = Date.now();
+        const lowerUser = username.toLowerCase();
+
+        // Incrementar contador total
+        this.totalMessages++;
+
+        // Inicializar array de timestamps si no existe
+        if (!this.userMessages[lowerUser]) {
+            this.userMessages[lowerUser] = [];
+        }
+
+        // Añadir timestamp actual
+        this.userMessages[lowerUser].push(now);
+
+        // Limpiar mensajes antiguos (más de 5 minutos)
+        this.userMessages[lowerUser] = this.userMessages[lowerUser].filter(
+            timestamp => now - timestamp < this.STREAK_WINDOW
+        );
+
+        // Verificar si está en racha
+        return this.userMessages[lowerUser].length >= this.STREAK_THRESHOLD;
+    }
+
+    /**
+     * Obtiene el número de mensajes recientes de un usuario
+     * @param {string} username 
+     * @returns {number}
+     */
+    getRecentMessageCount(username) {
+        const lowerUser = username.toLowerCase();
+        const now = Date.now();
+
+        if (!this.userMessages[lowerUser]) return 0;
+
+        return this.userMessages[lowerUser].filter(
+            timestamp => now - timestamp < this.STREAK_WINDOW
+        ).length;
+    }
+}
+
+// ============================================
 // APLICACIÓN PRINCIPAL
 // ============================================
 
@@ -252,6 +325,7 @@ class ChatApp {
         this.dataService = new ChatDataService(this.config, chatTeams, chatUserNumbers, chatUserTeams);
         this.audioService = new ChatAudioService(this.config.AUDIO_URL, this.config.AUDIO_VOLUME);
         this.uiManager = new ChatUIManager(this.config);
+        this.messageTracker = new ChatMessageTracker();
         this.twitchService = new TwitchService(
             this.config.TWITCH_CHANNEL,
             this.handleMessage.bind(this)
@@ -274,8 +348,12 @@ class ChatApp {
         const username = tags['display-name'] || tags.username;
         const emotes = tags.emotes;
 
+        // Trackear TODOS los mensajes para estadísticas (antes de filtrar)
+        const isOnStreak = this.messageTracker.trackMessage(username);
+
         if (this.config.DEBUG) {
-            console.log('Mensaje recibido:', username, message);
+            console.log('Mensaje recibido:', username, message,
+                `(Total: ${this.messageTracker.totalMessages}, Racha: ${isOnStreak})`);
         }
 
         // Verificar si el usuario está en la clasificación o es Liiukiin
@@ -306,9 +384,15 @@ class ChatApp {
                         // Aplicar clase de animación
                         row.classList.add('chat-active');
 
-                        // Remover clase después del tiempo de visualización del mensaje
+                        // Si está en racha (10+ mensajes en 5 min), añadir clase especial
+                        if (isOnStreak) {
+                            row.classList.add('on-streak');
+                        }
+
+                        // Remover clases después del tiempo de visualización del mensaje
                         setTimeout(() => {
                             row.classList.remove('chat-active');
+                            // La clase on-streak se mantiene mientras dure la racha
                         }, this.config.MESSAGE_DISPLAY_TIME);
                     }
                 });
@@ -320,7 +404,8 @@ class ChatApp {
         const userNumber = this.dataService.getUserNumber(username);
         const team = this.dataService.getUserTeam(username);
 
-        this.uiManager.displayMessage(username, message, emotes, userNumber, team);
+        // Pasar información de racha al UI
+        this.uiManager.displayMessage(username, message, emotes, userNumber, team, isOnStreak);
         this.audioService.play();
     }
 }

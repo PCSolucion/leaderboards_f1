@@ -204,11 +204,11 @@ class ChatUIManager {
         }
     }
 
-    displayMessage(username, message, emotes, userNumber, team, isOnStreak = false) {
+    displayMessage(username, message, emotes, userNumber, team, isTopChatter = false) {
         try {
-            // Actualizar contenido - añadir 🔥 si está en racha
-            const streakIndicator = isOnStreak ? ' 🔥' : '';
-            this.dom.username.textContent = username.toUpperCase() + streakIndicator;
+            // Actualizar contenido - añadir 🔥 si es el top chatter del día
+            const topIndicator = isTopChatter ? ' 🔥' : '';
+            this.dom.username.textContent = username.toUpperCase() + topIndicator;
             this.dom.number.textContent = userNumber;
             this.dom.root.style.setProperty('--chat-team-color', team.color);
             this.dom.teamLogo.style.backgroundImage = `url('${team.logo}')`;
@@ -219,16 +219,16 @@ class ChatUIManager {
 
             // Accesibilidad
             if (this.config.ACCESSIBILITY.ENABLE_ARIA) {
-                const streakText = isOnStreak ? ' (en racha)' : '';
-                this.dom.message.setAttribute('aria-label', `Mensaje de ${username}${streakText}: ${message}`);
+                const topText = isTopChatter ? ' (top chatter del día)' : '';
+                this.dom.message.setAttribute('aria-label', `Mensaje de ${username}${topText}: ${message}`);
             }
 
             // Mostrar
             this.dom.container.style.opacity = '1';
             this.dom.container.style.visibility = 'visible';
 
-            // Añadir/quitar clase de racha al contenedor
-            if (isOnStreak) {
+            // Añadir/quitar clase de top chatter al contenedor
+            if (isTopChatter) {
                 this.dom.container.classList.add('streak-active');
             } else {
                 this.dom.container.classList.remove('streak-active');
@@ -256,61 +256,138 @@ class ChatUIManager {
 
 /**
  * Clase para rastrear estadísticas de mensajes del chat
+ * Resalta al usuario de la tabla que más mensajes ha enviado en el día
  */
 class ChatMessageTracker {
     constructor() {
         this.totalMessages = 0;
-        this.userMessages = {}; // { username: [timestamp1, timestamp2, ...] }
-        this.STREAK_THRESHOLD = 10; // Mensajes necesarios para racha
-        this.STREAK_WINDOW = 5 * 60 * 1000; // 5 minutos en ms
+        this.dailyUserMessages = {}; // { username: count }
+        this.currentTopUser = null; // Usuario con más mensajes actualmente
+        this.lastResetDate = this.getTodayDateString();
 
         // Exponer estadísticas globalmente para stream_info.js
         window.chatMessageStats = this;
     }
 
     /**
+     * Obtiene la fecha actual como string (YYYY-MM-DD)
+     */
+    getTodayDateString() {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    }
+
+    /**
+     * Verifica si es un nuevo día y resetea los contadores si es necesario
+     */
+    checkDayReset() {
+        const today = this.getTodayDateString();
+        if (today !== this.lastResetDate) {
+            console.log('🔄 Nuevo día detectado. Reseteando contadores de mensajes...');
+            this.dailyUserMessages = {};
+            this.totalMessages = 0;
+            this.currentTopUser = null;
+            this.lastResetDate = today;
+
+            // Quitar todas las clases on-streak
+            document.querySelectorAll('tr.driver.on-streak').forEach(row => {
+                row.classList.remove('on-streak');
+            });
+        }
+    }
+
+    /**
      * Registra un mensaje de un usuario
      * @param {string} username 
-     * @returns {boolean} true si el usuario está en racha
+     * @param {boolean} isInClassification - Si el usuario está en la tabla
      */
-    trackMessage(username) {
-        const now = Date.now();
+    trackMessage(username, isInClassification = false) {
+        // Verificar si hay que resetear por nuevo día
+        this.checkDayReset();
+
         const lowerUser = username.toLowerCase();
 
         // Incrementar contador total
         this.totalMessages++;
 
-        // Inicializar array de timestamps si no existe
-        if (!this.userMessages[lowerUser]) {
-            this.userMessages[lowerUser] = [];
+        // Solo contar para el ranking de "top chatter" si está en la clasificación
+        if (isInClassification) {
+            // Incrementar contador del usuario
+            if (!this.dailyUserMessages[lowerUser]) {
+                this.dailyUserMessages[lowerUser] = 0;
+            }
+            this.dailyUserMessages[lowerUser]++;
         }
-
-        // Añadir timestamp actual
-        this.userMessages[lowerUser].push(now);
-
-        // Limpiar mensajes antiguos (más de 5 minutos)
-        this.userMessages[lowerUser] = this.userMessages[lowerUser].filter(
-            timestamp => now - timestamp < this.STREAK_WINDOW
-        );
-
-        // Verificar si está en racha
-        return this.userMessages[lowerUser].length >= this.STREAK_THRESHOLD;
     }
 
     /**
-     * Obtiene el número de mensajes recientes de un usuario
+     * Obtiene el usuario de la tabla con más mensajes del día
+     * @returns {string|null} username del top chatter o null
+     */
+    getTopChatter() {
+        let topUser = null;
+        let maxMessages = 0;
+
+        for (const [username, count] of Object.entries(this.dailyUserMessages)) {
+            if (count > maxMessages) {
+                maxMessages = count;
+                topUser = username;
+            }
+        }
+
+        return topUser;
+    }
+
+    /**
+     * Obtiene el número de mensajes de un usuario hoy
      * @param {string} username 
      * @returns {number}
      */
-    getRecentMessageCount(username) {
+    getDailyMessageCount(username) {
         const lowerUser = username.toLowerCase();
-        const now = Date.now();
+        return this.dailyUserMessages[lowerUser] || 0;
+    }
 
-        if (!this.userMessages[lowerUser]) return 0;
+    /**
+     * Actualiza el resaltado naranja para mostrar solo al top chatter
+     */
+    updateTopChatterHighlight() {
+        const topUser = this.getTopChatter();
 
-        return this.userMessages[lowerUser].filter(
-            timestamp => now - timestamp < this.STREAK_WINDOW
-        ).length;
+        // Si no hay top user o no ha cambiado, no hacer nada
+        if (!topUser) return;
+
+        const rows = document.querySelectorAll('tr.driver');
+
+        rows.forEach(row => {
+            const nameCell = row.querySelector('.driver-name');
+            if (nameCell) {
+                const username = nameCell.textContent.trim().toLowerCase();
+
+                if (username === topUser) {
+                    // Este es el top chatter, añadir clase
+                    if (!row.classList.contains('on-streak')) {
+                        row.classList.add('on-streak');
+                    }
+                } else {
+                    // No es el top chatter, quitar clase si la tiene
+                    row.classList.remove('on-streak');
+                }
+            }
+        });
+
+        this.currentTopUser = topUser;
+    }
+
+    /**
+     * Inicia el intervalo de actualización periódica
+     */
+    startCleanupInterval() {
+        // Actualizar el resaltado del top chatter cada 10 segundos
+        setInterval(() => {
+            this.checkDayReset();
+            this.updateTopChatterHighlight();
+        }, 10000);
     }
 }
 
@@ -336,6 +413,9 @@ class ChatApp {
         console.log('🏎️ Inicializando Twitch Chat Overlay F1 (Refactorizado)...');
         this.twitchService.connect();
 
+        // Iniciar limpieza periódica de rachas expiradas
+        this.messageTracker.startCleanupInterval();
+
         // Exponer para pruebas
         window.simularMensaje = (usuario, mensaje) => {
             this.handleMessage({ 'display-name': usuario, emotes: {} }, mensaje);
@@ -348,14 +428,6 @@ class ChatApp {
         const username = tags['display-name'] || tags.username;
         const emotes = tags.emotes;
 
-        // Trackear TODOS los mensajes para estadísticas (antes de filtrar)
-        const isOnStreak = this.messageTracker.trackMessage(username);
-
-        if (this.config.DEBUG) {
-            console.log('Mensaje recibido:', username, message,
-                `(Total: ${this.messageTracker.totalMessages}, Racha: ${isOnStreak})`);
-        }
-
         // Verificar si el usuario está en la clasificación o es Liiukiin
         const usernameUpper = username.toUpperCase();
         const isLiiukiin = username.toLowerCase() === 'liiukiin';
@@ -364,6 +436,18 @@ class ChatApp {
         const isInClassification = driversData.some(driver =>
             driver.name.toUpperCase() === usernameUpper
         );
+
+        // Trackear mensaje (solo cuenta para ranking si está en clasificación)
+        this.messageTracker.trackMessage(username, isInClassification);
+
+        // Verificar si es el top chatter actual
+        const topChatter = this.messageTracker.getTopChatter();
+        const isTopChatter = topChatter && username.toLowerCase() === topChatter;
+
+        if (this.config.DEBUG) {
+            console.log('Mensaje recibido:', username, message,
+                `(Total: ${this.messageTracker.totalMessages}, Top Chatter: ${topChatter}, Es Top: ${isTopChatter})`);
+        }
 
         // Solo mostrar y reproducir sonido si está en la clasificación o es Liiukiin
         if (!isInClassification && !isLiiukiin) {
@@ -376,23 +460,20 @@ class ChatApp {
         // Si está en la clasificación, resaltar la fila en la tabla
         if (isInClassification) {
             try {
-                // Buscar todas las filas de conductores
+                // Actualizar el resaltado del top chatter
+                this.messageTracker.updateTopChatterHighlight();
+
+                // Buscar la fila del usuario actual para añadir chat-active
                 const rows = document.querySelectorAll('tr.driver');
                 rows.forEach(row => {
                     const nameCell = row.querySelector('.driver-name');
                     if (nameCell && nameCell.textContent.trim().toUpperCase() === usernameUpper) {
-                        // Aplicar clase de animación
+                        // Aplicar clase de animación verde temporal
                         row.classList.add('chat-active');
 
-                        // Si está en racha (10+ mensajes en 5 min), añadir clase especial
-                        if (isOnStreak) {
-                            row.classList.add('on-streak');
-                        }
-
-                        // Remover clases después del tiempo de visualización del mensaje
+                        // Remover clase chat-active después del tiempo de visualización
                         setTimeout(() => {
                             row.classList.remove('chat-active');
-                            // La clase on-streak se mantiene mientras dure la racha
                         }, this.config.MESSAGE_DISPLAY_TIME);
                     }
                 });
@@ -404,8 +485,8 @@ class ChatApp {
         const userNumber = this.dataService.getUserNumber(username);
         const team = this.dataService.getUserTeam(username);
 
-        // Pasar información de racha al UI
-        this.uiManager.displayMessage(username, message, emotes, userNumber, team, isOnStreak);
+        // Pasar información de top chatter al UI (para mostrar emoji 🔥)
+        this.uiManager.displayMessage(username, message, emotes, userNumber, team, isTopChatter);
         this.audioService.play();
     }
 }

@@ -71,40 +71,448 @@ class ChatDataService {
 }
 
 /**
- * Servicio encargado del Audio
+ * Servicio encargado del Audio con Efecto Radio F1
+ * Usa Web Audio API para simular comunicaciones por radio de F1
  */
 class ChatAudioService {
-    constructor(audioUrl, volume) {
+    constructor(audioUrl, volume, radioConfig = null) {
         this.audioUrl = audioUrl;
         this.volume = volume;
-        this.audioElement = null;
+        this.radioConfig = radioConfig || {
+            ENABLED: false,
+            DELAY_MS: 150,
+            HIGHPASS_FREQ: 300,
+            LOWPASS_FREQ: 3500,
+            DISTORTION_AMOUNT: 20,
+            STATIC_VOLUME: 0.08,
+            STATIC_DURATION: 80,
+            COMPRESSION_THRESHOLD: -24,
+            COMPRESSION_RATIO: 4
+        };
+
+        this.audioContext = null;
+        this.audioBuffer = null;
+        this.isReady = false;
+
         this.init();
     }
 
-    init() {
+    async init() {
         try {
-            this.audioElement = new Audio(this.audioUrl);
-            this.audioElement.preload = 'auto';
-            this.audioElement.volume = this.volume;
+            // Crear contexto de audio
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-            this.audioElement.addEventListener('error', (e) => {
-                console.error('Error al cargar el audio:', e);
-            });
+            // Cargar el audio como buffer
+            await this.loadAudioBuffer();
+
+            console.log('🎙️ Audio Service con efecto Radio F1 inicializado');
         } catch (error) {
             console.error('Error al inicializar AudioService:', error);
         }
     }
 
+    async loadAudioBuffer() {
+        try {
+            const response = await fetch(this.audioUrl);
+            const arrayBuffer = await response.arrayBuffer();
+            this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+            this.isReady = true;
+            console.log('✅ Audio buffer cargado correctamente');
+        } catch (error) {
+            console.error('Error al cargar audio buffer:', error);
+        }
+    }
+
+    /**
+     * Crea una curva de distorsión para simular el crunch de radio
+     * @param {number} amount - Cantidad de distorsión (0-100)
+     * @returns {Float32Array}
+     */
+    createDistortionCurve(amount) {
+        const samples = 44100;
+        const curve = new Float32Array(samples);
+        const deg = Math.PI / 180;
+
+        for (let i = 0; i < samples; i++) {
+            const x = (i * 2) / samples - 1;
+            // Curva de distorsión suave tipo radio
+            curve[i] = ((3 + amount) * x * 20 * deg) / (Math.PI + amount * Math.abs(x));
+        }
+
+        return curve;
+    }
+
+    /**
+     * Genera ruido blanco para simular estática
+     * @param {number} duration - Duración en segundos
+     * @returns {AudioBuffer}
+     */
+    createStaticNoise(duration) {
+        const sampleRate = this.audioContext.sampleRate;
+        const length = sampleRate * duration;
+        const buffer = this.audioContext.createBuffer(1, length, sampleRate);
+        const data = buffer.getChannelData(0);
+
+        for (let i = 0; i < length; i++) {
+            // Ruido blanco con envolvente para fade in/out
+            const envelope = Math.sin((i / length) * Math.PI);
+            data[i] = (Math.random() * 2 - 1) * envelope;
+        }
+
+        return buffer;
+    }
+
+    /**
+     * Reproduce el sonido con efecto de radio F1
+     */
     play() {
-        if (!this.audioElement) return;
+        if (!this.isReady || !this.audioBuffer) {
+            console.warn('Audio no está listo todavía');
+            return;
+        }
+
+        // Reanudar contexto si está suspendido (requisito de navegadores)
+        if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
 
         try {
-            this.audioElement.currentTime = 0;
-            this.audioElement.play().catch((error) => {
-                console.warn('No se pudo reproducir el audio (posiblemente bloqueado por el navegador):', error);
-            });
+            if (this.radioConfig.ENABLED) {
+                this.playWithRadioEffect();
+            } else {
+                this.playNormal();
+            }
         } catch (error) {
             console.error('Error al reproducir audio:', error);
+        }
+    }
+
+    /**
+     * Reproducción normal sin efectos
+     */
+    playNormal() {
+        const source = this.audioContext.createBufferSource();
+        source.buffer = this.audioBuffer;
+
+        const gainNode = this.audioContext.createGain();
+        gainNode.gain.value = this.volume;
+
+        source.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+
+        source.start(0);
+    }
+
+    /**
+     * Reproducción con efecto de radio F1
+     */
+    playWithRadioEffect() {
+        const startTime = this.audioContext.currentTime;
+
+        // === ESTÁTICA INICIAL ===
+        this.playStaticBurst(startTime);
+
+        // === AUDIO PRINCIPAL CON EFECTOS ===
+        setTimeout(() => {
+            this.playMainAudioWithEffects();
+        }, this.radioConfig.DELAY_MS);
+    }
+
+    /**
+     * Reproduce una ráfaga de estática
+     */
+    playStaticBurst(startTime) {
+        const staticDuration = this.radioConfig.STATIC_DURATION / 1000;
+        const staticBuffer = this.createStaticNoise(staticDuration);
+
+        const staticSource = this.audioContext.createBufferSource();
+        staticSource.buffer = staticBuffer;
+
+        // Filtrar la estática para que suene más a radio
+        const staticHighpass = this.audioContext.createBiquadFilter();
+        staticHighpass.type = 'highpass';
+        staticHighpass.frequency.value = 500;
+
+        const staticGain = this.audioContext.createGain();
+        staticGain.gain.value = this.radioConfig.STATIC_VOLUME * this.volume;
+
+        staticSource.connect(staticHighpass);
+        staticHighpass.connect(staticGain);
+        staticGain.connect(this.audioContext.destination);
+
+        staticSource.start(startTime);
+    }
+
+    /**
+     * Reproduce el audio principal con todos los efectos de radio
+     */
+    playMainAudioWithEffects() {
+        // Crear nodos de audio
+        const source = this.audioContext.createBufferSource();
+        source.buffer = this.audioBuffer;
+
+        // === FILTRO PASO ALTO (elimina graves) ===
+        const highpassFilter = this.audioContext.createBiquadFilter();
+        highpassFilter.type = 'highpass';
+        highpassFilter.frequency.value = this.radioConfig.HIGHPASS_FREQ;
+        highpassFilter.Q.value = 0.7;
+
+        // === FILTRO PASO BAJO (elimina agudos extremos) ===
+        const lowpassFilter = this.audioContext.createBiquadFilter();
+        lowpassFilter.type = 'lowpass';
+        lowpassFilter.frequency.value = this.radioConfig.LOWPASS_FREQ;
+        lowpassFilter.Q.value = 0.7;
+
+        // === FILTRO PEAKING (realza frecuencias medias - característica de radio) ===
+        const peakingFilter = this.audioContext.createBiquadFilter();
+        peakingFilter.type = 'peaking';
+        peakingFilter.frequency.value = 1500;
+        peakingFilter.Q.value = 1;
+        peakingFilter.gain.value = 4;
+
+        // === DISTORSIÓN (crunch de radio) ===
+        const distortion = this.audioContext.createWaveShaper();
+        distortion.curve = this.createDistortionCurve(this.radioConfig.DISTORTION_AMOUNT);
+        distortion.oversample = '2x';
+
+        // === COMPRESOR (para ese sonido "apretado" de radio) ===
+        const compressor = this.audioContext.createDynamicsCompressor();
+        compressor.threshold.value = this.radioConfig.COMPRESSION_THRESHOLD;
+        compressor.ratio.value = this.radioConfig.COMPRESSION_RATIO;
+        compressor.attack.value = 0.003;
+        compressor.release.value = 0.1;
+
+        // === GANANCIA FINAL ===
+        const gainNode = this.audioContext.createGain();
+        gainNode.gain.value = this.volume * 1.2; // Compensar pérdida de volumen por filtros
+
+        // === CONECTAR LA CADENA DE EFECTOS ===
+        source.connect(highpassFilter);
+        highpassFilter.connect(lowpassFilter);
+        lowpassFilter.connect(peakingFilter);
+        peakingFilter.connect(distortion);
+        distortion.connect(compressor);
+        compressor.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+
+        // Reproducir
+        source.start(0);
+
+        if (this.radioConfig.DEBUG) {
+            console.log('🎙️ Audio reproducido con efecto Radio F1');
+        }
+    }
+}
+
+/**
+ * Servicio de Text-to-Speech (TTS) para leer mensajes del chat
+ * Usa Web Speech API con efecto de radio opcional
+ */
+class TTSService {
+    constructor(ttsConfig, radioConfig) {
+        this.config = ttsConfig || {
+            ENABLED: true,
+            LANG: 'es-ES',
+            RATE: 1.1,
+            PITCH: 0.9,
+            VOLUME: 0.8,
+            READ_USERNAME: true,
+            USERNAME_SEPARATOR: ' dice: ',
+            MAX_CHARS: 200,
+            APPLY_RADIO_EFFECT: true
+        };
+        this.radioConfig = radioConfig;
+        this.synth = window.speechSynthesis;
+        this.voices = [];
+        this.selectedVoice = null;
+        this.isSpeaking = false;
+        this.messageQueue = [];
+
+        this.init();
+    }
+
+    init() {
+        if (!this.synth) {
+            console.warn('⚠️ Web Speech API no está disponible en este navegador');
+            return;
+        }
+
+        // Cargar voces (pueden tardar en cargar)
+        this.loadVoices();
+
+        // Algunos navegadores requieren este evento
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = () => this.loadVoices();
+        }
+
+        console.log('🗣️ TTS Service inicializado');
+    }
+
+    loadVoices() {
+        this.voices = this.synth.getVoices();
+
+        // Buscar voz en español preferida
+        this.selectedVoice = this.voices.find(voice =>
+            voice.lang.startsWith('es') && voice.localService
+        ) || this.voices.find(voice =>
+            voice.lang.startsWith('es')
+        ) || this.voices.find(voice =>
+            voice.lang === this.config.LANG
+        ) || this.voices[0];
+
+        if (this.selectedVoice) {
+            console.log(`🎤 Voz seleccionada: ${this.selectedVoice.name} (${this.selectedVoice.lang})`);
+        }
+    }
+
+    /**
+     * Limpia el texto de emotes y caracteres especiales para TTS
+     * @param {string} text - Texto original
+     * @returns {string} Texto limpio
+     */
+    cleanTextForTTS(text) {
+        // Eliminar URLs
+        let cleaned = text.replace(/https?:\/\/\S+/gi, '');
+
+        // Eliminar emotes de Twitch (palabras en mayúsculas tipo LUL, KEKW, etc.)
+        cleaned = cleaned.replace(/\b[A-Z]{2,}[a-z]*[A-Z]+\b/g, '');
+
+        // Eliminar caracteres especiales repetidos
+        cleaned = cleaned.replace(/(.)\1{3,}/g, '$1$1');
+
+        // Eliminar emojis (mantener algunos básicos)
+        cleaned = cleaned.replace(/[\u{1F600}-\u{1F64F}]/gu, '');
+        cleaned = cleaned.replace(/[\u{1F300}-\u{1F5FF}]/gu, '');
+        cleaned = cleaned.replace(/[\u{1F680}-\u{1F6FF}]/gu, '');
+
+        // Limpiar espacios múltiples
+        cleaned = cleaned.replace(/\s+/g, ' ').trim();
+
+        // Limitar longitud
+        if (cleaned.length > this.config.MAX_CHARS) {
+            cleaned = cleaned.substring(0, this.config.MAX_CHARS) + '...';
+        }
+
+        return cleaned;
+    }
+
+    /**
+     * Verifica si el mensaje contiene palabras prohibidas
+     * @param {string} text - Texto a verificar
+     * @returns {boolean} true si contiene palabras prohibidas
+     */
+    containsProfanity(text) {
+        if (!this.config.PROFANITY_FILTER || !this.config.BANNED_WORDS) {
+            return false;
+        }
+
+        const lowerText = text.toLowerCase();
+
+        // Crear variante sin acentos para comparación
+        const normalizedText = lowerText.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+        for (const word of this.config.BANNED_WORDS) {
+            const normalizedWord = word.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+            // Buscar la palabra como palabra completa (con límites de palabra)
+            const regex = new RegExp(`\\b${normalizedWord}\\b`, 'i');
+
+            if (regex.test(normalizedText) || regex.test(lowerText)) {
+                console.log(`🚫 Mensaje bloqueado por palabra prohibida: "${word}"`);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Habla un mensaje
+     * @param {string} username - Nombre del usuario
+     * @param {string} message - Mensaje a leer
+     */
+    speak(username, message) {
+        if (!this.config.ENABLED || !this.synth) return;
+
+        // Verificar si el mensaje es muy largo (ignorar completamente)
+        const skipLimit = this.config.SKIP_IF_LONGER_THAN || 200;
+        if (message.length > skipLimit) {
+            console.log(`⏭️ Mensaje ignorado por ser muy largo (${message.length} > ${skipLimit} caracteres)`);
+            return;
+        }
+
+        // Verificar si contiene palabras prohibidas
+        if (this.containsProfanity(message)) {
+            return; // No leer el mensaje
+        }
+
+        const cleanedMessage = this.cleanTextForTTS(message);
+
+        // Si el mensaje está vacío después de limpiar, no leer
+        if (!cleanedMessage) return;
+
+        // Construir texto completo
+        let fullText = '';
+        if (this.config.READ_USERNAME) {
+            fullText = username + this.config.USERNAME_SEPARATOR + cleanedMessage;
+        } else {
+            fullText = cleanedMessage;
+        }
+
+        // Añadir a la cola
+        this.messageQueue.push(fullText);
+
+        // Si no está hablando, procesar cola
+        if (!this.isSpeaking) {
+            this.processQueue();
+        }
+    }
+
+    processQueue() {
+        if (this.messageQueue.length === 0) {
+            this.isSpeaking = false;
+            return;
+        }
+
+        this.isSpeaking = true;
+        const text = this.messageQueue.shift();
+
+        // Cancelar cualquier speech anterior
+        this.synth.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Configurar voz
+        if (this.selectedVoice) {
+            utterance.voice = this.selectedVoice;
+        }
+        utterance.lang = this.config.LANG;
+        utterance.rate = this.config.RATE;
+        utterance.pitch = this.config.PITCH;
+        utterance.volume = this.config.VOLUME;
+
+        // Eventos
+        utterance.onend = () => {
+            setTimeout(() => this.processQueue(), 300); // Pequeña pausa entre mensajes
+        };
+
+        utterance.onerror = (event) => {
+            console.error('Error en TTS:', event.error);
+            this.processQueue();
+        };
+
+        // Reproducir
+        this.synth.speak(utterance);
+    }
+
+    /**
+     * Detiene la reproducción actual
+     */
+    stop() {
+        if (this.synth) {
+            this.synth.cancel();
+            this.messageQueue = [];
+            this.isSpeaking = false;
         }
     }
 }
@@ -400,7 +808,8 @@ class ChatApp {
         this.config = CHAT_CONFIG; // Global from config_chat.js
         // Globales from data_chat.js: chatTeams, chatUserNumbers, chatUserTeams
         this.dataService = new ChatDataService(this.config, chatTeams, chatUserNumbers, chatUserTeams);
-        this.audioService = new ChatAudioService(this.config.AUDIO_URL, this.config.AUDIO_VOLUME);
+        this.audioService = new ChatAudioService(this.config.AUDIO_URL, this.config.AUDIO_VOLUME, this.config.RADIO_EFFECT);
+        this.ttsService = new TTSService(this.config.TTS, this.config.RADIO_EFFECT);
         this.uiManager = new ChatUIManager(this.config);
         this.messageTracker = new ChatMessageTracker();
         this.twitchService = new TwitchService(
@@ -421,7 +830,21 @@ class ChatApp {
             this.handleMessage({ 'display-name': usuario, emotes: {} }, mensaje);
         };
 
+        // Prueba solo TTS
+        window.probarTTS = (texto) => {
+            this.ttsService.speak('Sistema', texto || 'Esto es una prueba del sistema de voz');
+        };
+
+        // Detener TTS
+        window.detenerTTS = () => {
+            this.ttsService.stop();
+        };
+
         console.log('✅ Chat App inicializada');
+        console.log('💡 Comandos disponibles:');
+        console.log('   - simularMensaje("usuario", "mensaje")');
+        console.log('   - probarTTS("texto a leer")');
+        console.log('   - detenerTTS()');
     }
 
     handleMessage(tags, message) {
@@ -488,6 +911,9 @@ class ChatApp {
         // Pasar información de top chatter al UI (para mostrar emoji 🔥)
         this.uiManager.displayMessage(username, message, emotes, userNumber, team, isTopChatter);
         this.audioService.play();
+
+        // Leer el mensaje con TTS (Text-to-Speech)
+        this.ttsService.speak(username, message);
     }
 }
 

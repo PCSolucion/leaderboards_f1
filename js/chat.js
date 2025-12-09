@@ -26,8 +26,8 @@ class ChatDataService {
     getUserNumber(username) {
         const lowerUser = username.toLowerCase();
 
-        if (lowerUser === this.config.SPECIAL_USER.username) {
-            return this.config.SPECIAL_USER.number;
+        if (this.config.SPECIAL_USERS[lowerUser]) {
+            return this.config.SPECIAL_USERS[lowerUser].number;
         }
 
         if (this.userNumbers[lowerUser]) {
@@ -47,8 +47,9 @@ class ChatDataService {
     getUserTeam(username) {
         const lowerUser = username.toLowerCase();
 
-        if (lowerUser === this.config.SPECIAL_USER.username) {
-            return this.teams[this.config.SPECIAL_USER.team];
+        if (this.config.SPECIAL_USERS[lowerUser]) {
+            const teamName = this.config.SPECIAL_USERS[lowerUser].team;
+            return this.teams[teamName] || this.getRandomTeam();
         }
 
         const teamKey = this.userTeams[lowerUser];
@@ -453,7 +454,10 @@ class TTSService {
 
         // Construir texto completo
         let fullText = '';
-        if (this.config.READ_USERNAME) {
+        // Si el usuario tiene guion bajo, NO leer el nombre
+        const shouldReadUsername = this.config.READ_USERNAME && !username.includes('_');
+
+        if (shouldReadUsername) {
             fullText = username + this.config.USERNAME_SEPARATOR + cleanedMessage;
         } else {
             fullText = cleanedMessage;
@@ -570,6 +574,7 @@ class ChatUIManager {
             message: document.getElementById('chat-message'),
             container: document.querySelector('.chat-container'),
             teamLogo: document.querySelector('.chat-team-logo'),
+            userImage: document.getElementById('chat-user-image'),
             root: document.documentElement
         };
         this.hideTimeout = null;
@@ -614,12 +619,34 @@ class ChatUIManager {
 
     displayMessage(username, message, emotes, userNumber, team, isTopChatter = false) {
         try {
-            // Actualizar contenido - añadir 🔥 si es el top chatter del día
-            const topIndicator = isTopChatter ? ' 🔥' : '';
-            this.dom.username.textContent = username.toUpperCase() + topIndicator;
+            // Actualizar contenido
+            this.dom.username.textContent = username.toUpperCase();
+
+            // Ajustar tamaño de fuente si el nombre es muy largo
+            if (username.length > 12) {
+                this.dom.username.style.fontSize = '1.3rem'; // Reducir tamaño
+            } else {
+                this.dom.username.style.fontSize = ''; // Restaurar tamaño original (CSS)
+            }
+
             this.dom.number.textContent = userNumber;
             this.dom.root.style.setProperty('--chat-team-color', team.color);
+
             this.dom.teamLogo.style.backgroundImage = `url('${team.logo}')`;
+
+            // Mostrar imagen de usuario si es un usuario especial con imagen configurada
+            const lowerUser = username.toLowerCase();
+            const specialUserConfig = this.config.SPECIAL_USERS[lowerUser];
+
+            if (specialUserConfig && specialUserConfig.image) {
+                this.dom.userImage.src = specialUserConfig.image;
+                this.dom.userImage.style.display = 'block';
+                // Ajustar padding del header si hay imagen
+                document.querySelector('.chat-header').style.paddingRight = '110px';
+            } else {
+                this.dom.userImage.style.display = 'none';
+                document.querySelector('.chat-header').style.paddingRight = '0';
+            }
 
             // Procesar mensaje
             const processedMessage = this.processEmotes(message, emotes);
@@ -772,13 +799,13 @@ class ChatMessageTracker {
             if (nameCell) {
                 const username = nameCell.textContent.trim().toLowerCase();
 
-                if (username === topUser) {
-                    // Este es el top chatter, añadir clase
+                if (username === topUser && !row.classList.contains('rank-1')) {
+                    // Este es el top chatter y NO es el rank 1, añadir clase
                     if (!row.classList.contains('on-streak')) {
                         row.classList.add('on-streak');
                     }
                 } else {
-                    // No es el top chatter, quitar clase si la tiene
+                    // No es el top chatter O es el rank 1, quitar clase
                     row.classList.remove('on-streak');
                 }
             }
@@ -851,17 +878,18 @@ class ChatApp {
         const username = tags['display-name'] || tags.username;
         const emotes = tags.emotes;
 
-        // Verificar si el usuario está en la clasificación o es Liiukiin
+        // Verificar si el usuario está en la clasificación o es un usuario especial
         const usernameUpper = username.toUpperCase();
-        const isLiiukiin = username.toLowerCase() === 'liiukiin';
+        const lowerUser = username.toLowerCase();
+        const isSpecialUser = !!this.config.SPECIAL_USERS[lowerUser];
 
         // Verificar si está en driversData
         const isInClassification = driversData.some(driver =>
             driver.name.toUpperCase() === usernameUpper
         );
 
-        // Trackear mensaje (solo cuenta para ranking si está en clasificación)
-        this.messageTracker.trackMessage(username, isInClassification);
+        // Trackear mensaje (cuenta si está en clasificación o es especial)
+        this.messageTracker.trackMessage(username, isInClassification || isSpecialUser);
 
         // Verificar si es el top chatter actual
         const topChatter = this.messageTracker.getTopChatter();
@@ -872,8 +900,8 @@ class ChatApp {
                 `(Total: ${this.messageTracker.totalMessages}, Top Chatter: ${topChatter}, Es Top: ${isTopChatter})`);
         }
 
-        // Solo mostrar y reproducir sonido si está en la clasificación o es Liiukiin
-        if (!isInClassification && !isLiiukiin) {
+        // Solo mostrar y reproducir sonido si está en la clasificación o es usuario especial
+        if (!isInClassification && !isSpecialUser) {
             if (this.config.DEBUG) {
                 console.log(`Usuario ${username} no está en la clasificación. Mensaje ignorado.`);
             }
@@ -912,8 +940,12 @@ class ChatApp {
         this.uiManager.displayMessage(username, message, emotes, userNumber, team, isTopChatter);
         this.audioService.play();
 
-        // Leer el mensaje con TTS (Text-to-Speech)
-        this.ttsService.speak(username, message);
+        // Leer el mensaje con TTS (Text-to-Speech) - Omitir el primer mensaje del día
+        if (this.messageTracker.getDailyMessageCount(username) > 1) {
+            this.ttsService.speak(username, message);
+        } else if (this.config.DEBUG) {
+            console.log(`TTS omitido para ${username} (primer mensaje del día)`);
+        }
     }
 }
 

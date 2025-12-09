@@ -155,15 +155,9 @@ tr.driver.chat-active {
   /* Borde verde para resaltar más */
 }
 
-/* Efecto para usuario en RACHA (10+ mensajes en 5 min) */
-tr.driver.on-streak {
-  animation: streakPulse 1.5s infinite;
-  z-index: 15;
-  position: relative;
-  border-left: 4px solid #ff6600 !important;
-  /* Borde naranja fuego */
-  background: linear-gradient(90deg, rgba(255, 102, 0, 0.15), rgba(0, 0, 0, 0)) !important;
-}
+
+
+
 
 @keyframes streakPulse {
   0% {
@@ -182,11 +176,7 @@ tr.driver.on-streak {
   }
 }
 
-/* Efecto en el chat container cuando hay racha */
-.chat-container.streak-active {
-  border: 2px solid #ff6600 !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 102, 0, 0.3) !important;
-}
+
 
 @keyframes slideInRow {
   from {
@@ -705,7 +695,7 @@ table td.position span {
   --chat-purple-glow: rgba(135, 20, 203, 0.15);
 
   /* Tamaños del Chat */
-  --chat-number-size: 4rem;
+  --chat-number-size: 2rem;
   --chat-driver-name-size: 1.76rem;
   --chat-radio-label-size: 1.4rem;
   --chat-message-size: 1.6rem;
@@ -734,7 +724,7 @@ table td.position span {
 }
 
 .chat-container {
-  width: 351px;
+  width: 420px;
   /* 10% menos que 390px */
   max-width: none;
   margin: 5px 0 0 0;
@@ -748,7 +738,7 @@ table td.position span {
   visibility: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(135, 20, 203, 0.1);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Bordes morados eliminados - ::before y ::after removidos */
@@ -798,7 +788,8 @@ table td.position span {
 .chat-driver-name {
   font-size: var(--chat-driver-name-size);
   color: var(--chat-text-white);
-  font-weight: bold;
+  font-family: 'Titillium Web', sans-serif;
+  font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
   line-height: 1;
@@ -807,7 +798,8 @@ table td.position span {
 .chat-radio-label {
   font-size: var(--chat-radio-label-size);
   color: var(--chat-team-color);
-  font-weight: 900;
+  font-family: 'Titillium Web', sans-serif;
+  font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -938,4 +930,27 @@ table td.position span {
   display: inline-block;
   vertical-align: middle;
   margin: 0 2px;
+}
+
+/* Estilos para la imagen del usuario en el chat */
+.chat-user-image {
+  position: absolute;
+  right: -50px;
+  bottom: -10px;
+  height: 160%;
+  /* Más grande y desplazada a la derecha */
+  max-height: 160px;
+  width: auto;
+  object-fit: contain;
+  mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Ajustamos el header para que el texto no se solape con la imagen */
+.chat-header {
+  padding-right: 10px;
+  /* Espacio base */
 }

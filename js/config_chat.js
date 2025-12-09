@@ -8,7 +8,7 @@ const CHAT_CONFIG = {
     TWITCH_CHANNEL: 'liiukiin',
 
     // Tiempos (en milisegundos)
-    MESSAGE_DISPLAY_TIME: 2500,
+    MESSAGE_DISPLAY_TIME: 5500,
     TRANSITION_DURATION: 700,
 
     // Audio
@@ -85,10 +85,23 @@ const CHAT_CONFIG = {
     MAX_RANDOM_NUMBER: 99,
 
     // Usuario especial
-    SPECIAL_USER: {
-        username: 'liiukiin',
-        number: 63,
-        team: 'mercedes'
+    // Usuarios especiales (siempre se muestran y tienen config personalizada)
+    SPECIAL_USERS: {
+        'liiukiin': {
+            number: 63,
+            team: 'mercedes',
+            image: './assets/liiukiin.png'
+        },
+        'c_h_a_n_d_a_l_f': {
+            number: 10, // Asignar un número si no tienen
+            team: 'ferrari', // Asignar un equipo por defecto
+            image: './assets/chandalf.png'
+        },
+        '01jenial': {
+            number: 1,
+            team: 'redbull',
+            image: './assets/jenial.png'
+        }
     },
 
     // Configuración de accesibilidad

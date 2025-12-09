@@ -101,6 +101,16 @@ const CHAT_CONFIG = {
             number: 1,
             team: 'redbull',
             image: './assets/jenial.png'
+        },
+        'ractor09': {
+            number: 9,
+            team: 'mclaren',
+            image: './assets/ractor09.png'
+        },
+        'takeru_xiii': {
+            number: 13,
+            team: 'mercedes',
+            image: './assets/takeruxiii.png'
         }
     },
 

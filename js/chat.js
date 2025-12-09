@@ -453,12 +453,25 @@ class TTSService {
         if (!cleanedMessage) return;
 
         // Construir texto completo
+        // Construir texto completo
         let fullText = '';
-        // Si el usuario tiene guion bajo, NO leer el nombre
-        const shouldReadUsername = this.config.READ_USERNAME && !username.includes('_');
 
-        if (shouldReadUsername) {
-            fullText = username + this.config.USERNAME_SEPARATOR + cleanedMessage;
+        // Lógica especial para nombres
+        let nameToRead = username;
+        let shouldReadName = this.config.READ_USERNAME;
+
+        // Excepción específica para Takeru_XIII
+        if (username.toLowerCase() === 'takeru_xiii') {
+            nameToRead = 'Takeru';
+            shouldReadName = true;
+        }
+        // Regla general: si tiene guion bajo, NO leer el nombre (salvo excepción anterior)
+        else if (username.includes('_')) {
+            shouldReadName = false;
+        }
+
+        if (shouldReadName) {
+            fullText = nameToRead + this.config.USERNAME_SEPARATOR + cleanedMessage;
         } else {
             fullText = cleanedMessage;
         }

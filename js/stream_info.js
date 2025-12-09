@@ -24,32 +24,70 @@ class StreamInfoRotator {
     }
 
     async init() {
-        // Intentar obtener el título del stream
-        await this.fetchStreamTitle();
+        // Obtener información inicial del stream (título y tiempo)
+        await this.fetchStreamInfo();
 
         // Iniciar rotación
         this.rotate();
         setInterval(() => this.rotate(), this.rotationInterval);
+
+        // Actualizar info cada 60 segundos para corregir desfases y título
+        setInterval(() => this.fetchStreamInfo(), 60000);
     }
 
-    async fetchStreamTitle() {
+    async fetchStreamInfo() {
+        const timestamp = Date.now();
         try {
-            const response = await fetch('https://decapi.me/twitch/title/liiukiin');
-            if (response.ok) {
-                const title = await response.text();
+            // 1. Obtener Título
+            const titleResponse = await fetch(`https://decapi.me/twitch/title/liiukiin?t=${timestamp}`);
+            if (titleResponse.ok) {
+                const title = await titleResponse.text();
                 this.streamTitle = title.trim() || 'Stream de Liiukiin';
             }
+
+            // 2. Obtener Uptime para calcular tiempo real
+            const uptimeResponse = await fetch(`https://decapi.me/twitch/uptime/liiukiin?t=${timestamp}`);
+            if (uptimeResponse.ok) {
+                const uptimeText = await uptimeResponse.text();
+
+                if (uptimeText.includes('offline')) {
+                    // Si está offline, usar hora local o resetear
+                    this.isOffline = true;
+                } else {
+                    this.isOffline = false;
+                    // Parsear "1 hour, 30 minutes, 10 seconds"
+                    const uptimeSeconds = this.parseUptime(uptimeText);
+                    if (uptimeSeconds > 0) {
+                        // Calcular hora de inicio estimada
+                        this.sessionStartTime = Date.now() - (uptimeSeconds * 1000);
+                    }
+                }
+            }
         } catch (error) {
-            console.log('No se pudo obtener el título del stream:', error);
-            this.streamTitle = 'Stream de Liiukiin';
+            console.log('Error al obtener info del stream:', error);
         }
+    }
+
+    parseUptime(uptimeText) {
+        // Ejemplo: "1 hour, 30 minutes, 10 seconds" o "30 minutes, 10 seconds"
+        let seconds = 0;
+
+        const hoursMatch = uptimeText.match(/(\d+)\s+hour/);
+        const minutesMatch = uptimeText.match(/(\d+)\s+minute/);
+        const secondsMatch = uptimeText.match(/(\d+)\s+second/);
+
+        if (hoursMatch) seconds += parseInt(hoursMatch[1]) * 3600;
+        if (minutesMatch) seconds += parseInt(minutesMatch[1]) * 60;
+        if (secondsMatch) seconds += parseInt(secondsMatch[1]);
+
+        return seconds;
     }
 
     getTimeView() {
         return {
-            label: 'DIRECTO',
+            label: this.isOffline ? 'OFFLINE' : 'DIRECTO',
             display: this.getSessionTime(),
-            needsUpdate: true
+            needsUpdate: !this.isOffline
         };
     }
 
@@ -88,8 +126,12 @@ class StreamInfoRotator {
     }
 
     getSessionTime() {
+        if (this.isOffline) return "00:00:00";
+
         const elapsed = Date.now() - this.sessionStartTime;
-        const totalSeconds = Math.floor(elapsed / 1000);
+        // Evitar tiempos negativos si hay desajuste
+        const totalSeconds = Math.max(0, Math.floor(elapsed / 1000));
+
         const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;

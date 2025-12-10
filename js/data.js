@@ -24,7 +24,7 @@ const config = {
             width: '1.6em'
         },
         alpine: {
-            color: '#0b1d2e',
+            color: '#0078c1',
             logo: 'https://res.cloudinary.com/pcsolucion/image/upload/v1742786254/imgbin_alpine-a110-sports-car-renault-png_upq6ni.png',
             width: '1.6em'
         },

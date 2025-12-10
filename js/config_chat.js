@@ -121,6 +121,21 @@ const CHAT_CONFIG = {
             number: 77,
             team: 'alfaRomeo',
             image: './assets/mambittv.png'
+        },
+        'james_193': {
+            number: 2,
+            team: 'mercedes',
+            image: './assets/james193.png'
+        },
+        'xroockk': {
+            number: 4,
+            team: 'toroRosso',
+            image: './assets/xroockk.png'
+        },
+        'broxa24': {
+            number: 5,
+            team: 'ferrari',
+            image: './assets/brooxa24.png'
         }
     },
 

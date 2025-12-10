@@ -328,6 +328,7 @@ class TTSService {
         this.selectedVoice = null;
         this.isSpeaking = false;
         this.messageQueue = [];
+        this.lastSpeaker = null;
 
         this.init();
     }
@@ -378,13 +379,27 @@ class TTSService {
         // Eliminar emotes de Twitch (palabras en mayúsculas tipo LUL, KEKW, etc.)
         cleaned = cleaned.replace(/\b[A-Z]{2,}[a-z]*[A-Z]+\b/g, '');
 
-        // Eliminar caracteres especiales repetidos
+        // Eliminar risas (jajaja, jejeje, hahaha, kkkkk, etc.)
+        // Busca patrones repetitivos de risa de al menos 2 repeticiones (ej. jaja, jeje)
+        cleaned = cleaned.replace(/\b([jh][aeiou]){2,}[jh]?\b/gi, '');
+
+        // Eliminar expresiones como "xd", "xdd", "xD"
+        cleaned = cleaned.replace(/\bxd+\b/gi, '');
+
+        // Eliminar emoticonos de texto comunes (:D, :P, :), :(, ^^, etc.)
+        cleaned = cleaned.replace(/[:;=8]['-]?[)D(|P/\\\]}[{]/g, '');
+        cleaned = cleaned.replace(/\b(uwu|owo|ewe)\b/gi, '');
+        cleaned = cleaned.replace(/(\^_\^|\^\^)/g, '');
+
+        // Eliminar caracteres especiales repetidos (ej. "holaaaaa" -> "holaa")
         cleaned = cleaned.replace(/(.)\1{3,}/g, '$1$1');
 
-        // Eliminar emojis (mantener algunos básicos)
+        // Eliminar emojis (rango extendido)
         cleaned = cleaned.replace(/[\u{1F600}-\u{1F64F}]/gu, '');
         cleaned = cleaned.replace(/[\u{1F300}-\u{1F5FF}]/gu, '');
         cleaned = cleaned.replace(/[\u{1F680}-\u{1F6FF}]/gu, '');
+        cleaned = cleaned.replace(/[\u{2600}-\u{26FF}]/gu, '');
+        cleaned = cleaned.replace(/[\u{2700}-\u{27BF}]/gu, '');
 
         // Limpiar espacios múltiples
         cleaned = cleaned.replace(/\s+/g, ' ').trim();
@@ -465,8 +480,23 @@ class TTSService {
             nameToRead = 'Takeru';
             shouldReadName = true;
         }
+        // Excepción para DUCKCris (para que no deletree D-U-C-K)
+        else if (username.toLowerCase() === 'duckcris') {
+            nameToRead = 'Duckcris';
+            shouldReadName = true;
+        }
+        // Excepción para MambiiTV
+        else if (username.toLowerCase() === 'mambiitv') {
+            nameToRead = 'Mambii';
+            shouldReadName = true;
+        }
         // Regla general: si tiene guion bajo, NO leer el nombre (salvo excepción anterior)
         else if (username.includes('_')) {
+            shouldReadName = false;
+        }
+
+        // Si es el mismo usuario que habló la última vez, no repetir el nombre
+        if (this.lastSpeaker === username) {
             shouldReadName = false;
         }
 
@@ -475,6 +505,9 @@ class TTSService {
         } else {
             fullText = cleanedMessage;
         }
+
+        // Actualizar el último hablante
+        this.lastSpeaker = username;
 
         // Añadir a la cola
         this.messageQueue.push(fullText);

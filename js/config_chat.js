@@ -111,6 +111,16 @@ const CHAT_CONFIG = {
             number: 13,
             team: 'mercedes',
             image: './assets/takeruxiii.png'
+        },
+        'duckcris': {
+            number: 2,
+            team: 'redbull',
+            image: './assets/duckcris.png'
+        },
+        'mambiitv': {
+            number: 77,
+            team: 'alfaRomeo',
+            image: './assets/mambittv.png'
         }
     },
 

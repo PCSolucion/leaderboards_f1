@@ -986,11 +986,18 @@ class ChatApp {
         this.uiManager.displayMessage(username, message, emotes, userNumber, team, isTopChatter);
         this.audioService.play();
 
-        // Leer el mensaje con TTS (Text-to-Speech) - Omitir el primer mensaje del día
-        if (this.messageTracker.getDailyMessageCount(username) > 1) {
+        // Leer el mensaje con TTS (Text-to-Speech)
+        // Condiciones para NO leer:
+        // 1. Es el primer mensaje del día del usuario
+        // 2. Es un mensaje de música automática
+        const isMusicMessage = this.config.MUSIC && this.config.MUSIC.ENABLED && message.startsWith(this.config.MUSIC.MESSAGE_PREFIX);
+        const isFirstMessage = this.messageTracker.getDailyMessageCount(username) <= 1;
+
+        if (!isFirstMessage && !isMusicMessage) {
             this.ttsService.speak(username, message);
         } else if (this.config.DEBUG) {
-            console.log(`TTS omitido para ${username} (primer mensaje del día)`);
+            if (isMusicMessage) console.log('TTS omitido: Mensaje de música');
+            if (isFirstMessage) console.log(`TTS omitido para ${username} (primer mensaje del día)`);
         }
     }
 }

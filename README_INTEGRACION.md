@@ -139,6 +139,31 @@ const CHAT_CONFIG = {
   AUDIO_VOLUME: 1.0,  // 0.0 a 1.0
   // ...
 };
+
+## 🎵 Integración de Música
+
+Este proyecto incluye un servidor local para mostrar la música que estás escuchando ("Now Playing") como mensajes de chat.
+
+### 1. Iniciar el Servidor
+
+Para que funcione, debes ejecutar el servidor local incluido:
+
+1. Ve a la carpeta raíz del proyecto.
+2. Ejecuta el archivo `run_server.bat`.
+3. Mantén esa ventana abierta mientras haces stream.
+
+### 2. Configuración
+
+Puedes activar o desactivar esta función en `js/config_chat.js`:
+
+```javascript
+MUSIC: {
+    ENABLED: true,
+    // ...
+}
+```
+
+El servidor escucha en `http://localhost:3000` y espera recibir actualizaciones de música (por ejemplo, desde una extensión de navegador compatible con Music OBS Widget).
 ```
 
 ## 🐛 Solución de Problemas

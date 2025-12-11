@@ -954,3 +954,69 @@ table td.position span {
   padding-right: 10px;
   /* Espacio base */
 }
+/* ============================================
+   RACE CONTROL FLAGS
+   ============================================ */
+
+/* Yellow Flag / Safety Car */
+body.flag-yellow::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 10px solid #FFD700; /* Gold/Yellow */
+  box-sizing: border-box;
+  z-index: 9999;
+  pointer-events: none;
+  animation: yellowFlagPulse 1s infinite;
+}
+
+body.flag-yellow table {
+  border: 2px solid #FFD700 !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+body.flag-yellow .chat-container {
+  border: 2px solid #FFD700 !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes yellowFlagPulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+/* Red Flag */
+body.flag-red::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 10px solid #FF0000; /* Red */
+  box-sizing: border-box;
+  z-index: 9999;
+  pointer-events: none;
+  animation: redFlagPulse 1s infinite;
+}
+
+body.flag-red table {
+  border: 2px solid #FF0000 !important;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+body.flag-red .chat-container {
+  border: 2px solid #FF0000 !important;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+@keyframes redFlagPulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+

@@ -136,6 +136,11 @@ const CHAT_CONFIG = {
             number: 5,
             team: 'ferrari',
             image: './assets/brooxa24.png'
+        },
+        'manguerazo': {
+            number: 8,
+            team: 'haas',
+            image: './assets/manguerazo.png'
         }
     },
 
@@ -143,6 +148,15 @@ const CHAT_CONFIG = {
     ACCESSIBILITY: {
         ENABLE_ARIA: true,
         ENABLE_SCREEN_READER: true
+    },
+
+    // Integración de Música (Music OBS Widget)
+    MUSIC: {
+        ENABLED: true,
+        ENDPOINT: 'http://127.0.0.1:3000/current',
+        CHECK_INTERVAL: 5000, // Verificar cada 5 segundos
+        MESSAGE_PREFIX: '🎶 Escuchando ahora: ',
+        IGNORE_STATUS: 'Esperando música...'
     },
 
     // Modo debug

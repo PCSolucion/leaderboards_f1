@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests - Leaderboard F1</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #8714cb;
+            border-bottom: 2px solid #8714cb;
+            padding-bottom: 10px;
+        }
+
+        #output {
+            background-color: #0a0a0a;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            min-height: 400px;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+
+        button {
+            background-color: #8714cb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px 10px 10px 0;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #9f7cc2;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .info {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #8714cb;
+        }
+
+        .info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 Suite de Tests - Leaderboard F1</h1>
+
+    <div class="info">
+        <p><strong>Estado:</strong> Scripts cargados correctamente</p>
+        <p><strong>Instrucciones:</strong> Haz clic en "Ejecutar Tests" para correr la suite completa</p>
+        <p><strong>Consola:</strong> También puedes ejecutar <code>runTests()</code> en la consola del navegador</p>
+    </div>
+
+    <button onclick="runTestsAndDisplay()">▶️ Ejecutar Tests</button>
+    <button onclick="clearOutput()">🗑️ Limpiar Salida</button>
+
+    <div id="output"></div>
+
+    <!-- Cargar dependencias -->
+    <script src="./js/utils.js"></script>
+    <script src="./js/tests.js"></script>
+
+    <script>
+        const outputDiv = document.getElementById('output');
+
+        // Interceptar console.log para mostrar en la página
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        function addToOutput(message, type = 'log') {
+            const colors = {
+                'log': '#00ff00',
+                'error': '#ff4444',
+                'warn': '#ffaa00',
+                'info': '#44aaff'
+            };
+
+            const line = document.createElement('div');
+            line.style.color = colors[type] || colors.log;
+            line.textContent = message;
+            outputDiv.appendChild(line);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        }
+
+        console.log = function (...args) {
+            originalLog.apply(console, args);
+            addToOutput(args.join(' '), 'log');
+        };
+
+        console.error = function (...args) {
+            originalError.apply(console, args);
+            addToOutput(args.join(' '), 'error');
+        };
+
+        console.warn = function (...args) {
+            originalWarn.apply(console, args);
+            addToOutput(args.join(' '), 'warn');
+        };
+
+        async function runTestsAndDisplay() {
+            clearOutput();
+            addToOutput('🚀 Iniciando suite de tests...', 'info');
+            addToOutput('─'.repeat(60), 'info');
+
+            try {
+                const result = await runTests();
+                addToOutput('─'.repeat(60), 'info');
+
+                if (result) {
+                    addToOutput('✅ TODOS LOS TESTS PASARON', 'log');
+                } else {
+                    addToOutput('❌ ALGUNOS TESTS FALLARON', 'error');
+                }
+            } catch (error) {
+                addToOutput('💥 Error ejecutando tests: ' + error.message, 'error');
+            }
+        }
+
+        function clearOutput() {
+            outputDiv.innerHTML = '';
+        }
+
+        // Ejecutar automáticamente al cargar
+        window.addEventListener('load', () => {
+            addToOutput('✅ Página de tests cargada correctamente', 'info');
+            addToOutput('Haz clic en "Ejecutar Tests" para comenzar', 'info');
+        });
+    </script>
+</body>
+
+</html>

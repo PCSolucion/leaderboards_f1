@@ -214,14 +214,89 @@ class DOMHelper {
     }
 
     /**
-     * Escape HTML seguro
+     * Escape HTML seguro para prevenir XSS
      * @param {string} text 
      * @returns {string}
      */
     static escapeHTML(text) {
+        if (typeof text !== 'string') return '';
+
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    /**
+     * Sanitiza HTML permitiendo solo tags seguros
+     * @param {string} html 
+     * @returns {string}
+     */
+    static sanitizeHTML(html) {
+        if (typeof html !== 'string') return '';
+
+        // Remover scripts y eventos inline
+        const temp = document.createElement('div');
+        temp.textContent = html;
+        let sanitized = temp.innerHTML;
+
+        // Prevenir javascript: URLs y event handlers
+        sanitized = sanitized.replace(/javascript:/gi, '')
+            .replace(/on\w+\s*=/gi, '');
+
+        return sanitized;
+    }
+
+    /**
+     * Crea un elemento de forma segura con propiedades
+     * @param {string} tag 
+     * @param {Object} props 
+     * @param {string|HTMLElement[]} children 
+     * @returns {HTMLElement}
+     */
+    static createElement(tag, props = {}, children = null) {
+        const element = document.createElement(tag);
+
+        // Aplicar propiedades
+        Object.entries(props).forEach(([key, value]) => {
+            if (key === 'className') {
+                element.className = value;
+            } else if (key === 'textContent') {
+                element.textContent = value;
+            } else if (key === 'innerHTML') {
+                // Sanitizar HTML antes de asignar
+                element.innerHTML = this.sanitizeHTML(value);
+            } else if (key.startsWith('data-')) {
+                element.setAttribute(key, value);
+            } else {
+                element[key] = value;
+            }
+        });
+
+        // Agregar hijos
+        if (children) {
+            if (typeof children === 'string') {
+                element.textContent = children;
+            } else if (Array.isArray(children)) {
+                children.forEach(child => {
+                    if (child instanceof HTMLElement) {
+                        element.appendChild(child);
+                    }
+                });
+            }
+        }
+
+        return element;
+    }
+
+    /**
+     * Actualiza texto de forma segura
+     * @param {HTMLElement} element 
+     * @param {string} text 
+     */
+    static setTextSafely(element, text) {
+        if (element && typeof text === 'string') {
+            element.textContent = text;
+        }
     }
 }
 
@@ -258,13 +333,171 @@ class UsernameHelper {
 }
 
 /**
+ * Sistema de Logging centralizado
+ */
+class Logger {
+    static LOG_LEVELS = {
+        DEBUG: 0,
+        INFO: 1,
+        WARN: 2,
+        ERROR: 3,
+        NONE: 4
+    };
+
+    static currentLevel = Logger.LOG_LEVELS.INFO;
+    static prefix = '🎮';
+
+    static setLevel(level) {
+        this.currentLevel = typeof level === 'string'
+            ? this.LOG_LEVELS[level.toUpperCase()]
+            : level;
+    }
+
+    static shouldLog(level) {
+        return this.currentLevel <= level;
+    }
+
+    static debug(message, ...args) {
+        if (this.shouldLog(this.LOG_LEVELS.DEBUG)) {
+            console.log(`${this.prefix} [DEBUG]`, message, ...args);
+        }
+    }
+
+    static info(message, ...args) {
+        if (this.shouldLog(this.LOG_LEVELS.INFO)) {
+            console.log(`${this.prefix} [INFO]`, message, ...args);
+        }
+    }
+
+    static warn(message, ...args) {
+        if (this.shouldLog(this.LOG_LEVELS.WARN)) {
+            console.warn(`${this.prefix} [WARN]`, message, ...args);
+        }
+    }
+
+    static error(message, ...args) {
+        if (this.shouldLog(this.LOG_LEVELS.ERROR)) {
+            console.error(`${this.prefix} [ERROR]`, message, ...args);
+        }
+    }
+}
+
+/**
+ * EventEmitter para comunicación entre módulos (PubSub pattern)
+ */
+class EventEmitter {
+    constructor() {
+        this.events = new Map();
+    }
+
+    on(event, callback) {
+        if (!this.events.has(event)) {
+            this.events.set(event, []);
+        }
+        this.events.get(event).push(callback);
+
+        // Retornar función para unsubscribe
+        return () => this.off(event, callback);
+    }
+
+    off(event, callback) {
+        if (!this.events.has(event)) return;
+
+        const callbacks = this.events.get(event);
+        const index = callbacks.indexOf(callback);
+        if (index > -1) {
+            callbacks.splice(index, 1);
+        }
+    }
+
+    emit(event, ...args) {
+        if (!this.events.has(event)) return;
+
+        this.events.get(event).forEach(callback => {
+            try {
+                callback(...args);
+            } catch (error) {
+                Logger.error(`Error en evento '${event}':`, error);
+            }
+        });
+    }
+
+    once(event, callback) {
+        const onceCallback = (...args) => {
+            callback(...args);
+            this.off(event, onceCallback);
+        };
+        this.on(event, onceCallback);
+    }
+
+    clear(event) {
+        if (event) {
+            this.events.delete(event);
+        } else {
+            this.events.clear();
+        }
+    }
+}
+
+/**
+ * Utilidades de Performance - Debouncing y Throttling
+ */
+class PerformanceHelper {
+    /**
+     * Debounce - Ejecuta la función después de que pasen 'delay' ms sin nuevas llamadas
+     */
+    static debounce(func, delay) {
+        let timeoutId;
+        return function debounced(...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    /**
+     * Throttle - Ejecuta la función como máximo una vez cada 'limit' ms
+     */
+    static throttle(func, limit) {
+        let inThrottle;
+        return function throttled(...args) {
+            if (!inThrottle) {
+                func.apply(this, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+
+    /**
+     * RequestAnimationFrame wrapper para animaciones suaves
+     */
+    static rafThrottle(func) {
+        let rafId = null;
+        return function rafThrottled(...args) {
+            if (rafId !== null) return;
+            rafId = requestAnimationFrame(() => {
+                func.apply(this, args);
+                rafId = null;
+            });
+        };
+    }
+}
+
+/**
  * Constantes de UI para evitar magic numbers
  */
 const UI_CONSTANTS = {
-    // Tiempos
+    // Tiempos de animación
     TTS_PAUSE_BETWEEN_MESSAGES_MS: 300,
     MUSIC_CHECK_RETRY_DELAY_MS: 2000,
     CHAT_HEADER_CACHE_TIMEOUT_MS: 100,
+    CHAT_DISPLAY_DURATION_MS: 5500,
+    CHAT_TRANSITION_DURATION_MS: 700,
+
+    // Intervalos
+    MUSIC_CHECK_INTERVAL_MS: 5000,
+    PURPLE_ICON_UPDATE_INTERVAL_MS: 10000,
+    TABLE_UPDATE_INTERVAL_MS: 5000,
 
     // Tamaños de texto
     USERNAME_LENGTH_THRESHOLD: 12,
@@ -275,6 +508,21 @@ const UI_CONSTANTS = {
 
     // Límites
     DEFAULT_TOP_LIMIT: 15,
+    MAX_CONSECUTIVE_ERRORS: 5,
+    MAX_MUSIC_HISTORY: 50,
+
+    // Retry config
+    DEFAULT_MAX_RETRIES: 3,
+    DEFAULT_INITIAL_DELAY_MS: 1000,
+    DEFAULT_MAX_DELAY_MS: 10000,
+
+    // Volúmenes
+    DEFAULT_AUDIO_VOLUME: 1.0,
+    DEFAULT_TTS_VOLUME: 0.8,
+
+    // TTS
+    TTS_MAX_CHARS: 150,
+    TTS_SKIP_IF_LONGER_THAN: 200,
 };
 
 // Exportar para uso global
@@ -284,5 +532,11 @@ if (typeof window !== 'undefined') {
     window.RetryHelper = RetryHelper;
     window.DOMHelper = DOMHelper;
     window.UsernameHelper = UsernameHelper;
+    window.Logger = Logger;
+    window.EventEmitter = EventEmitter;
+    window.PerformanceHelper = PerformanceHelper;
     window.UI_CONSTANTS = UI_CONSTANTS;
+
+    // Crear instancia global de EventEmitter
+    window.appEvents = new EventEmitter();
 }

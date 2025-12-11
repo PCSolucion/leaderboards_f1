@@ -10,24 +10,25 @@ class MusicIntegrationService {
         this.intervalId = null;
         this.isInitialized = false;
         this.consecutiveErrors = 0;
-        this.maxConsecutiveErrors = 5;
+        this.maxConsecutiveErrors = UI_CONSTANTS.MAX_CONSECUTIVE_ERRORS;
         this.isServerAvailable = true;
+        this.abortController = null; // Para cancelar peticiones pendientes
     }
 
     init() {
         if (!this.config || !this.config.ENABLED) {
-            console.log('🎵 Integración de música desactivada en configuración');
+            Logger.info('Integración de música desactivada en configuración');
             return;
         }
 
-        console.log('🎵 Iniciando servicio de integración de música...');
+        Logger.info('Iniciando servicio de integración de música...');
         this.isInitialized = true;
 
         // Primera verificación inmediata
         this.checkSong();
 
-        // Iniciar intervalo
-        this.intervalId = setInterval(() => this.checkSong(), this.config.CHECK_INTERVAL);
+        // Iniciar intervalo usando constante
+        this.intervalId = setInterval(() => this.checkSong(), UI_CONSTANTS.MUSIC_CHECK_INTERVAL_MS);
     }
 
     async checkSong() {
@@ -37,18 +38,31 @@ class MusicIntegrationService {
         if (!this.isServerAvailable) {
             if (this.consecutiveErrors % 10 === 0) {
                 // Reintentar cada 10 intentos fallidos
-                console.log('🔄 Reintentando conexión al servidor de música...');
+                Logger.debug('Reintentando conexión al servidor de música...');
             } else {
                 return; // Salir sin intentar
             }
         }
 
         try {
-            // Usar RetryHelper si está disponible
+            // Cancelar petición previa si existe
+            if (this.abortController) {
+                Logger.debug('Cancelando petición de música anterior');
+                this.abortController.abort();
+            }
+
+            // Crear nuevo AbortController para esta petición
+            this.abortController = new AbortController();
+            const signal = this.abortController.signal;
+
             const fetchData = async () => {
                 const response = await fetch(this.config.ENDPOINT, {
                     method: 'GET',
-                    signal: AbortSignal.timeout(5000) // Timeout de 5 segundos
+                    signal: signal,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
                 });
 
                 if (!response.ok) {
@@ -65,7 +79,7 @@ class MusicIntegrationService {
                     maxDelay: 2000,
                     onRetry: (attempt, max) => {
                         if (CHAT_CONFIG.DEBUG) {
-                            console.log(`🔄 Reintentando petición de música (${attempt}/${max})...`);
+                            Logger.debug(`Reintentando petición de música (${attempt}/${max})...`);
                         }
                     }
                 })
@@ -96,33 +110,47 @@ class MusicIntegrationService {
             }
 
         } catch (error) {
+            // Si el error es por abort, no contar como error real
+            if (error.name === 'AbortError') {
+                Logger.debug('Petición de música cancelada');
+                return;
+            }
+
             this.consecutiveErrors++;
 
             // Marcar servidor como no disponible después de varios errores
             if (this.consecutiveErrors >= this.maxConsecutiveErrors) {
                 if (this.isServerAvailable) {
-                    console.warn('⚠️ Servidor de música no disponible. Pausando reintentos frecuentes...');
+                    Logger.warn('Servidor de música no disponible. Pausando reintentos frecuentes...');
                     this.isServerAvailable = false;
                 }
             }
 
             // Log solo en modo debug o en el primer error
             if (CHAT_CONFIG.DEBUG || this.consecutiveErrors === 1) {
-                console.warn('⚠️ No se pudo conectar con el servidor de música:', error.message);
+                Logger.warn('No se pudo conectar con el servidor de música:', error.message);
             }
+        } finally {
+            // Limpiar AbortController después de la petición
+            this.abortController = null;
         }
     }
 
     announceSong(title, artist) {
         const message = `${this.config.MESSAGE_PREFIX}${title} - ${artist}`;
 
-        console.log(`🎵 Nueva canción detectada: ${message}`);
+        Logger.info(`Nueva canción detectada: ${message}`);
 
         // Usar la función global simularMensaje expuesta por ChatApp
         if (typeof window.simularMensaje === 'function') {
             window.simularMensaje('liiukiin', message);
+
+            // Emitir evento para otros módulos
+            if (window.appEvents) {
+                window.appEvents.emit('music:changed', { title, artist, message });
+            }
         } else {
-            console.error('❌ La función simularMensaje no está disponible');
+            Logger.error('La función simularMensaje no está disponible');
         }
     }
 
@@ -131,9 +159,18 @@ class MusicIntegrationService {
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
+
+        // Cancelar cualquier petición pendiente
+        if (this.abortController) {
+            this.abortController.abort();
+            this.abortController = null;
+        }
+
         this.isInitialized = false;
         this.consecutiveErrors = 0;
         this.isServerAvailable = true;
+
+        Logger.info('Servicio de música detenido');
     }
 }
 

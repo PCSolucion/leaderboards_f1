@@ -1,6 +1,7 @@
 /**
  * Servicio de integración con Music OBS Widget
  * Consulta el servidor local para obtener la canción actual y la envía al chat
+ * Versión mejorada con retry logic y mejor manejo de errores
  */
 class MusicIntegrationService {
     constructor() {
@@ -8,6 +9,9 @@ class MusicIntegrationService {
         this.lastSongTitle = null;
         this.intervalId = null;
         this.isInitialized = false;
+        this.consecutiveErrors = 0;
+        this.maxConsecutiveErrors = 5;
+        this.isServerAvailable = true;
     }
 
     init() {
@@ -29,19 +33,49 @@ class MusicIntegrationService {
     async checkSong() {
         if (!this.isInitialized) return;
 
-        try {
-            const response = await fetch(this.config.ENDPOINT);
-
-            if (!response.ok) {
-                if (CHAT_CONFIG.DEBUG) console.warn(`⚠️ Error al consultar música: ${response.status}`);
-                return;
+        // Si hemos detectado que el servidor no está disponible, intentar menos frecuentemente
+        if (!this.isServerAvailable) {
+            if (this.consecutiveErrors % 10 === 0) {
+                // Reintentar cada 10 intentos fallidos
+                console.log('🔄 Reintentando conexión al servidor de música...');
+            } else {
+                return; // Salir sin intentar
             }
+        }
 
-            const data = await response.json();
+        try {
+            // Usar RetryHelper si está disponible
+            const fetchData = async () => {
+                const response = await fetch(this.config.ENDPOINT, {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(5000) // Timeout de 5 segundos
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                return await response.json();
+            };
+
+            const data = window.RetryHelper
+                ? await RetryHelper.withRetry(fetchData, {
+                    maxRetries: 2,
+                    initialDelay: 500,
+                    maxDelay: 2000,
+                    onRetry: (attempt, max) => {
+                        if (CHAT_CONFIG.DEBUG) {
+                            console.log(`🔄 Reintentando petición de música (${attempt}/${max})...`);
+                        }
+                    }
+                })
+                : await fetchData();
+
+            // Reset contador de errores si la petición fue exitosa
+            this.consecutiveErrors = 0;
+            this.isServerAvailable = true;
 
             // Validar datos
-            // Validar datos
-            // El servidor devuelve { artist, song, fullTitle, ... }
             if (!data || (!data.song && !data.title) || !data.artist) return;
 
             // Normalizar título (el servidor usa 'song', pero soportamos 'title' por si acaso)
@@ -62,9 +96,19 @@ class MusicIntegrationService {
             }
 
         } catch (error) {
-            // Silencioso por defecto para no llenar la consola si el servidor no está corriendo
-            if (CHAT_CONFIG.DEBUG) {
-                console.warn('⚠️ No se pudo conectar con el servidor de música (¿está corriendo?)', error);
+            this.consecutiveErrors++;
+
+            // Marcar servidor como no disponible después de varios errores
+            if (this.consecutiveErrors >= this.maxConsecutiveErrors) {
+                if (this.isServerAvailable) {
+                    console.warn('⚠️ Servidor de música no disponible. Pausando reintentos frecuentes...');
+                    this.isServerAvailable = false;
+                }
+            }
+
+            // Log solo en modo debug o en el primer error
+            if (CHAT_CONFIG.DEBUG || this.consecutiveErrors === 1) {
+                console.warn('⚠️ No se pudo conectar con el servidor de música:', error.message);
             }
         }
     }
@@ -88,6 +132,8 @@ class MusicIntegrationService {
             this.intervalId = null;
         }
         this.isInitialized = false;
+        this.consecutiveErrors = 0;
+        this.isServerAvailable = true;
     }
 }
 

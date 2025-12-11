@@ -123,7 +123,7 @@ const CHAT_CONFIG = {
             image: './assets/mambittv.png'
         },
         'james_193': {
-            number: 2,
+            number: 19, // Corregido: era 2 (duplicado con duckcris)
             team: 'mercedes',
             image: './assets/james193.png'
         },
@@ -166,4 +166,23 @@ const CHAT_CONFIG = {
 // Exportar para uso en otros archivos
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CHAT_CONFIG;
+}
+
+// Validación de configuración (se ejecuta cuando se carga el script)
+if (typeof window !== 'undefined') {
+    // Esperar a que utils.js esté cargado para validar
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.ConfigValidator) {
+            // Validar propiedades principales
+            const isValid = ConfigValidator.validateRequired(
+                CHAT_CONFIG,
+                ['TWITCH_CHANNEL', 'MESSAGE_DISPLAY_TIME', 'AUDIO_URL', 'TTS', 'SPECIAL_USERS'],
+                'CHAT_CONFIG'
+            );
+
+            if (isValid) {
+                console.log('✅ Configuración de chat validada correctamente');
+            }
+        }
+    });
 }

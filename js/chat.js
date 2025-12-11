@@ -549,7 +549,8 @@ class TTSService {
 
         // Eventos
         utterance.onend = () => {
-            setTimeout(() => this.processQueue(), 300); // Pequeña pausa entre mensajes
+            const pauseTime = window.UI_CONSTANTS?.TTS_PAUSE_BETWEEN_MESSAGES_MS || 300;
+            setTimeout(() => this.processQueue(), pauseTime);
         };
 
         utterance.onerror = (event) => {
@@ -627,7 +628,8 @@ class ChatUIManager {
             container: document.querySelector('.chat-container'),
             teamLogo: document.querySelector('.chat-team-logo'),
             userImage: document.getElementById('chat-user-image'),
-            root: document.documentElement
+            root: document.documentElement,
+            chatHeader: null // Se cacheará en la primera llamada
         };
         this.hideTimeout = null;
     }
@@ -675,10 +677,13 @@ class ChatUIManager {
             this.dom.username.textContent = username.toUpperCase();
 
             // Ajustar tamaño de fuente si el nombre es muy largo
-            if (username.length > 12) {
-                this.dom.username.style.fontSize = '1.3rem'; // Reducir tamaño
+            const lengthThreshold = window.UI_CONSTANTS?.USERNAME_LENGTH_THRESHOLD || 12;
+            const longFontSize = window.UI_CONSTANTS?.USERNAME_LONG_FONT_SIZE || '1.3rem';
+
+            if (username.length > lengthThreshold) {
+                this.dom.username.style.fontSize = longFontSize;
             } else {
-                this.dom.username.style.fontSize = ''; // Restaurar tamaño original (CSS)
+                this.dom.username.style.fontSize = '';
             }
 
             this.dom.number.textContent = userNumber;
@@ -693,15 +698,21 @@ class ChatUIManager {
             if (specialUserConfig && specialUserConfig.image) {
                 this.dom.userImage.src = specialUserConfig.image;
                 this.dom.userImage.style.display = 'block';
-                // Ajustar padding del header si hay imagen
-                document.querySelector('.chat-header').style.paddingRight = '110px';
+                // Ajustar padding del header si hay imagen (cachear referencia)
+                if (!this.dom.chatHeader) {
+                    this.dom.chatHeader = document.querySelector('.chat-header');
+                }
+                if (this.dom.chatHeader) {
+                    this.dom.chatHeader.style.paddingRight = '110px';
+                }
             } else {
                 this.dom.userImage.style.display = 'none';
-                document.querySelector('.chat-header').style.paddingRight = '0';
+                if (this.dom.chatHeader) {
+                    this.dom.chatHeader.style.paddingRight = '0';
+                }
             }
 
-            // Procesar mensaje
-            // Detectar si es un mensaje de música
+            // Procesar mensaje (detectar si es de música)
             if (this.config.MUSIC && this.config.MUSIC.ENABLED && message.startsWith(this.config.MUSIC.MESSAGE_PREFIX)) {
                 const rawContent = message.substring(this.config.MUSIC.MESSAGE_PREFIX.length);
                 // Intentar separar Título y Artista (asumiendo formato "Título - Artista")
@@ -853,8 +864,11 @@ class ChatMessageTracker {
      * Normaliza nombres de usuario (manejo de alias)
      */
     normalizeUsername(username) {
+        // Usar UsernameHelper si está disponible, sino fallback al método anterior
+        if (window.UsernameHelper) {
+            return UsernameHelper.normalize(username);
+        }
         const lower = username.toLowerCase();
-        // Alias específico solicitado
         if (lower === 'c_h_a_n_d_a_l_f') return 'chandalf';
         return lower;
     }
@@ -867,7 +881,8 @@ class ChatMessageTracker {
      */
     getTopActiveUser(allowedUsernames) {
         const now = Date.now();
-        const fiveMinutesAgo = now - 5 * 60 * 1000;
+        const fiveMinutesMs = window.UI_CONSTANTS?.FIVE_MINUTES_MS || (5 * 60 * 1000);
+        const fiveMinutesAgo = now - fiveMinutesMs;
         let maxCount = 0;
         let topUser = null;
 

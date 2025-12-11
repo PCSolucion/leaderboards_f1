@@ -198,6 +198,13 @@ class TableRenderer {
     d3.selectAll('.hot-streak').classed('hot-streak', false);
   }
 
+  clearPurpleIcon() {
+    const existingIcon = document.querySelector(`img[src="${this.config.images.purpleIcon}"]`);
+    if (existingIcon) {
+      existingIcon.remove();
+    }
+  }
+
   renderPurpleIcon(index) {
     const rows = document.querySelectorAll('tr.driver');
     const targetRow = rows[index];
@@ -218,7 +225,6 @@ class TableRenderer {
 
 
 }
-
 /**
  * LeaderboardApp (Orchestrator)
  * Responsabilidad: Inicializar y coordinar el servicio y el renderizador.
@@ -229,23 +235,57 @@ class LeaderboardApp {
     this.renderer = renderer;
     this.config = config;
     this.showInterval = false;
-
   }
 
   init() {
     this.renderer.initTable();
     // LIMIT TO 18 DRIVERS
     this.renderer.renderRows(this.driverService.getTopDrivers(15));
-    this.applyPurpleIcon();
+
+    // Initial check for Purple Icon
+    this.updatePurpleIconLogic();
+
     this.startTimers();
 
+    // Update purple icon every 5 seconds to reflect chat activity
+    setInterval(() => this.updatePurpleIconLogic(), 5000);
   }
 
-  applyPurpleIcon() {
-    const bestImproverIndex = this.driverService.calculateBestImproverIndex();
-    if (bestImproverIndex !== -1) {
-      this.renderer.renderPurpleIcon(bestImproverIndex);
+  updatePurpleIconLogic() {
+    // 1. Get Top 15 drivers
+    const topDrivers = this.driverService.getTopDrivers(this.config.topLimit);
+    const topDriverNames = topDrivers.map(d => d.name);
+
+    // 2. Ask ChatMessageTracker for top active user
+    let topActiveUser = null;
+    if (window.chatMessageStats) {
+      topActiveUser = window.chatMessageStats.getTopActiveUser(topDriverNames);
     }
+
+    // 3. Determine index
+    let targetIndex = -1;
+
+    if (topActiveUser) {
+      // Find index in topDrivers
+      targetIndex = topDrivers.findIndex(d => this.normalizeName(d.name) === topActiveUser);
+    }
+
+    // 4. Fallback if no target found (no chat activity in last 5 mins)
+    if (targetIndex === -1) {
+      targetIndex = this.driverService.calculateBestImproverIndex();
+    }
+
+    // 5. Render
+    this.renderer.clearPurpleIcon();
+    if (targetIndex !== -1) {
+      this.renderer.renderPurpleIcon(targetIndex);
+    }
+  }
+
+  normalizeName(name) {
+    let lower = name.toLowerCase();
+    if (lower === 'c_h_a_n_d_a_l_f') return 'chandalf';
+    return lower;
   }
 
   startTimers() {
@@ -263,8 +303,6 @@ class LeaderboardApp {
     const leaderPoints = this.driverService.getLeaderPoints();
     this.renderer.updateGapColumn(this.showInterval, leaderPoints);
   }
-
-
 }
 
 // Inicialización de la aplicación

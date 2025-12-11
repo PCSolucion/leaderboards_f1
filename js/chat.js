@@ -457,6 +457,12 @@ class TTSService {
             return;
         }
 
+        // Verificar si el mensaje empieza por ! (comando)
+        if (message.trim().startsWith('!')) {
+            console.log('TTS omitido: Mensaje es un comando (!)');
+            return;
+        }
+
         // Verificar si contiene palabras prohibidas
         if (this.containsProfanity(message)) {
             return; // No leer el mensaje
@@ -695,8 +701,36 @@ class ChatUIManager {
             }
 
             // Procesar mensaje
-            const processedMessage = this.processEmotes(message, emotes);
-            this.dom.message.innerHTML = `"${processedMessage}"`;
+            // Detectar si es un mensaje de música
+            if (this.config.MUSIC && this.config.MUSIC.ENABLED && message.startsWith(this.config.MUSIC.MESSAGE_PREFIX)) {
+                const rawContent = message.substring(this.config.MUSIC.MESSAGE_PREFIX.length);
+                // Intentar separar Título y Artista (asumiendo formato "Título - Artista")
+                // Buscamos el último guión para separar, por si el título contiene guiones
+                const separatorIndex = rawContent.lastIndexOf(' - ');
+
+                let song = rawContent;
+                let artist = '';
+
+                if (separatorIndex !== -1) {
+                    song = rawContent.substring(0, separatorIndex);
+                    artist = rawContent.substring(separatorIndex + 3);
+                }
+
+                // Renderizado estilo "Tarjeta de Música" - Integrado y limpio
+                this.dom.message.innerHTML = `
+                    <div style="display: flex; flex-direction: column; justify-content: center; gap: 2px;">
+                        <div style="font-weight: 700; font-size: 1.1em; display: flex; align-items: center; gap: 6px;">
+                            <span>🎵</span>
+                            <span>${this.escapeHTML(song)}</span>
+                        </div>
+                        ${artist ? `<div style="font-size: 0.85em; opacity: 0.8; font-weight: 400;">${this.escapeHTML(artist)}</div>` : ''}
+                    </div>
+                `;
+            } else {
+                // Procesar mensaje normal
+                const processedMessage = this.processEmotes(message, emotes);
+                this.dom.message.innerHTML = `"${processedMessage}"`;
+            }
 
             // Accesibilidad
             if (this.config.ACCESSIBILITY.ENABLE_ARIA) {
@@ -791,15 +825,81 @@ class ChatMessageTracker {
         // Incrementar contador total
         this.totalMessages++;
 
+        // Guardar timestamp del mensaje para la lógica de "Vuelta Rápida" (últimos 5 min)
+        if (!this.userMessageTimestamps) {
+            this.userMessageTimestamps = {};
+        }
+        if (!this.userMessageTimestamps[lowerUser]) {
+            this.userMessageTimestamps[lowerUser] = [];
+        }
+        this.userMessageTimestamps[lowerUser].push(Date.now());
+
         // Solo contar para el ranking de "top chatter" si está en la clasificación
         if (isInClassification) {
-            // Incrementar contador del usuario
             if (!this.dailyUserMessages[lowerUser]) {
                 this.dailyUserMessages[lowerUser] = 0;
             }
             this.dailyUserMessages[lowerUser]++;
+
+            // Actualizar top user si es necesario
+            if (!this.currentTopUser || this.dailyUserMessages[lowerUser] > this.dailyUserMessages[this.currentTopUser]) {
+                this.currentTopUser = lowerUser;
+                console.log(`🏆 Nuevo Top Chatter del día: ${lowerUser} (${this.dailyUserMessages[lowerUser]} mensajes)`);
+            }
         }
     }
+
+    /**
+     * Normaliza nombres de usuario (manejo de alias)
+     */
+    normalizeUsername(username) {
+        const lower = username.toLowerCase();
+        // Alias específico solicitado
+        if (lower === 'c_h_a_n_d_a_l_f') return 'chandalf';
+        return lower;
+    }
+
+    /**
+     * Obtiene el usuario más activo de los últimos 5 minutos
+     * restringido a una lista de usuarios permitidos (Top 15 de la tabla)
+     * @param {Array<string>} allowedUsernames - Lista de nombres de la tabla
+     * @returns {string|null} Nombre del usuario normalizado o null si no hay actividad
+     */
+    getTopActiveUser(allowedUsernames) {
+        const now = Date.now();
+        const fiveMinutesAgo = now - 5 * 60 * 1000;
+        let maxCount = 0;
+        let topUser = null;
+
+        // Crear set de usuarios permitidos normalizados
+        const allowedSet = new Set(allowedUsernames.map(u => this.normalizeUsername(u)));
+
+        if (!this.userMessageTimestamps) return null;
+
+        for (const user in this.userMessageTimestamps) {
+            // Normalizar usuario del chat
+            const normalizedChatUser = this.normalizeUsername(user);
+
+            // Verificar si está en la lista permitida
+            if (!allowedSet.has(normalizedChatUser)) continue;
+
+            // Filtrar timestamps recientes
+            const timestamps = this.userMessageTimestamps[user];
+            // Limpiar timestamps viejos ya que estamos aquí (optimización lazy)
+            const recentTimestamps = timestamps.filter(t => t > fiveMinutesAgo);
+            this.userMessageTimestamps[user] = recentTimestamps;
+
+            const recentCount = recentTimestamps.length;
+
+            if (recentCount > 0 && recentCount > maxCount) {
+                maxCount = recentCount;
+                topUser = normalizedChatUser;
+            }
+        }
+
+        return topUser;
+    }
+
 
     /**
      * Obtiene el usuario de la tabla con más mensajes del día

@@ -488,14 +488,11 @@ class PerformanceHelper {
  */
 const UI_CONSTANTS = {
     // Tiempos de animación
-    TTS_PAUSE_BETWEEN_MESSAGES_MS: 300,
-    MUSIC_CHECK_RETRY_DELAY_MS: 2000,
     CHAT_HEADER_CACHE_TIMEOUT_MS: 100,
     CHAT_DISPLAY_DURATION_MS: 5500,
     CHAT_TRANSITION_DURATION_MS: 700,
 
     // Intervalos
-    MUSIC_CHECK_INTERVAL_MS: 5000,
     PURPLE_ICON_UPDATE_INTERVAL_MS: 10000,
     TABLE_UPDATE_INTERVAL_MS: 5000,
 
@@ -509,7 +506,6 @@ const UI_CONSTANTS = {
     // Límites
     DEFAULT_TOP_LIMIT: 15,
     MAX_CONSECUTIVE_ERRORS: 5,
-    MAX_MUSIC_HISTORY: 50,
 
     // Retry config
     DEFAULT_MAX_RETRIES: 3,
@@ -518,11 +514,6 @@ const UI_CONSTANTS = {
 
     // Volúmenes
     DEFAULT_AUDIO_VOLUME: 1.0,
-    DEFAULT_TTS_VOLUME: 0.8,
-
-    // TTS
-    TTS_MAX_CHARS: 150,
-    TTS_SKIP_IF_LONGER_THAN: 200,
 };
 
 // Exportar para uso global

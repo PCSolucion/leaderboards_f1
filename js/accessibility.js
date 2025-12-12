@@ -140,15 +140,6 @@ class AccessibilityManager {
         this.announce(message, 'polite');
     }
 
-    /**
-     * Anuncia nueva canción
-     * @param {string} title 
-     * @param {string} artist 
-     */
-    announceSongChange(title, artist) {
-        const message = `Ahora sonando: ${title} de ${artist}`;
-        this.announce(message, 'polite');
-    }
 }
 
 // Inicializar cuando el DOM esté listo
@@ -158,11 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Escuchar eventos de aplicación
     if (window.appEvents) {
-        // Anunciar cambios de música
-        window.appEvents.on('music:changed', ({ title, artist }) => {
-            window.accessibilityManager.announceSongChange(title, artist);
-        });
-
         // Anunciar cambios en el chat
         window.appEvents.on('chat:message', ({ username, message }) => {
             window.accessibilityManager.updateChatLabel(username, message);

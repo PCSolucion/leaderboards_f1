@@ -306,275 +306,6 @@ class ChatAudioService {
 }
 
 /**
- * Servicio de Text-to-Speech (TTS) para leer mensajes del chat
- * Usa Web Speech API con efecto de radio opcional
- */
-class TTSService {
-    constructor(ttsConfig, radioConfig) {
-        this.config = ttsConfig || {
-            ENABLED: true,
-            LANG: 'es-ES',
-            RATE: 1.1,
-            PITCH: 0.9,
-            VOLUME: 0.8,
-            READ_USERNAME: true,
-            USERNAME_SEPARATOR: ' dice: ',
-            MAX_CHARS: 200,
-            APPLY_RADIO_EFFECT: true
-        };
-        this.radioConfig = radioConfig;
-        this.synth = window.speechSynthesis;
-        this.voices = [];
-        this.selectedVoice = null;
-        this.isSpeaking = false;
-        this.messageQueue = [];
-        this.lastSpeaker = null;
-
-        this.init();
-    }
-
-    init() {
-        if (!this.synth) {
-            console.warn('⚠️ Web Speech API no está disponible en este navegador');
-            return;
-        }
-
-        // Cargar voces (pueden tardar en cargar)
-        this.loadVoices();
-
-        // Algunos navegadores requieren este evento
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = () => this.loadVoices();
-        }
-
-        console.log('🗣️ TTS Service inicializado');
-    }
-
-    loadVoices() {
-        this.voices = this.synth.getVoices();
-
-        // Buscar voz en español preferida
-        this.selectedVoice = this.voices.find(voice =>
-            voice.lang.startsWith('es') && voice.localService
-        ) || this.voices.find(voice =>
-            voice.lang.startsWith('es')
-        ) || this.voices.find(voice =>
-            voice.lang === this.config.LANG
-        ) || this.voices[0];
-
-        if (this.selectedVoice) {
-            console.log(`🎤 Voz seleccionada: ${this.selectedVoice.name} (${this.selectedVoice.lang})`);
-        }
-    }
-
-    /**
-     * Limpia el texto de emotes y caracteres especiales para TTS
-     * @param {string} text - Texto original
-     * @returns {string} Texto limpio
-     */
-    cleanTextForTTS(text) {
-        // Eliminar URLs
-        let cleaned = text.replace(/https?:\/\/\S+/gi, '');
-
-        // Eliminar emotes de Twitch (palabras en mayúsculas tipo LUL, KEKW, etc.)
-        cleaned = cleaned.replace(/\b[A-Z]{2,}[a-z]*[A-Z]+\b/g, '');
-
-        // Eliminar risas (jajaja, jejeje, hahaha, kkkkk, etc.)
-        // Busca patrones repetitivos de risa de al menos 2 repeticiones (ej. jaja, jeje)
-        cleaned = cleaned.replace(/\b([jh][aeiou]){2,}[jh]?\b/gi, '');
-
-        // Eliminar expresiones como "xd", "xdd", "xD"
-        cleaned = cleaned.replace(/\bxd+\b/gi, '');
-
-        // Eliminar emoticonos de texto comunes (:D, :P, :), :(, ^^, etc.)
-        cleaned = cleaned.replace(/[:;=8]['-]?[)D(|P/\\\]}[{]/g, '');
-        cleaned = cleaned.replace(/\b(uwu|owo|ewe)\b/gi, '');
-        cleaned = cleaned.replace(/(\^_\^|\^\^)/g, '');
-
-        // Eliminar caracteres especiales repetidos (ej. "holaaaaa" -> "holaa")
-        cleaned = cleaned.replace(/(.)\1{3,}/g, '$1$1');
-
-        // Eliminar emojis (rango extendido)
-        cleaned = cleaned.replace(/[\u{1F600}-\u{1F64F}]/gu, '');
-        cleaned = cleaned.replace(/[\u{1F300}-\u{1F5FF}]/gu, '');
-        cleaned = cleaned.replace(/[\u{1F680}-\u{1F6FF}]/gu, '');
-        cleaned = cleaned.replace(/[\u{2600}-\u{26FF}]/gu, '');
-        cleaned = cleaned.replace(/[\u{2700}-\u{27BF}]/gu, '');
-
-        // Limpiar espacios múltiples
-        cleaned = cleaned.replace(/\s+/g, ' ').trim();
-
-        // Limitar longitud
-        if (cleaned.length > this.config.MAX_CHARS) {
-            cleaned = cleaned.substring(0, this.config.MAX_CHARS) + '...';
-        }
-
-        return cleaned;
-    }
-
-    /**
-     * Verifica si el mensaje contiene palabras prohibidas
-     * @param {string} text - Texto a verificar
-     * @returns {boolean} true si contiene palabras prohibidas
-     */
-    containsProfanity(text) {
-        if (!this.config.PROFANITY_FILTER || !this.config.BANNED_WORDS) {
-            return false;
-        }
-
-        const lowerText = text.toLowerCase();
-
-        // Crear variante sin acentos para comparación
-        const normalizedText = lowerText.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-        for (const word of this.config.BANNED_WORDS) {
-            const normalizedWord = word.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-            // Buscar la palabra como palabra completa (con límites de palabra)
-            const regex = new RegExp(`\\b${normalizedWord}\\b`, 'i');
-
-            if (regex.test(normalizedText) || regex.test(lowerText)) {
-                console.log(`🚫 Mensaje bloqueado por palabra prohibida: "${word}"`);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Habla un mensaje
-     * @param {string} username - Nombre del usuario
-     * @param {string} message - Mensaje a leer
-     */
-    speak(username, message) {
-        if (!this.config.ENABLED || !this.synth) return;
-
-        // Verificar si el mensaje es muy largo (ignorar completamente)
-        const skipLimit = this.config.SKIP_IF_LONGER_THAN || 200;
-        if (message.length > skipLimit) {
-            console.log(`⏭️ Mensaje ignorado por ser muy largo (${message.length} > ${skipLimit} caracteres)`);
-            return;
-        }
-
-        // Verificar si el mensaje empieza por ! (comando)
-        if (message.trim().startsWith('!')) {
-            console.log('TTS omitido: Mensaje es un comando (!)');
-            return;
-        }
-
-        // Verificar si contiene palabras prohibidas
-        if (this.containsProfanity(message)) {
-            return; // No leer el mensaje
-        }
-
-        const cleanedMessage = this.cleanTextForTTS(message);
-
-        // Si el mensaje está vacío después de limpiar, no leer
-        if (!cleanedMessage) return;
-
-        // Construir texto completo
-        // Construir texto completo
-        let fullText = '';
-
-        // Lógica especial para nombres
-        let nameToRead = username;
-        let shouldReadName = this.config.READ_USERNAME;
-
-        // Excepción específica para Takeru_XIII
-        if (username.toLowerCase() === 'takeru_xiii') {
-            nameToRead = 'Takeru';
-            shouldReadName = true;
-        }
-        // Excepción para DUCKCris (para que no deletree D-U-C-K)
-        else if (username.toLowerCase() === 'duckcris') {
-            nameToRead = 'Duckcris';
-            shouldReadName = true;
-        }
-        // Excepción para MambiiTV
-        else if (username.toLowerCase() === 'mambiitv') {
-            nameToRead = 'Mambii';
-            shouldReadName = true;
-        }
-        // Regla general: si tiene guion bajo, NO leer el nombre (salvo excepción anterior)
-        else if (username.includes('_')) {
-            shouldReadName = false;
-        }
-
-        // Si es el mismo usuario que habló la última vez, no repetir el nombre
-        if (this.lastSpeaker === username) {
-            shouldReadName = false;
-        }
-
-        if (shouldReadName) {
-            fullText = nameToRead + this.config.USERNAME_SEPARATOR + cleanedMessage;
-        } else {
-            fullText = cleanedMessage;
-        }
-
-        // Actualizar el último hablante
-        this.lastSpeaker = username;
-
-        // Añadir a la cola
-        this.messageQueue.push(fullText);
-
-        // Si no está hablando, procesar cola
-        if (!this.isSpeaking) {
-            this.processQueue();
-        }
-    }
-
-    processQueue() {
-        if (this.messageQueue.length === 0) {
-            this.isSpeaking = false;
-            return;
-        }
-
-        this.isSpeaking = true;
-        const text = this.messageQueue.shift();
-
-        // Cancelar cualquier speech anterior
-        this.synth.cancel();
-
-        const utterance = new SpeechSynthesisUtterance(text);
-
-        // Configurar voz
-        if (this.selectedVoice) {
-            utterance.voice = this.selectedVoice;
-        }
-        utterance.lang = this.config.LANG;
-        utterance.rate = this.config.RATE;
-        utterance.pitch = this.config.PITCH;
-        utterance.volume = this.config.VOLUME;
-
-        // Eventos
-        utterance.onend = () => {
-            const pauseTime = window.UI_CONSTANTS?.TTS_PAUSE_BETWEEN_MESSAGES_MS || 300;
-            setTimeout(() => this.processQueue(), pauseTime);
-        };
-
-        utterance.onerror = (event) => {
-            console.error('Error en TTS:', event.error);
-            this.processQueue();
-        };
-
-        // Reproducir
-        this.synth.speak(utterance);
-    }
-
-    /**
-     * Detiene la reproducción actual
-     */
-    stop() {
-        if (this.synth) {
-            this.synth.cancel();
-            this.messageQueue = [];
-            this.isSpeaking = false;
-        }
-    }
-}
-
-/**
  * Servicio encargado de la conexión con Twitch
  */
 class TwitchService {
@@ -678,7 +409,7 @@ class ChatUIManager {
 
             // Ajustar tamaño de fuente si el nombre es muy largo
             const lengthThreshold = window.UI_CONSTANTS?.USERNAME_LENGTH_THRESHOLD || 12;
-            const longFontSize = window.UI_CONSTANTS?.USERNAME_LONG_FONT_SIZE || '1.3rem';
+            const longFontSize = window.UI_CONSTANTS?.USERNAME_LONG_FONT_SIZE || '1.0rem';
 
             if (username.length > lengthThreshold) {
                 this.dom.username.style.fontSize = longFontSize;
@@ -699,49 +430,17 @@ class ChatUIManager {
                 this.dom.userImage.src = specialUserConfig.image;
                 this.dom.userImage.style.display = 'block';
                 // Ajustar padding del header si hay imagen (cachear referencia)
-                if (!this.dom.chatHeader) {
-                    this.dom.chatHeader = document.querySelector('.chat-header');
-                }
-                if (this.dom.chatHeader) {
-                    this.dom.chatHeader.style.paddingRight = '110px';
-                }
+                // En el nuevo diseño "discreet", la imagen está en el fondo y no requiere padding extra en el header
+                this.dom.container.classList.add('has-image');
             } else {
                 this.dom.userImage.style.display = 'none';
-                if (this.dom.chatHeader) {
-                    this.dom.chatHeader.style.paddingRight = '0';
-                }
+                this.dom.container.classList.remove('has-image');
             }
 
-            // Procesar mensaje (detectar si es de música)
-            if (this.config.MUSIC && this.config.MUSIC.ENABLED && message.startsWith(this.config.MUSIC.MESSAGE_PREFIX)) {
-                const rawContent = message.substring(this.config.MUSIC.MESSAGE_PREFIX.length);
-                // Intentar separar Título y Artista (asumiendo formato "Título - Artista")
-                // Buscamos el último guión para separar, por si el título contiene guiones
-                const separatorIndex = rawContent.lastIndexOf(' - ');
+            // Procesar mensaje normal
+            const processedMessage = this.processEmotes(message, emotes);
+            this.dom.message.innerHTML = `"${processedMessage}"`;
 
-                let song = rawContent;
-                let artist = '';
-
-                if (separatorIndex !== -1) {
-                    song = rawContent.substring(0, separatorIndex);
-                    artist = rawContent.substring(separatorIndex + 3);
-                }
-
-                // Renderizado estilo "Tarjeta de Música" - Integrado y limpio
-                this.dom.message.innerHTML = `
-                    <div style="display: flex; flex-direction: column; justify-content: center; gap: 2px;">
-                        <div style="font-weight: 700; font-size: 1.1em; display: flex; align-items: center; gap: 6px;">
-                            <span>🎵</span>
-                            <span>${this.escapeHTML(song)}</span>
-                        </div>
-                        ${artist ? `<div style="font-size: 0.85em; opacity: 0.8; font-weight: 400;">${this.escapeHTML(artist)}</div>` : ''}
-                    </div>
-                `;
-            } else {
-                // Procesar mensaje normal
-                const processedMessage = this.processEmotes(message, emotes);
-                this.dom.message.innerHTML = `"${processedMessage}"`;
-            }
 
             // Accesibilidad
             if (this.config.ACCESSIBILITY.ENABLE_ARIA) {
@@ -997,7 +696,6 @@ class ChatApp {
         // Globales from data_chat.js: chatTeams, chatUserNumbers, chatUserTeams
         this.dataService = new ChatDataService(this.config, chatTeams, chatUserNumbers, chatUserTeams);
         this.audioService = new ChatAudioService(this.config.AUDIO_URL, this.config.AUDIO_VOLUME, this.config.RADIO_EFFECT);
-        this.ttsService = new TTSService(this.config.TTS, this.config.RADIO_EFFECT);
         this.uiManager = new ChatUIManager(this.config);
         this.messageTracker = new ChatMessageTracker();
         this.twitchService = new TwitchService(
@@ -1018,21 +716,9 @@ class ChatApp {
             this.handleMessage({ 'display-name': usuario, emotes: {} }, mensaje);
         };
 
-        // Prueba solo TTS
-        window.probarTTS = (texto) => {
-            this.ttsService.speak('Sistema', texto || 'Esto es una prueba del sistema de voz');
-        };
-
-        // Detener TTS
-        window.detenerTTS = () => {
-            this.ttsService.stop();
-        };
-
         console.log('✅ Chat App inicializada');
         console.log('💡 Comandos disponibles:');
         console.log('   - simularMensaje("usuario", "mensaje")');
-        console.log('   - probarTTS("texto a leer")');
-        console.log('   - detenerTTS()');
     }
 
     handleMessage(tags, message) {
@@ -1083,9 +769,15 @@ class ChatApp {
                         // Aplicar clase de animación verde temporal
                         row.classList.add('chat-active');
 
+                        // Sincronizar con el ciclo de parpadeo (1 min activo + 10 min pausa)
+                        if (window.greenPulseCycleManager) {
+                            window.greenPulseCycleManager.applyToRow(row);
+                        }
+
                         // Remover clase chat-active después del tiempo de visualización
                         setTimeout(() => {
                             row.classList.remove('chat-active');
+                            row.classList.remove('pulsing'); // También remover pulsing
                         }, this.config.MESSAGE_DISPLAY_TIME);
                     }
                 });
@@ -1099,20 +791,15 @@ class ChatApp {
 
         // Pasar información de top chatter al UI (para mostrar emoji 🔥)
         this.uiManager.displayMessage(username, message, emotes, userNumber, team, isTopChatter);
-        this.audioService.play();
 
-        // Leer el mensaje con TTS (Text-to-Speech)
-        // Condiciones para NO leer:
-        // 1. Es el primer mensaje del día del usuario
-        // 2. Es un mensaje de música automática
-        const isMusicMessage = this.config.MUSIC && this.config.MUSIC.ENABLED && message.startsWith(this.config.MUSIC.MESSAGE_PREFIX);
-        const isFirstMessage = this.messageTracker.getDailyMessageCount(username) <= 1;
+        // Reproducir sonido de radio F1 solo para liiukiin o usuarios en el top 15 de la clasificación
+        const isLiiukiin = lowerUser === 'liiukiin';
+        const isInTop15 = driversData.slice(0, 15).some(driver =>
+            driver.name.toUpperCase() === usernameUpper
+        );
 
-        if (!isFirstMessage && !isMusicMessage) {
-            this.ttsService.speak(username, message);
-        } else if (this.config.DEBUG) {
-            if (isMusicMessage) console.log('TTS omitido: Mensaje de música');
-            if (isFirstMessage) console.log(`TTS omitido para ${username} (primer mensaje del día)`);
+        if (isLiiukiin || isInTop15) {
+            this.audioService.play();
         }
     }
 }

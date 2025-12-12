@@ -8,7 +8,7 @@ const CHAT_CONFIG = {
     TWITCH_CHANNEL: 'liiukiin',
 
     // Tiempos (en milisegundos)
-    MESSAGE_DISPLAY_TIME: 5500,
+    MESSAGE_DISPLAY_TIME: 8500,
     TRANSITION_DURATION: 700,
 
     // Audio
@@ -17,7 +17,7 @@ const CHAT_CONFIG = {
 
     // Efecto Radio F1
     RADIO_EFFECT: {
-        ENABLED: true,
+        ENABLED: false, // Solo pitido limpio, sin efectos de radio
         // Delay antes de reproducir (simula transmisión por radio)
         DELAY_MS: 150,
         // Filtro paso alto (Hz) - elimina graves, simula speaker pequeño
@@ -33,47 +33,6 @@ const CHAT_CONFIG = {
         // Ganancia del efecto de compresión
         COMPRESSION_THRESHOLD: -24,
         COMPRESSION_RATIO: 4
-    },
-
-    // Text-to-Speech (TTS) - Voz para mensajes
-    TTS: {
-        ENABLED: true,
-        // Idioma preferido (es-ES para español)
-        LANG: 'es-ES',
-        // Velocidad de la voz (0.5 = lento, 1 = normal, 2 = rápido)
-        RATE: 1.1,
-        // Tono de la voz (0.5 = grave, 1 = normal, 2 = agudo)
-        PITCH: 0.9,
-        // Volumen del TTS (0-1)
-        VOLUME: 0.8,
-        // Leer también el nombre del usuario antes del mensaje
-        READ_USERNAME: true,
-        // Prefijo antes del mensaje (ej: "dice:", ":", etc.)
-        USERNAME_SEPARATOR: ' dice: ',
-        // Máximo de caracteres a leer (se trunca el mensaje)
-        MAX_CHARS: 150,
-        // Si el mensaje supera este límite, NO se lee (se ignora completamente)
-        SKIP_IF_LONGER_THAN: 200,
-        // Filtro de palabras adultas/ofensivas (activar/desactivar)
-        PROFANITY_FILTER: true,
-        // Lista de palabras prohibidas (si aparecen, no se lee el mensaje)
-        // Añade o quita palabras según necesites
-        BANNED_WORDS: [
-            // Insultos comunes en español
-            'puta', 'puto', 'mierda', 'cago', 'cagar', 'culo', 'coño', 'joder',
-            'cabron', 'cabrón', 'gilipollas', 'hostia', 'ostia', 'follar',
-            'verga', 'polla', 'cipote', 'capullo', 'mamón', 'pendejo',
-            'idiota', 'imbecil', 'imbécil', 'subnormal', 'retrasado',
-            'maricón', 'maricon', 'marica', 'bollera', 'zorra',
-            'hdp', 'hp', 'ptm', 'puto', 'ctm', 'csm', 'nmms',
-            // Insultos en inglés comunes
-            'fuck', 'shit', 'bitch', 'asshole', 'dick', 'cock', 'pussy',
-            'nigger', 'nigga', 'faggot', 'fag', 'retard', 'cunt', 'whore',
-            // Variaciones con números/símbolos
-            'put4', 'm1erda', 'c4bron', 'p0lla', 'f0llar', 'c0ño'
-        ],
-        // Aplicar efecto de radio al TTS
-        APPLY_RADIO_EFFECT: true
     },
 
     // Tamaños y dimensiones
@@ -150,15 +109,6 @@ const CHAT_CONFIG = {
         ENABLE_SCREEN_READER: true
     },
 
-    // Integración de Música (Music OBS Widget)
-    MUSIC: {
-        ENABLED: true,
-        ENDPOINT: 'http://127.0.0.1:3000/current',
-        CHECK_INTERVAL: 5000, // Verificar cada 5 segundos
-        MESSAGE_PREFIX: '🎶 Escuchando ahora: ',
-        IGNORE_STATUS: 'Esperando música...'
-    },
-
     // Modo debug
     DEBUG: false
 };
@@ -176,7 +126,7 @@ if (typeof window !== 'undefined') {
             // Validar propiedades principales
             const isValid = ConfigValidator.validateRequired(
                 CHAT_CONFIG,
-                ['TWITCH_CHANNEL', 'MESSAGE_DISPLAY_TIME', 'AUDIO_URL', 'TTS', 'SPECIAL_USERS'],
+                ['TWITCH_CHANNEL', 'MESSAGE_DISPLAY_TIME', 'AUDIO_URL', 'SPECIAL_USERS'],
                 'CHAT_CONFIG'
             );
 

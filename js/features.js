@@ -4,8 +4,6 @@
  */
 const FEATURES = {
     // Funcionalidades principales
-    TTS_ENABLED: true,
-    MUSIC_INTEGRATION: true,
     PURPLE_ICON_TRACKING: true,
     CHAT_DISPLAY: true,
 
@@ -39,13 +37,6 @@ const ENV_CONFIG = {
     isProduction: window.location.hostname !== 'localhost' &&
         window.location.hostname !== '127.0.0.1' &&
         window.location.protocol !== 'file:',
-
-    // URLs base según entorno
-    get musicServerUrl() {
-        return this.isDevelopment
-            ? 'http://127.0.0.1:3000'
-            : 'http://127.0.0.1:3000'; // Cambiar en producción si es necesario
-    },
 
     // Nivel de logging según entorno
     get logLevel() {

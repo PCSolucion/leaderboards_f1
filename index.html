@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -42,7 +42,7 @@
           <div class="chat-info-container">
             <span class="chat-driver-name" id="chat-username">RUSSELL</span>
           </div>
-          <img id="chat-user-image" class="chat-user-image" src="" alt="" style="display: none;">
+
         </div>
         <div class="chat-equalizer" aria-hidden="true">
           <!-- 40 barras para simular el ecualizador -->
@@ -90,6 +90,8 @@
         <div class="chat-quote" id="chat-message" role="status" aria-live="polite">
           "F1 SEASON IS FINISHED, SO ALL I HAVE LEFT IS MAKING IT IN FIGMA."
         </div>
+        <!-- Imagen del usuario posicionada absolutamente -->
+        <img id="chat-user-image" class="chat-user-image" src="" alt="" style="display: none;">
       </div>
     </div>
   </div>
@@ -111,8 +113,9 @@
   <script src="./js/timer.js"></script>
   <script src="./js/script.js"></script>
   <script src="./js/accessibility.js"></script>
-  <script src="./js/chat.js"></script>
-  <script src="./js/music_integration.js"></script>
+
+  <script src="./js/green_pulse_cycle.js"></script> <!-- Gestor de ciclos de parpadeo verde -->
+  <script src="./js/chat.js"></script> <!-- Sistema principal de chat de Twitch -->
 </body>
 
 </html>

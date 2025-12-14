@@ -1,4 +1,4 @@
-Ôªø/* importar la fuente Titillium Web desde Google Fonts (similar a la usada en F1) */
+/* importar la fuente Titillium Web desde Google Fonts (similar a la usada en F1) */
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap');
 
 /* establecer el modelo de caja para todos los elementos */
@@ -13,7 +13,7 @@ body {
   background: #00000000;
   color: #fff;
   font-family: 'Titillium Web', sans-serif;
-  /* Alineaci√≥n num√©rica perfecta */
+  /* AlineaciÛn numÈrica perfecta */
   font-variant-numeric: tabular-nums;
   /* centrar la tabla horizontalmente */
   display: flex;
@@ -77,7 +77,7 @@ tr.driver {
   /* Mejora de contraste: borde sutil inferior */
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 
-  /* Tabla siempre visible, sin animaci√≥n de entrada */
+  /* Tabla siempre visible, sin animaciÛn de entrada */
   opacity: 1;
 }
 
@@ -97,7 +97,7 @@ tr.driver:hover {
 tr.driver.rank-1 {
   background: linear-gradient(90deg, rgba(135, 20, 203, 0.15), rgba(0, 0, 0, 0));
   border-left: 4px solid #ffd700 !important;
-  /* Borde dorado para el campe√≥n */
+  /* Borde dorado para el campeÛn */
   box-shadow: 0 0 15px rgba(135, 20, 203, 0.1);
   z-index: 2;
   position: relative;
@@ -105,51 +105,60 @@ tr.driver.rank-1 {
 
 /* Estilo especial para el Top 2 (Plata) */
 tr.driver.rank-2 {
-  background: linear-gradient(90deg, rgba(192, 192, 192, 0.1), rgba(0, 0, 0, 0));
-  border-left: 4px solid #C0C0C0 !important;
+  /* background: linear-gradient(90deg, rgba(192, 192, 192, 0.1), rgba(0, 0, 0, 0)); */
+  /* border-left: 4px solid #C0C0C0 !important; */
   /* Borde plateado */
-  box-shadow: 0 0 10px rgba(192, 192, 192, 0.05);
+  /* box-shadow: 0 0 10px rgba(192, 192, 192, 0.05); */
   z-index: 2;
   position: relative;
 }
 
 /* Estilo especial para el Top 3 (Bronce) */
 tr.driver.rank-3 {
-  background: linear-gradient(90deg, rgba(205, 127, 50, 0.1), rgba(0, 0, 0, 0));
-  border-left: 4px solid #CD7F32 !important;
+  /* background: linear-gradient(90deg, rgba(205, 127, 50, 0.1), rgba(0, 0, 0, 0)); */
+  /* border-left: 4px solid #CD7F32 !important; */
   /* Borde bronce */
-  box-shadow: 0 0 10px rgba(205, 127, 50, 0.05);
+  /* box-shadow: 0 0 10px rgba(205, 127, 50, 0.05); */
   z-index: 2;
   position: relative;
 }
 
-/* Efecto Hot Streak (Racha) - Sin parpadeo */
+/* Efecto Hot Streak (Racha) */
 tr.driver.hot-streak {
-  animation: slideInRow 0.5s ease-out forwards;
+  animation: greenPulse 2s ease-in-out 1.5;
+  /* 1.5 iterations = 3 seconds total */
+  animation-fill-mode: forwards;
   z-index: 1;
-  background-color: rgba(0, 255, 0, 0.1);
-  /* Fondo verde est√°tico */
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.15);
-  /* Sombra verde est√°tica */
 }
 
-/* Efecto para usuario activo en chat - Verde est√°tico (sin parpadeo) */
+@keyframes greenPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+    background-color: rgba(0, 255, 0, 0.05);
+  }
+
+  50% {
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+    background-color: rgba(0, 255, 0, 0.15);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+    background-color: rgba(0, 255, 0, 0.05);
+  }
+}
+
+/* Efecto para usuario activo en chat (reutiliza greenPulse) */
 tr.driver.chat-active {
   z-index: 10;
   position: relative;
   border-left: 4px solid #00ff00 !important;
-  /* Borde verde para resaltar m√°s */
-  background-color: rgba(0, 255, 0, 0.1) !important;
-  /* Fondo verde transl√∫cido est√°tico */
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.15);
-  /* Sombra verde suave */
+  /* Borde verde para resaltar m·s */
 }
 
-/* Estado pulsing (ahora est√°tico, sin animaci√≥n) */
+/* Estado parpadeante (activado por JavaScript en ciclos de 1 min activo + 10 min pausa) */
 tr.driver.chat-active.pulsing {
-  /* Mantener el mismo estilo est√°tico que chat-active */
-  background-color: rgba(0, 255, 0, 0.1) !important;
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.15);
+  animation: greenPulse 2s infinite;
 }
 
 @keyframes streakPulse {
@@ -261,7 +270,7 @@ table {
   /* Forzar ancho fijo de columnas */
 }
 
-/* Estilos para el cron√≥metro de sesi√≥n */
+/* Estilos para el cronÛmetro de sesiÛn */
 .timer-row {
   height: auto !important;
   border-bottom: none !important;
@@ -280,7 +289,7 @@ table {
   justify-content: space-between;
   align-items: center;
   padding: 8px 15px;
-  /* Aumentado de 6px a 8px (aprox 30% m√°s) */
+  /* Aumentado de 6px a 8px (aprox 30% m·s) */
   height: 45px;
   /* Altura fija */
   background: linear-gradient(90deg, rgba(135, 20, 203, 0.08), rgba(21, 21, 30, 0.6));
@@ -327,12 +336,12 @@ table {
   white-space: nowrap;
   overflow: hidden;
   max-width: 80%;
-  /* Aumentado de 60% para aprovechar m√°s espacio */
+  /* Aumentado de 60% para aprovechar m·s espacio */
   position: relative;
   z-index: 2;
 }
 
-/* Contenedor interno para la animaci√≥n de marquesina */
+/* Contenedor interno para la animaciÛn de marquesina */
 .timer-label.marquee {
   display: block;
   max-width: 100%;
@@ -360,13 +369,13 @@ table {
 
 .timer-display {
   font-size: 21px;
-  /* Aumentado de 16px (aprox 30% m√°s) */
+  /* Aumentado de 16px (aprox 30% m·s) */
   font-weight: 400;
   color: #eee;
   letter-spacing: 1px;
   font-family: 'Titillium Web', sans-serif;
   text-shadow: 0 0 5px rgba(135, 20, 203, 0.2);
-  /* Animaci√≥n removida para ser menos agresivo */
+  /* AnimaciÛn removida para ser menos agresivo */
   transition: opacity 0.3s ease;
   white-space: nowrap;
   flex-shrink: 0;
@@ -391,14 +400,14 @@ table tr>* {
   padding: 0.15rem 0.1rem;
 }
 
-/* Regla general para la primera columna (Posici√≥n) */
+/* Regla general para la primera columna (PosiciÛn) */
 table tr>*:nth-child(1) {
   width: 35px;
-  /* Ancho fijo para posici√≥n */
+  /* Ancho fijo para posiciÛn */
   max-width: 35px;
 }
 
-/* Regla general para la segunda columna (Nombre) - alineaci√≥n izquierda */
+/* Regla general para la segunda columna (Nombre) - alineaciÛn izquierda */
 table tr>*:nth-child(2) {
   text-align: left;
   padding-left: 0.4rem;
@@ -410,7 +419,7 @@ table tr>*:nth-child(2) {
   white-space: nowrap;
 }
 
-/* Excepci√≥n para el encabezado - alineaci√≥n centrada */
+/* ExcepciÛn para el encabezado - alineaciÛn centrada */
 table tr:first-child th:nth-child(2) {
   text-align: center;
   padding-left: 0;
@@ -482,7 +491,7 @@ table th {
   pointer-events: none;
 }
 
-/* estilo para los encabezados con t√≠tulos en may√∫sculas */
+/* estilo para los encabezados con tÌtulos en may˙sculas */
 table th {
   font-weight: 600;
   letter-spacing: 0.05rem;
@@ -497,17 +506,17 @@ table th {
 table th:nth-child(3) {
   text-align: right;
   width: 14px;
-  /* Reducido a√∫n m√°s (de 17.5px a 14px) */
+  /* Reducido a˙n m·s (de 17.5px a 14px) */
   padding-right: 12px;
   /* Aumentado de 5px a 12px */
 }
 
-/* aumentar ligeramente el peso de la celda que describe la posici√≥n */
+/* aumentar ligeramente el peso de la celda que describe la posiciÛn */
 table td.position {
   font-weight: 700;
   border-radius: 5px 0 0 5px;
   width: 12px;
-  /* Ancho m√≠nimo para la columna de posici√≥n */
+  /* Ancho mÌnimo para la columna de posiciÛn */
 }
 
 /* estilo para la celda con el conductor, separando el nombre y el equipo */
@@ -517,7 +526,7 @@ table td.driver {
   letter-spacing: 0.05rem;
   transition: all 0.3s ease;
   width: 50%;
-  /* Aumentado para compensar la reducci√≥n de la puntuaci√≥n */
+  /* Aumentado para compensar la reducciÛn de la puntuaciÛn */
 }
 
 /* Efecto hover para las filas */
@@ -545,7 +554,7 @@ table td.driver span {
   letter-spacing: 0.05rem;
 }
 
-/* estilo para el span anidado en la √∫ltima celda con un fondo en rect√°ngulo redondeado */
+/* estilo para el span anidado en la ˙ltima celda con un fondo en rect·ngulo redondeado */
 table td.gap span {
   border-radius: 30px;
   padding: 0.4rem 0.6rem;
@@ -555,7 +564,7 @@ table td.gap span {
   font-weight: 500;
 }
 
-/* en pantallas m√°s peque√±as, ocultar la tercera columna */
+/* en pantallas m·s pequeÒas, ocultar la tercera columna */
 @media (max-width: 500px) {
   table tr>*:nth-child(3) {
     display: none;
@@ -624,10 +633,10 @@ td.gap {
   text-align: right;
   padding-left: 1rem !important;
   padding-right: 3px !important;
-  /* A√±adido !important para forzar su aplicaci√≥n */
+  /* AÒadido !important para forzar su aplicaciÛn */
 }
 
-/* A√±adir logos F1 en el header */
+/* AÒadir logos F1 en el header */
 table th:nth-child(2) {
   position: relative;
 }
@@ -643,7 +652,7 @@ table tr:first-child th:first-child {
   border-top-left-radius: 8px;
 }
 
-/* Asegurar que el texto y el logo est√©n en la misma l√≠nea */
+/* Asegurar que el texto y el logo estÈn en la misma lÌnea */
 .header-label {
   display: inline-flex;
   align-items: center;
@@ -687,7 +696,7 @@ table td.position span {
   --chat-bg-dark: rgba(12, 12, 17, 0.97);
   --chat-purple-glow: rgba(135, 20, 203, 0.15);
 
-  /* Tama√±os del Chat */
+  /* TamaÒos del Chat */
   --chat-number-size: 2rem;
   --chat-driver-name-size: 1.76rem;
   --chat-radio-label-size: 1.4rem;
@@ -791,372 +800,3 @@ table td.position span {
 .chat-radio-label {
   font-size: var(--chat-radio-label-size);
   color: var(--chat-team-color);
-  font-family: 'Titillium Web', sans-serif;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.chat-team-logo {
-  width: 46px;
-  height: 46px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  margin-left: auto;
-  opacity: 0.8;
-}
-
-/* ============================================
-   CHAT EQUALIZER SECTION
-   ============================================ */
-.chat-equalizer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 40px;
-  margin: 10px 0;
-  background: transparent;
-  position: relative;
-}
-
-/* Add a line through the equalizer */
-.chat-equalizer::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--chat-team-color);
-  opacity: 0.3;
-  z-index: 0;
-}
-
-.chat-bar {
-  width: 2%;
-  min-width: 3px;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 2px;
-  opacity: 0.9;
-  height: 10px;
-  z-index: 1;
-  animation: chatEqualizer 1.2s infinite ease-in-out;
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
-}
-
-.chat-bar:nth-child(odd) {
-  animation-delay: 0.1s;
-}
-
-.chat-bar:nth-child(even) {
-  animation-delay: 0.2s;
-}
-
-.chat-bar:nth-child(3n) {
-  animation-delay: 0.3s;
-}
-
-.chat-bar:nth-child(4n) {
-  animation-delay: 0.4s;
-}
-
-.chat-bar:nth-child(5n) {
-  animation-delay: 0.5s;
-}
-
-@keyframes chatEqualizer {
-
-  0%,
-  100% {
-    height: 10px;
-    opacity: 0.6;
-  }
-
-  20% {
-    height: 35px;
-    opacity: 1;
-  }
-
-  40% {
-    height: 20px;
-    opacity: 0.8;
-  }
-
-  60% {
-    height: 30px;
-    opacity: 1;
-  }
-
-  80% {
-    height: 15px;
-    opacity: 0.7;
-  }
-}
-
-/* ============================================
-   CHAT MESSAGE SECTION
-   ============================================ */
-.chat-quote {
-  margin-top: 10px;
-  /* Reducido de 20px */
-  font-size: 1.1rem;
-  /* M√°s peque√±o (antes 1.3rem) */
-  color: #E0E0E0;
-  font-family: 'Magistral', sans-serif;
-  font-weight: normal;
-  letter-spacing: 0.5px;
-  /* Reducido */
-  line-height: 1.2;
-  /* M√°s compacto */
-  padding: 0 10px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.chat-quote strong {
-  color: var(--chat-team-color);
-}
-
-/* Estilos para emotes */
-.emote-img {
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0 2px;
-}
-
-/* Estilos para la imagen del usuario en el chat */
-.chat-user-image {
-  position: absolute;
-  right: -50px;
-  bottom: -10px;
-  height: 160%;
-  /* M√°s grande y desplazada a la derecha */
-  max-height: 160px;
-  width: auto;
-  object-fit: contain;
-  mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
-  z-index: 10;
-  pointer-events: none;
-}
-
-/* Ajustamos el header para que el texto no se solape con la imagen */
-.chat-header {
-  padding-right: 10px;
-  /* Espacio base */
-}
-
-/* ============================================
-   RACE CONTROL FLAGS
-   ============================================ */
-
-/* Yellow Flag / Safety Car */
-body.flag-yellow::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 10px solid #FFD700;
-  /* Gold/Yellow */
-  box-sizing: border-box;
-  z-index: 9999;
-  pointer-events: none;
-  animation: yellowFlagPulse 1s infinite;
-}
-
-body.flag-yellow table {
-  border: 2px solid #FFD700 !important;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-body.flag-yellow .chat-container {
-  border: 2px solid #FFD700 !important;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-@keyframes yellowFlagPulse {
-  0% {
-    opacity: 0.6;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0.6;
-  }
-}
-
-/* Red Flag */
-body.flag-red::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 10px solid #FF0000;
-  /* Red */
-  box-sizing: border-box;
-  z-index: 9999;
-  pointer-events: none;
-  animation: redFlagPulse 1s infinite;
-}
-
-body.flag-red table {
-  border: 2px solid #FF0000 !important;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-}
-
-body.flag-red .chat-container {
-  border: 2px solid #FF0000 !important;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-}
-
-@keyframes redFlagPulse {
-  0% {
-    opacity: 0.6;
-  }
-
-  50% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0.6;
-  }
-}
-
-
-/* ============================================
-   CHAT REDESIGN (MATCHING LEADERBOARD)
-   ============================================ */
-
-:root {
-  --chat-bg-dark: #0c0c11;
-  --chat-purple-glow: transparent;
-  --chat-number-size: 1.5rem;
-  --chat-driver-name-size: 1.2rem;
-  --chat-radio-label-size: 1rem;
-  --chat-message-size: 0.95rem;
-  --chat-container-padding: 15px;
-  --chat-header-gap: 10px;
-}
-
-.chat-container {
-  width: 280px !important;
-  background: #0c0c11 !important;
-  border-radius: 5px !important;
-  padding: 15px !important;
-  text-align: left !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-  border-left: 2px solid rgba(135, 20, 203, 0.3) !important;
-  overflow: visible !important;
-  position: relative !important;
-  min-height: 90px !important;
-}
-
-/* Header ocupa todo el ancho siempre */
-.chat-header {
-  margin-bottom: 10px !important;
-  padding-bottom: 8px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-  justify-content: flex-start !important;
-  position: relative;
-  z-index: 2;
-  width: 100% !important;
-}
-
-.chat-number {
-  font-family: 'Titillium Web', sans-serif !important;
-  text-shadow: none !important;
-  min-width: 30px;
-  font-size: 1.5rem !important;
-}
-
-.chat-info-container {
-  align-items: flex-start !important;
-  text-align: left !important;
-  margin-left: 5px;
-  overflow: hidden;
-  flex: 1 !important;
-}
-
-.chat-driver-name {
-  font-family: 'Titillium Web', sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 1.2rem !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  display: block;
-}
-
-.chat-team-logo {
-  margin-left: 0 !important;
-  width: 26px !important;
-  height: 26px !important;
-  opacity: 0.9 !important;
-  flex-shrink: 0 !important;
-}
-
-.chat-equalizer {
-  height: 20px !important;
-  opacity: 0.3 !important;
-  margin: 8px 0 !important;
-  position: relative;
-  z-index: 2;
-}
-
-.chat-quote {
-  margin-top: 8px !important;
-  color: #ccc !important;
-  font-family: 'Titillium Web', sans-serif !important;
-  font-size: 0.85rem !important;
-  line-height: 1.4 !important;
-  text-align: left !important;
-  padding: 0 !important;
-  text-shadow: none !important;
-  position: relative;
-  z-index: 2;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* User image - hidden by default */
-.chat-user-image {
-  display: none !important;
-}
-
-/* When has-image, show it below the header */
-.chat-container.has-image {
-  padding: 12px !important;
-  min-height: 140px !important;
-}
-
-.chat-container.has-image .chat-user-image {
-  display: block !important;
-  position: absolute !important;
-  right: 12px !important;
-  bottom: 12px !important;
-  width: 115px !important;
-  height: 115px !important;
-  object-fit: cover !important;
-  object-position: center !important;
-  border-radius: 5px !important;
-  opacity: 1 !important;
-  z-index: 3 !important;
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.6)) !important;
-}
-
-/* Adjust content area when image is present */
-.chat-container.has-image .chat-equalizer,
-.chat-container.has-image .chat-quote {
-  padding-right: 130px !important;
-}

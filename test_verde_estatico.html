@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test - Verde Estático</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        body {
+            padding: 50px;
+            background: #0c0c11;
+        }
+
+        .test-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .info {
+            color: #aaa;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <h1>🟢 Test Verde Estático</h1>
+        <div class="info">
+            Si ves parpadeo, hay un problema.<br>
+            Si el verde es constante, ¡está correcto! ✅
+        </div>
+
+        <table>
+            <tr>
+                <th>Pos</th>
+                <th>Driver</th>
+                <th>Pts</th>
+            </tr>
+            <tr class="driver chat-active pulsing">
+                <td class="position">1</td>
+                <td class="driver"><strong>TEST</strong> <span>Usuario</span></td>
+                <td class="gap"><span>100</span></td>
+            </tr>
+            <tr class="driver">
+                <td class="position">2</td>
+                <td class="driver"><strong>NORMAL</strong> <span>Usuario</span></td>
+                <td class="gap"><span>90</span></td>
+            </tr>
+            <tr class="driver hot-streak">
+                <td class="position">3</td>
+                <td class="driver"><strong>HOT</strong> <span>Streak</span></td>
+                <td class="gap"><span>80</span></td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="./js/green_pulse_cycle.js"></script>
+    <script>
+        console.log('🧪 Test de Verde Estático cargado');
+        console.log('Verifica visualmente:');
+        console.log('- Fila 1 (chat-active): Verde constante, SIN parpadeo');
+        console.log('- Fila 2 (normal): Sin efectos especiales');
+        console.log('- Fila 3 (hot-streak): Verde constante, SIN parpadeo');
+    </script>
+</body>
+
+</html>

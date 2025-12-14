@@ -1,52 +1,24 @@
 /**
- * Gestor de Ciclos de Parpadeo Verde
- * Controla el parpadeo de las filas de la tabla en ciclos:
- * - 1 minuto: Parpade green
- * - 10 minutos: Pausa (sin parpadeo)
- * - Repetir indefinidamente
+ * Gestor de Resaltado Verde Estático
+ * Mantiene el resaltado verde constante para las filas activas del chat
+ * (sin parpadeo ni ciclos temporales)
  */
 
 class GreenPulseCycleManager {
     constructor() {
-        // Duraciones en milisegundos
-        this.PULSE_DURATION = 60 * 1000; // 1 minuto
-        this.PAUSE_DURATION = 10 * 60 * 1000; // 10 minutos
-        this.TOTAL_CYCLE = this.PULSE_DURATION + this.PAUSE_DURATION; // 11 minutos
+        this.isPulsing = true; // Siempre activo
 
-        this.isPulsing = false;
-        this.cycleTimer = null;
+        console.log('🟢 Green Pulse Manager inicializado (modo estático)');
+        console.log('   El resaltado verde está siempre activo');
 
-        console.log('🟢 Green Pulse Cycle Manager inicializado');
-        console.log(`   Patrón: 1 min activo → 10 min pausa → repetir`);
-
-        // Iniciar el ciclo
-        this.startCycle();
+        // Aplicar inmediatamente a las filas existentes
+        this.applyToAllActiveRows();
     }
 
     /**
-     * Inicia el ciclo de parpadeo
+     * Aplica el estilo estático a todas las filas con chat-active
      */
-    startCycle() {
-        // Comenzar inmediatamente con el primer minuto de parpadeo
-        this.startPulsing();
-
-        // Después de 1 minuto, detener el parpadeo
-        setTimeout(() => {
-            this.stopPulsing();
-
-            // Después de 10 minutos de pausa, reiniciar el ciclo
-            setTimeout(() => {
-                this.startCycle(); // Recursivo para ciclo infinito
-            }, this.PAUSE_DURATION);
-
-        }, this.PULSE_DURATION);
-    }
-
-    /**
-     * Activa el parpadeo en todas las filas con clase chat-active
-     */
-    startPulsing() {
-        this.isPulsing = true;
+    applyToAllActiveRows() {
         const activeRows = document.querySelectorAll('tr.driver.chat-active');
 
         activeRows.forEach(row => {
@@ -54,51 +26,28 @@ class GreenPulseCycleManager {
         });
 
         if (activeRows.length > 0) {
-            console.log(`🟢 Parpadeo ACTIVADO para ${activeRows.length} fila(s) (duración: 1 minuto)`);
+            console.log(`🟢 Resaltado verde aplicado a ${activeRows.length} fila(s)`);
         }
     }
 
     /**
-     * Desactiva el parpadeo en todas las filas
-     */
-    stopPulsing() {
-        this.isPulsing = false;
-        const activeRows = document.querySelectorAll('tr.driver.chat-active');
-
-        activeRows.forEach(row => {
-            row.classList.remove('pulsing');
-        });
-
-        if (activeRows.length > 0) {
-            console.log(`⏸️  Parpadeo PAUSADO (duración: 10 minutos)`);
-        }
-    }
-
-    /**
-     * Añade la clase pulsing a una fila si el ciclo está activo
-     * Usar esto cuando una nueva fila recibe chat-active
+     * Añade la clase pulsing a una fila (siempre activo)
      * @param {HTMLElement} row - Elemento TR de la fila
      */
     applyToRow(row) {
         if (!row) return;
-
-        if (this.isPulsing) {
-            row.classList.add('pulsing');
-        } else {
-            row.classList.remove('pulsing');
-        }
+        row.classList.add('pulsing');
     }
 
     /**
-     * Obtiene el estado actual del ciclo
-     * @returns {{isPulsing: boolean, nextChangeIn: number}}
+     * Obtiene el estado actual
+     * @returns {{isPulsing: boolean}}
      */
     getStatus() {
         return {
             isPulsing: this.isPulsing,
-            pulseDuration: this.PULSE_DURATION / 1000 + 's',
-            pauseDuration: this.PAUSE_DURATION / 1000 + 's',
-            totalCycle: this.TOTAL_CYCLE / 1000 + 's'
+            mode: 'static',
+            description: 'Resaltado verde siempre activo'
         };
     }
 }
@@ -111,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Exponer comando de depuración
     window.getGreenPulseStatus = () => {
         const status = window.greenPulseCycleManager.getStatus();
-        console.log('🟢 Estado del Green Pulse Cycle:', status);
+        console.log('🟢 Estado del Green Pulse:', status);
         return status;
     };
 

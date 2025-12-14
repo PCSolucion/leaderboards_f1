@@ -96,5 +96,5 @@ const driversData = [
     { name: 'URIMAS82', team: 'astonmartin', points: 349, prevPoints: 348, trend: 1 },
     { name: 'NANUSSO', team: 'toroRosso', points: 288, prevPoints: 284, trend: 1 },
     { name: 'BITTERBITZ', team: 'williams', points: 258, prevPoints: 258, trend: 1 },
-    { name: 'MAMBIITV', team: 'alfaRomeo', points: 257, prevPoints: 248, trend: 2 }
+    { name: 'MAMBIITV', team: 'alpine', points: 257, prevPoints: 248, trend: 2 }
 ];

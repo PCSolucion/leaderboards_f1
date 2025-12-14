@@ -99,7 +99,7 @@ const chatUserTeams = {
     'nanusso': 'toroRosso',
     'bitterbitz': 'williams',
     'reichskanz': 'alpine',
-    'mambiitv': 'alfaRomeo',
+    'mambiitv': 'alpine',
     'yisus86': 'williams',
     'tonyforyu': 'williams',
     'emma1403': 'alfaRomeo',

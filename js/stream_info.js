@@ -109,7 +109,7 @@ class StreamInfoRotator {
 
     getScheduleView() {
         return {
-            label: 'Directo todos los días a las 15:00',
+            label: 'Directo todos los días',
             display: '',
             needsUpdate: false
         };

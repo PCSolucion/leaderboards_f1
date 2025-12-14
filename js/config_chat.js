@@ -78,7 +78,7 @@ const CHAT_CONFIG = {
         },
         'mambiitv': {
             number: 77,
-            team: 'alfaRomeo',
+            team: 'ferrari',
             image: './assets/mambittv.png'
         },
         'james_193': {

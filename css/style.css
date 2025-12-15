@@ -1,7 +1,5 @@
-/* importar la fuente Titillium Web desde Google Fonts (similar a la usada en F1) */
-@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap');
+@import url('fonts.css');
 
-/* establecer el modelo de caja para todos los elementos */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,76 +7,68 @@
 }
 
 body {
-  /* fondo con degradado similar al de F1 (rojo a negro) */
   background: #00000000;
   color: #fff;
   font-family: 'Titillium Web', sans-serif;
-  /* Alineación numérica perfecta */
   font-variant-numeric: tabular-nums;
-  /* centrar la tabla horizontalmente */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  /* Evitar recentrado vertical */
   padding-top: 20px;
-  /* Espacio superior fijo */
   min-height: 100vh;
   overflow-y: scroll;
-  overflow-x: hidden;
-  /* Evitar scroll horizontal que mueve la tabla */
 }
 
 table {
   border-top-left-radius: 27px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-radius: 5px;
+  margin: 0;
+  background-color: #0c0c11;
+  position: relative;
+  width: 280px !important;
+  max-width: 280px !important;
+  min-width: 280px !important;
+  border-spacing: 0 0.1rem;
+  border-collapse: separate;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  table-layout: fixed;
+  overflow: visible !important;
 }
 
 .header-label {
   margin-left: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
 @keyframes purplePulse {
-  0% {
+
+  0%,
+  100% {
     box-shadow: inset 0 0 0 0 rgba(135, 20, 203, 0);
     background-color: rgba(135, 20, 203, 0.1) !important;
     border-left-color: rgba(135, 20, 203, 0.5);
-    /* Solo cambiar color */
   }
 
   50% {
     box-shadow: inset 0 0 40px rgba(135, 20, 203, 0.6);
     background-color: rgba(135, 20, 203, 0.5) !important;
     border-left-color: #8714cb;
-    /* Solo cambiar color */
-  }
-
-  100% {
-    box-shadow: inset 0 0 0 0 rgba(135, 20, 203, 0);
-    background-color: rgba(135, 20, 203, 0.1) !important;
-    border-left-color: rgba(135, 20, 203, 0.5);
-    /* Solo cambiar color */
   }
 }
 
-/* Mejorar el aspecto de las filas de la tabla */
 tr.driver {
   transition: all 0.3s ease;
   border-radius: 8px;
   height: 40px;
   line-height: 1.2;
-  margin-top: -5px;
-  /* Margen negativo para juntar las filas */
-  margin-bottom: -5px;
-  /* Margen negativo para juntar las filas */
-
-  /* Mejora de contraste: borde sutil inferior */
+  margin: -5px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-
-  /* Tabla siempre visible, sin animación de entrada */
   opacity: 1;
+  overflow: visible !important;
 }
 
 tr.driver:last-child {
@@ -89,48 +79,33 @@ tr.driver:hover {
   background-color: rgba(225, 6, 0, 0.1);
   transform: scale(1.02);
   z-index: 1;
-  /* Asegurar que el elemento escalado quede por encima */
   position: relative;
 }
 
-/* Estilo especial para el Top 1 */
 tr.driver.rank-1 {
   background: linear-gradient(90deg, rgba(135, 20, 203, 0.15), rgba(0, 0, 0, 0));
   border-left: 4px solid #ffd700 !important;
-  /* Borde dorado para el campeón */
   box-shadow: 0 0 15px rgba(135, 20, 203, 0.1);
   z-index: 2;
   position: relative;
 }
 
-/* Estilo especial para el Top 2 (Plata) */
-tr.driver.rank-2 {
-  background: linear-gradient(90deg, rgba(192, 192, 192, 0.1), rgba(0, 0, 0, 0));
-  border-left: 4px solid #C0C0C0 !important;
-  /* Borde plateado */
-  box-shadow: 0 0 10px rgba(192, 192, 192, 0.05);
-  z-index: 2;
-  position: relative;
-}
-
-/* Estilo especial para el Top 3 (Bronce) */
+tr.driver.rank-2,
 tr.driver.rank-3 {
-  background: linear-gradient(90deg, rgba(205, 127, 50, 0.1), rgba(0, 0, 0, 0));
-  border-left: 4px solid #CD7F32 !important;
-  /* Borde bronce */
-  box-shadow: 0 0 10px rgba(205, 127, 50, 0.05);
   z-index: 2;
   position: relative;
 }
 
-/* Efecto Hot Streak (Racha) */
 tr.driver.hot-streak {
-  animation: slideInRow 0.5s ease-out forwards, greenPulse 2s infinite;
+  animation: greenPulse 2s ease-in-out 1.5 forwards;
   z-index: 1;
+  border-radius: 0 !important;
 }
 
 @keyframes greenPulse {
-  0% {
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
     background-color: rgba(0, 255, 0, 0.05);
   }
@@ -139,28 +114,22 @@ tr.driver.hot-streak {
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
     background-color: rgba(0, 255, 0, 0.15);
   }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
-    background-color: rgba(0, 255, 0, 0.05);
-  }
 }
 
-/* Efecto para usuario activo en chat (reutiliza greenPulse) */
 tr.driver.chat-active {
-  animation: greenPulse 2s infinite;
   z-index: 10;
   position: relative;
-  border-left: 4px solid #00ff00 !important;
-  /* Borde verde para resaltar más */
+  border-left: 4px solid #00ff0099 !important;
 }
 
-
-
-
+tr.driver.chat-active.pulsing {
+  animation: greenPulse 2s infinite;
+}
 
 @keyframes streakPulse {
-  0% {
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(255, 102, 0, 0);
     background-color: rgba(255, 102, 0, 0.1);
   }
@@ -169,14 +138,7 @@ tr.driver.chat-active {
     box-shadow: 0 0 15px rgba(255, 102, 0, 0.4);
     background-color: rgba(255, 102, 0, 0.25);
   }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 102, 0, 0);
-    background-color: rgba(255, 102, 0, 0.1);
-  }
 }
-
-
 
 @keyframes slideInRow {
   from {
@@ -190,7 +152,6 @@ tr.driver.chat-active {
   }
 }
 
-/* Estilos para el header estilo F1 */
 .f1-header {
   width: calc(60vw - 2rem);
   max-width: 280px;
@@ -203,10 +164,7 @@ tr.driver.chat-active {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   position: relative;
   margin-bottom: 0;
-  /* Pegado a la tabla */
 }
-
-
 
 .f1-logo {
   display: flex;
@@ -215,25 +173,23 @@ tr.driver.chat-active {
   padding-left: 15px;
 }
 
-.f1-text {
+.f1-text,
+.f1-text-bold {
   font-size: 24px;
-  font-weight: 400;
   font-style: italic;
-  /* Cursiva Racing */
   letter-spacing: 1px;
-  margin-left: -16px;
-  color: #fff;
   text-transform: uppercase;
 }
 
+.f1-text {
+  font-weight: 400;
+  margin-left: -16px;
+  color: #fff;
+}
+
 .f1-text-bold {
-  font-size: 24px;
   font-weight: 700;
-  font-style: italic;
-  /* Cursiva Racing */
-  letter-spacing: 1px;
   color: #8714cb;
-  text-transform: uppercase;
 }
 
 .f1-race-info {
@@ -252,23 +208,6 @@ tr.driver.chat-active {
   margin-left: 118px !important;
 }
 
-/* Estable */
-table {
-  margin: 0;
-  background-color: #0c0c11;
-  position: relative;
-  width: 280px !important;
-  /* Ancho fijo absoluto */
-  max-width: 280px !important;
-  min-width: 280px !important;
-  border-spacing: 0 0.1rem;
-  border-collapse: separate;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  table-layout: fixed;
-  /* Forzar ancho fijo de columnas */
-}
-
-/* Estilos para el cronómetro de sesión */
 .timer-row {
   height: auto !important;
   border-bottom: none !important;
@@ -280,16 +219,13 @@ table {
 
 .session-timer {
   width: 280px !important;
-  /* Mismo ancho que la tabla */
   max-width: 280px !important;
   min-width: 280px !important;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 15px;
-  /* Aumentado de 6px a 8px (aprox 30% más) */
   height: 45px;
-  /* Altura fija */
   background: linear-gradient(90deg, rgba(135, 20, 203, 0.08), rgba(21, 21, 30, 0.6));
   border-left: 2px solid rgba(135, 20, 203, 0.6);
   border-right: 1px solid rgba(135, 20, 203, 0.1);
@@ -297,34 +233,30 @@ table {
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
-  /* Incluir padding en el ancho */
 }
 
-.session-timer::before {
+.session-timer::before,
+.session-timer::after {
   content: '';
   position: absolute;
-  top: 0;
   left: 0;
   width: 100%;
   height: 1px;
   background: linear-gradient(90deg, rgba(135, 20, 203, 0.4), transparent);
+}
+
+.session-timer::before {
+  top: 0;
   opacity: 0.3;
 }
 
 .session-timer::after {
-  content: '';
-  position: absolute;
   bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(135, 20, 203, 0.4), transparent);
   opacity: 0.2;
 }
 
 .timer-label {
   font-size: 16px;
-  /* Aumentado de 13px para mejor legibilidad */
   font-weight: 400;
   letter-spacing: 1px;
   color: #aaa;
@@ -334,16 +266,13 @@ table {
   white-space: nowrap;
   overflow: hidden;
   max-width: 80%;
-  /* Aumentado de 60% para aprovechar más espacio */
   position: relative;
   z-index: 2;
 }
 
-/* Contenedor interno para la animación de marquesina */
 .timer-label.marquee {
   display: block;
   max-width: 100%;
-  /* Ocupar todo el ancho cuando es marquesina */
   width: 100%;
   mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
@@ -367,17 +296,14 @@ table {
 
 .timer-display {
   font-size: 21px;
-  /* Aumentado de 16px (aprox 30% más) */
   font-weight: 400;
   color: #eee;
   letter-spacing: 1px;
   font-family: 'Titillium Web', sans-serif;
   text-shadow: 0 0 5px rgba(135, 20, 203, 0.2);
-  /* Animación removida para ser menos agresivo */
   transition: opacity 0.3s ease;
   white-space: nowrap;
   flex-shrink: 0;
-  /* No permitir que se encoja */
 }
 
 @keyframes timerPulse {
@@ -392,46 +318,38 @@ table {
   }
 }
 
-/* centrar cada elemento anidado en una fila de la tabla */
 table tr>* {
   text-align: center;
   padding: 0.15rem 0.1rem;
 }
 
-/* Regla general para la primera columna (Posición) */
 table tr>*:nth-child(1) {
   width: 35px;
-  /* Ancho fijo para posición */
   max-width: 35px;
 }
 
-/* Regla general para la segunda columna (Nombre) - alineación izquierda */
 table tr>*:nth-child(2) {
   text-align: left;
   padding-left: 0.4rem;
   width: 195px;
-  /* Resto del espacio (280 - 35 - 50) */
   max-width: 195px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* Excepción para el encabezado - alineación centrada */
 table tr:first-child th:nth-child(2) {
   text-align: center;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 0;
+  position: relative;
 }
 
-/* Regla general para la tercera columna (Puntos) */
 table tr>*:nth-child(3) {
   padding-left: 0;
   padding-right: 5px;
   font-size: 1.1rem;
   text-align: right;
   width: 50px;
-  /* Ancho fijo para puntos */
   max-width: 50px;
 }
 
@@ -440,6 +358,9 @@ td.position {
   font-size: 14px !important;
   position: relative !important;
   overflow: visible !important;
+  font-weight: 700;
+  border-radius: 5px 0 0 5px;
+  width: 12px;
 }
 
 table td.position img {
@@ -447,87 +368,65 @@ table td.position img {
 }
 
 @keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(135, 20, 203, 0.7);
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(135, 20, 203, 0);
   }
 
   70% {
     box-shadow: 0 0 0 10px rgba(135, 20, 203, 0);
   }
 
-  100% {
-    box-shadow: 0 0 0 0 rgba(135, 20, 203, 0);
+  0% {
+    box-shadow: 0 0 0 0 rgba(135, 20, 203, 0.7);
   }
 }
 
 table th {
   height: 50px;
-
-}
-
-.up {
-  position: absolute !important;
-  top: 2px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 15px !important;
-  height: 10px !important;
-  filter: drop-shadow(0 0 2px rgba(0, 255, 0, 0.5));
-  z-index: 10;
-  pointer-events: none;
-}
-
-.down {
-  position: absolute !important;
-  bottom: 1px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 15px !important;
-  height: 10px !important;
-  filter: drop-shadow(0 0 2px rgba(255, 0, 0, 0.5));
-  z-index: 10;
-  pointer-events: none;
-}
-
-/* estilo para los encabezados con títulos en mayúsculas */
-table th {
   font-weight: 600;
   letter-spacing: 0.05rem;
   font-size: 12px;
-  /* Reducido de 16px a 12px */
   color: #fff;
   text-transform: uppercase;
-
 }
 
-/* Alinear la columna PUNTOS */
+.up,
+.down {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 15px !important;
+  height: 10px !important;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.up {
+  top: 2px !important;
+  filter: drop-shadow(0 0 2px rgba(0, 255, 0, 0.5));
+}
+
+.down {
+  bottom: 1px !important;
+  filter: drop-shadow(0 0 2px rgba(255, 0, 0, 0.5));
+}
+
 table th:nth-child(3) {
   text-align: right;
   width: 14px;
-  /* Reducido aún más (de 17.5px a 14px) */
   padding-right: 12px;
-  /* Aumentado de 5px a 12px */
 }
 
-/* aumentar ligeramente el peso de la celda que describe la posición */
-table td.position {
-  font-weight: 700;
-  border-radius: 5px 0 0 5px;
-  width: 12px;
-  /* Ancho mínimo para la columna de posición */
-}
-
-/* estilo para la celda con el conductor, separando el nombre y el equipo */
 table td.driver {
   padding-left: 0.4rem;
   font-size: 15px;
   letter-spacing: 0.05rem;
   transition: all 0.3s ease;
   width: 50%;
-  /* Aumentado para compensar la reducción de la puntuación */
 }
 
-/* Efecto hover para las filas */
 tr.driver:hover td.driver {
   transform: translateX(5px);
 }
@@ -544,7 +443,6 @@ table td.driver span {
   letter-spacing: initial;
 }
 
-/* Estilos para el nombre del conductor */
 .driver-name {
   color: #fff;
   font-size: 14px;
@@ -552,7 +450,6 @@ table td.driver span {
   letter-spacing: 0.05rem;
 }
 
-/* estilo para el span anidado en la última celda con un fondo en rectángulo redondeado */
 table td.gap span {
   border-radius: 30px;
   padding: 0.4rem 0.6rem;
@@ -562,7 +459,6 @@ table td.gap span {
   font-weight: 500;
 }
 
-/* en pantallas más pequeñas, ocultar la tercera columna */
 @media (max-width: 500px) {
   table tr>*:nth-child(3) {
     display: none;
@@ -578,10 +474,9 @@ table td.gap span {
   min-height: 100vh;
   background: transparent;
   position: relative;
-  overflow: visible;
+  overflow: visible !important;
   padding: 20px 0;
 }
-
 
 @keyframes slideOut {
   0% {
@@ -624,41 +519,23 @@ table td.gap span {
   animation: slideIn 1s ease-in-out forwards;
 }
 
-/* Dar estilo F1 a los tiempos de gap */
 td.gap {
   border-radius: 0 5px 5px 0;
   position: relative;
   text-align: right;
   padding-left: 1rem !important;
   padding-right: 3px !important;
-  /* Añadido !important para forzar su aplicación */
+  overflow: visible !important;
 }
 
-/* Añadir logos F1 en el header */
-table th:nth-child(2) {
-  position: relative;
-}
-
-/* Estilo para el encabezado principal RANK CANAL */
 table tr:first-child th {
   padding-bottom: 16px;
   padding-top: 9px;
 }
 
-/* Redondear la esquina superior izquierda igual que la inferior izquierda */
 table tr:first-child th:first-child {
   border-top-left-radius: 8px;
 }
-
-/* Asegurar que el texto y el logo estén en la misma línea */
-.header-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-}
-
-
 
 table td.position,
 table td.position span {
@@ -666,357 +543,7 @@ table td.position span {
   line-height: 1;
 }
 
-/* ============================================
-   CHAT DE TWITCH - ESTILOS F1
-   ============================================ */
-
-@font-face {
-  font-family: 'Magistral';
-  src: url('../fonts/MagistralRegular.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
+table {
+  overflow: visible !important;
 }
-
-@font-face {
-  font-family: 'Magistral';
-  src: url('../fonts/MagistralBold.otf') format('opentype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-:root {
-  /* Colores del Chat */
-  --chat-team-color: #9f7cc2;
-  /* Morado suave principal */
-  --chat-team-color-bright: #8714cb;
-  /* Morado brillante para acentos */
-  --chat-text-white: #FFFFFF;
-  --chat-bg-dark: rgba(12, 12, 17, 0.97);
-  --chat-purple-glow: rgba(135, 20, 203, 0.15);
-
-  /* Tamaños del Chat */
-  --chat-number-size: 2rem;
-  --chat-driver-name-size: 1.76rem;
-  --chat-radio-label-size: 1.4rem;
-  --chat-message-size: 1.6rem;
-
-  /* Espaciado del Chat */
-  --chat-container-padding: 20px;
-  --chat-header-gap: 15px;
-
-  /* Animaciones del Chat */
-  --chat-transition-duration: 0.7s;
-  --chat-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Wrapper para alinear tabla y chat a la izquierda pero centrados en pantalla */
-.content-wrapper {
-  display: flex;
-  flex-direction: column;
-  width: 280px !important;
-  /* Ancho fijo, no debe cambiar nunca */
-  min-width: 280px;
-  max-width: 280px;
-  margin: 0 auto;
-  align-items: flex-start;
-  position: relative;
-  overflow: visible;
-}
-
-.chat-container {
-  width: 420px;
-  /* 10% menos que 390px */
-  max-width: none;
-  margin: 5px 0 0 0;
-  background: linear-gradient(90deg, var(--chat-purple-glow), var(--chat-bg-dark));
-  border-radius: 8px;
-  padding: 8px 20px;
-  text-align: right;
-  transition: all var(--chat-transition-duration) var(--chat-transition-easing);
-  transform: translateX(0);
-  opacity: 0;
-  visibility: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(135, 20, 203, 0.1);
-  position: relative;
-  overflow: visible;
-}
-
-/* Bordes morados eliminados - ::before y ::after removidos */
-
-/* ============================================
-   CHAT HEADER SECTION
-   ============================================ */
-.chat-header {
-  display: flex;
-  align-items: center;
-  gap: var(--chat-header-gap);
-  margin-bottom: 15px;
-  position: relative;
-  padding-bottom: 10px;
-}
-
-.chat-number {
-  font-size: var(--chat-number-size);
-  color: var(--chat-team-color);
-  font-weight: bold;
-  font-family: 'Magistral', sans-serif;
-  line-height: 0.8;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-}
-
-/* ... (skip unchanged) ... */
-
-.chat-quote {
-  margin-top: 20px;
-  font-size: var(--chat-message-size);
-  color: #E0E0E0;
-  font-family: 'Magistral', sans-serif;
-  font-weight: normal;
-  letter-spacing: 1px;
-  line-height: 1.3;
-  padding: 0 10px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.chat-info-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-}
-
-.chat-driver-name {
-  font-size: var(--chat-driver-name-size);
-  color: var(--chat-text-white);
-  font-family: 'Titillium Web', sans-serif;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-.chat-radio-label {
-  font-size: var(--chat-radio-label-size);
-  color: var(--chat-team-color);
-  font-family: 'Titillium Web', sans-serif;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.chat-team-logo {
-  width: 46px;
-  height: 46px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  margin-left: auto;
-  opacity: 0.8;
-}
-
-/* ============================================
-   CHAT EQUALIZER SECTION
-   ============================================ */
-.chat-equalizer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 40px;
-  margin: 10px 0;
-  background: transparent;
-  position: relative;
-}
-
-/* Add a line through the equalizer */
-.chat-equalizer::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--chat-team-color);
-  opacity: 0.3;
-  z-index: 0;
-}
-
-.chat-bar {
-  width: 2%;
-  min-width: 3px;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 2px;
-  opacity: 0.9;
-  height: 10px;
-  z-index: 1;
-  animation: chatEqualizer 1.2s infinite ease-in-out;
-  box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
-}
-
-.chat-bar:nth-child(odd) {
-  animation-delay: 0.1s;
-}
-
-.chat-bar:nth-child(even) {
-  animation-delay: 0.2s;
-}
-
-.chat-bar:nth-child(3n) {
-  animation-delay: 0.3s;
-}
-
-.chat-bar:nth-child(4n) {
-  animation-delay: 0.4s;
-}
-
-.chat-bar:nth-child(5n) {
-  animation-delay: 0.5s;
-}
-
-@keyframes chatEqualizer {
-
-  0%,
-  100% {
-    height: 10px;
-    opacity: 0.6;
-  }
-
-  20% {
-    height: 35px;
-    opacity: 1;
-  }
-
-  40% {
-    height: 20px;
-    opacity: 0.8;
-  }
-
-  60% {
-    height: 30px;
-    opacity: 1;
-  }
-
-  80% {
-    height: 15px;
-    opacity: 0.7;
-  }
-}
-
-/* ============================================
-   CHAT MESSAGE SECTION
-   ============================================ */
-.chat-quote {
-  margin-top: 10px;
-  /* Reducido de 20px */
-  font-size: 1.1rem;
-  /* Más pequeño (antes 1.3rem) */
-  color: #E0E0E0;
-  font-family: 'Magistral', sans-serif;
-  font-weight: normal;
-  letter-spacing: 0.5px;
-  /* Reducido */
-  line-height: 1.2;
-  /* Más compacto */
-  padding: 0 10px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.chat-quote strong {
-  color: var(--chat-team-color);
-}
-
-/* Estilos para emotes */
-.emote-img {
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0 2px;
-}
-
-/* Estilos para la imagen del usuario en el chat */
-.chat-user-image {
-  position: absolute;
-  right: -50px;
-  bottom: -10px;
-  height: 160%;
-  /* Más grande y desplazada a la derecha */
-  max-height: 160px;
-  width: auto;
-  object-fit: contain;
-  mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
-  z-index: 10;
-  pointer-events: none;
-}
-
-/* Ajustamos el header para que el texto no se solape con la imagen */
-.chat-header {
-  padding-right: 10px;
-  /* Espacio base */
-}
-/* ============================================
-   RACE CONTROL FLAGS
-   ============================================ */
-
-/* Yellow Flag / Safety Car */
-body.flag-yellow::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 10px solid #FFD700; /* Gold/Yellow */
-  box-sizing: border-box;
-  z-index: 9999;
-  pointer-events: none;
-  animation: yellowFlagPulse 1s infinite;
-}
-
-body.flag-yellow table {
-  border: 2px solid #FFD700 !important;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-body.flag-yellow .chat-container {
-  border: 2px solid #FFD700 !important;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-@keyframes yellowFlagPulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-/* Red Flag */
-body.flag-red::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 10px solid #FF0000; /* Red */
-  box-sizing: border-box;
-  z-index: 9999;
-  pointer-events: none;
-  animation: redFlagPulse 1s infinite;
-}
-
-body.flag-red table {
-  border: 2px solid #FF0000 !important;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-}
-
-body.flag-red .chat-container {
-  border: 2px solid #FF0000 !important;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-}
-
-@keyframes redFlagPulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
+.content-wrapper { overflow: visible !important; width: 100%; display: flex; justify-content: center; }

@@ -9,34 +9,27 @@
 </head>
 
 <body>
-  <!-- Añadimos un div contenedor alrededor de la tabla -->
   <div id="table-container">
     <div class="content-wrapper">
       <table>
         <tr>
-
-          <th style="text-align: left;"><span class="header-label"><span class="f1-text"
-                style="font-size: 18px; color: #fff; letter-spacing: 2px; font-weight: 300; ">
-                RANK </span> <span class="f1-text-bold"
-                style="font-size: 18px; color: #fff; letter-spacing: 2px; font-weight: 300;">CANAL</span>
-              <img class="logo" src="./assets/logo.png" alt="Logo"
-                style="height: 20px; margin-left: 8px; vertical-align: middle;"></span></th>
+          <th class="header-th">
+            <span class="header-label">
+              <span class="f1-text header-f1-text">RANK</span>
+              <span class="f1-text-bold header-f1-text">CANAL</span>
+              <img class="logo" src="./assets/logo.png" alt="Logo">
+            </span>
+          </th>
           <th></th>
           <th></th>
         </tr>
       </table>
     </div>
   </div>
-
-  <!-- parcial -->
   <script src="./js/d3.min.js"></script>
-
-
-
-  <!-- Scripts de la aplicación -->
   <script src="./js/data.js"></script>
   <script src="./js/script.js"></script>
-  <script src="./js/visibility_cycle.js"></script> <!-- Gestor de ciclo de visibilidad de la tabla -->
+  <script src="./js/visibility_cycle.js"></script>
 </body>
 
 </html>

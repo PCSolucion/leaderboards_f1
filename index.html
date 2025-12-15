@@ -22,101 +22,21 @@
               <img class="logo" src="./assets/logo.png" alt="Logo"
                 style="height: 20px; margin-left: 8px; vertical-align: middle;"></span></th>
           <th></th>
-        </tr>
-        <!-- Cronómetro de sesión estilo F1 -->
-        <tr class="timer-row">
-          <td colspan="3" style="padding: 0;">
-            <div class="session-timer">
-              <div class="timer-label">DIRECTO</div>
-              <div class="timer-display" id="session-time">00:00:00</div>
-            </div>
-          </td>
+          <th></th>
         </tr>
       </table>
-
-      <!-- Chat de Twitch -->
-      <div class="chat-container" role="region" aria-label="Chat de Twitch">
-        <div class="chat-header">
-          <div class="chat-number" aria-label="Número de piloto">63</div>
-          <div class="chat-team-logo" role="img" aria-label="Logo del equipo"></div>
-          <div class="chat-info-container">
-            <span class="chat-driver-name" id="chat-username">RUSSELL</span>
-          </div>
-
-        </div>
-        <div class="chat-equalizer" aria-hidden="true">
-          <!-- 40 barras para simular el ecualizador -->
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-          <div class="chat-bar"></div>
-        </div>
-        <div class="chat-quote" id="chat-message" role="status" aria-live="polite">
-          "F1 SEASON IS FINISHED, SO ALL I HAVE LEFT IS MAKING IT IN FIGMA."
-        </div>
-        <!-- Imagen del usuario posicionada absolutamente -->
-        <img id="chat-user-image" class="chat-user-image" src="" alt="" style="display: none;">
-      </div>
     </div>
   </div>
 
   <!-- parcial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/5.9.2/d3.min.js'></script>
+  <script src="./js/d3.min.js"></script>
 
-  <!-- Scripts del chat de Twitch -->
-  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.7/runtime.min.js"></script>
-  <script src="./libs/tmi.min.js"></script>
-  <script src="./js/utils.js"></script> <!-- Utilidades compartidas - cargar primero -->
-  <script src="./js/features.js"></script> <!-- Feature flags y configuración de entorno -->
-  <script src="./js/config_chat.js"></script>
-  <script src="./js/data_chat.js"></script>
+
 
   <!-- Scripts de la aplicación -->
   <script src="./js/data.js"></script>
-  <script src="./js/stream_info.js"></script>
-  <script src="./js/timer.js"></script>
   <script src="./js/script.js"></script>
-  <script src="./js/accessibility.js"></script>
-
-  <script src="./js/green_pulse_cycle.js"></script> <!-- Gestor de ciclos de parpadeo verde -->
   <script src="./js/visibility_cycle.js"></script> <!-- Gestor de ciclo de visibilidad de la tabla -->
-  <script src="./js/chat.js"></script> <!-- Sistema principal de chat de Twitch -->
 </body>
 
 </html>

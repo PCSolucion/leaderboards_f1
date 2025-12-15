@@ -2,8 +2,6 @@
  * DriverService (Business Logic Layer)
  * Responsabilidad: Gestionar los datos, cálculos y reglas de negocio.
  */
-
-
 class DriverService {
   constructor(data, config) {
     this.drivers = data;
@@ -22,10 +20,6 @@ class DriverService {
     return this.drivers.length > 0 ? this.drivers[0].points : 0;
   }
 
-  /**
-   * Calcula el índice del conductor con mayor progreso (puntos actuales - puntos anteriores).
-   * @returns {number} Índice del conductor o -1 si no hay ninguno.
-   */
   calculateBestImproverIndex() {
     let maxDiff = -Infinity;
     let index = -1;
@@ -33,7 +27,8 @@ class DriverService {
 
     for (let i = 0; i < limit; i++) {
       const driver = this.drivers[i];
-      const diff = driver.points - driver.prevPoints;
+      const prev = driver.prevPoints !== undefined ? driver.prevPoints : driver.points;
+      const diff = driver.points - prev;
       if (diff > maxDiff) {
         maxDiff = diff;
         index = i;
@@ -45,14 +40,12 @@ class DriverService {
 
 /**
  * TableRenderer (Presentation Layer)
- * Responsabilidad: Manipular el DOM y visualizar los datos usando D3.js.
  */
 class TableRenderer {
   constructor(tableSelector, config) {
     this.tableSelector = tableSelector;
     this.config = config;
     this.main = d3.select(tableSelector);
-
   }
 
   initTable() {
@@ -60,7 +53,6 @@ class TableRenderer {
       .style('border-collapse', 'separate')
       .style('border-spacing', '0 6px');
 
-    // Estilos de encabezado
     this.main.select('thead th:first-child')
       .style('padding-top', '10px')
       .style('margin-top', '-10px')
@@ -72,7 +64,6 @@ class TableRenderer {
   }
 
   renderRows(drivers) {
-    // En D3, el patrón enter/update/exit es clave. Aquí simplificamos asumiendo renderizado inicial.
     const rows = this.main.selectAll('tr.driver')
       .data(drivers)
       .enter()
@@ -165,24 +156,19 @@ class TableRenderer {
   }
 
   updateGapColumn(showInterval, leaderPoints) {
-    // Usar querySelectorAll para asegurar que capturamos todos los elementos en el DOM actual
     const rows = document.querySelectorAll('tr.driver');
 
     rows.forEach((row, index) => {
       const gapCell = row.querySelector('td.gap span');
       if (!gapCell) return;
 
-      // Obtener los puntos directamente de los datos adjuntos al nodo por D3
-      // D3 adjunta los datos a la propiedad __data__ del elemento DOM
       const d = row.__data__;
-
       if (!d) return;
 
       if (showInterval) {
         if (index === 0) {
           gapCell.textContent = "LIDER";
         } else {
-          // Asegurar que leaderPoints y d.points sean números
           const points = parseInt(d.points) || 0;
           const leader = parseInt(leaderPoints) || 0;
           const gap = leader - points;
@@ -199,7 +185,7 @@ class TableRenderer {
   }
 
   clearPurpleIcon() {
-    const existingIcon = document.querySelector(`img[src="${this.config.images.purpleIcon}"]`);
+    const existingIcon = document.querySelector(`img[src="${config.images.purpleIcon}"]`);
     if (existingIcon) {
       existingIcon.remove();
     }
@@ -222,12 +208,10 @@ class TableRenderer {
       }
     }
   }
-
-
 }
+
 /**
  * LeaderboardApp (Orchestrator)
- * Responsabilidad: Inicializar y coordinar el servicio y el renderizador.
  */
 class LeaderboardApp {
   constructor(driverService, renderer, config) {
@@ -239,60 +223,23 @@ class LeaderboardApp {
 
   init() {
     this.renderer.initTable();
-    // LIMIT TO 18 DRIVERS
     this.renderer.renderRows(this.driverService.getTopDrivers(15));
-
-    // Initial check for Purple Icon
     this.updatePurpleIconLogic();
-
     this.startTimers();
-
-    // Update purple icon every 5 seconds to reflect chat activity
-    setInterval(() => this.updatePurpleIconLogic(), 5000);
   }
 
   updatePurpleIconLogic() {
-    // 1. Get Top 15 drivers
-    const topDrivers = this.driverService.getTopDrivers(this.config.topLimit);
-    const topDriverNames = topDrivers.map(d => d.name);
+    const targetIndex = this.driverService.calculateBestImproverIndex();
 
-    // 2. Ask ChatMessageTracker for top active user
-    let topActiveUser = null;
-    if (window.chatMessageStats) {
-      topActiveUser = window.chatMessageStats.getTopActiveUser(topDriverNames);
-    }
-
-    // 3. Determine index
-    let targetIndex = -1;
-
-    if (topActiveUser) {
-      // Find index in topDrivers
-      targetIndex = topDrivers.findIndex(d => this.normalizeName(d.name) === topActiveUser);
-    }
-
-    // 4. Fallback if no target found (no chat activity in last 5 mins)
-    if (targetIndex === -1) {
-      targetIndex = this.driverService.calculateBestImproverIndex();
-    }
-
-    // 5. Render
     this.renderer.clearPurpleIcon();
     if (targetIndex !== -1) {
       this.renderer.renderPurpleIcon(targetIndex);
     }
   }
 
-  normalizeName(name) {
-    let lower = name.toLowerCase();
-    if (lower === 'c_h_a_n_d_a_l_f') return 'chandalf';
-    return lower;
-  }
-
   startTimers() {
-    // Intervalo para alternar entre Puntos y Gap
     setInterval(() => this.togglePointsInterval(), this.config.intervalTime);
 
-    // Timeout para remover la clase hot-streak
     setTimeout(() => {
       this.renderer.removeHotStreakClasses();
     }, this.config.hotStreakDuration);
@@ -307,7 +254,6 @@ class LeaderboardApp {
 
 // Inicialización de la aplicación
 document.addEventListener('DOMContentLoaded', () => {
-  // Inyección de dependencias
   const driverService = new DriverService(driversData, appConfig);
   const renderer = new TableRenderer('table', appConfig);
 

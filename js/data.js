@@ -85,19 +85,19 @@ const appConfig = {
 // Datos unificados de los conductores
 // trend: 1 = igual, 2 = subió (verde), 3 = bajó (rojo)
 const driversData = [
-    { name: 'TAKERU_XIII', team: 'mercedes', points: 689, prevPoints: 682, trend: 1 },
-    { name: 'JAMES_193', team: 'mercedes', points: 660, prevPoints: 656, trend: 1 },
-    { name: 'RACTOR09', team: 'mclaren', points: 568, prevPoints: 564, trend: 1 },
-    { name: 'XROOCKK', team: 'toroRosso', points: 459, prevPoints: 455, trend: 1 },
-    { name: 'BROXA24', team: 'ferrari', points: 418, prevPoints: 417, trend: 1 },
-    { name: 'CHANDALF', team: 'alpine', points: 416, prevPoints: 416, trend: 1 },
-    { name: 'X1LENZ', team: 'redBull', points: 415, prevPoints: 415, trend: 1 },
+    { name: 'TAKERU_XIII', team: 'mercedes', points: 705, prevPoints: 689, trend: 1 },
+    { name: 'JAMES_193', team: 'mercedes', points: 664, prevPoints: 660, trend: 1 },
+    { name: 'RACTOR09', team: 'mclaren', points: 579, prevPoints: 568, trend: 1 },
+    { name: 'XROOCKK', team: 'toroRosso', points: 460, prevPoints: 459, trend: 1 },
+    { name: 'BROXA24', team: 'ferrari', points: 418, prevPoints: 418, trend: 1 },
+    { name: 'CHANDALF', team: 'alpine', points: 417, prevPoints: 416, trend: 1 },
+    { name: 'X1LENZ', team: 'redBull', points: 416, prevPoints: 415, trend: 1 },
     { name: 'DARKOUS666', team: 'ferrari', points: 392, prevPoints: 392, trend: 1 },
-    { name: 'MANGUERAZO', team: 'redBull', points: 387, prevPoints: 387, trend: 1 },
+    { name: 'MANGUERAZO', team: 'redBull', points: 390, prevPoints: 387, trend: 1 },
     { name: 'CCXSNOP', team: 'mclaren', points: 366, prevPoints: 366, trend: 1 },
-    { name: 'MACUSAM', team: 'astonmartin', points: 352, prevPoints: 352, trend: 1 },
-    { name: 'URIMAS82', team: 'astonmartin', points: 350, prevPoints: 349, trend: 1 },
-    { name: 'NANUSSO', team: 'toroRosso', points: 289, prevPoints: 288, trend: 1 },
-    { name: 'MAMBIITV', team: 'alpine', points: 260, prevPoints: 257, trend: 2 },
-    { name: 'BITTERBITZ', team: 'williams', points: 259, prevPoints: 258, trend: 3 }
+    { name: 'MACUSAM', team: 'astonmartin', points: 353, prevPoints: 352, trend: 1 },
+    { name: 'URIMAS82', team: 'astonmartin', points: 352, prevPoints: 350, trend: 1 },
+    { name: 'NANUSSO', team: 'toroRosso', points: 289, prevPoints: 289, trend: 1 },
+    { name: 'REICHSKANZ', team: 'alpine', points: 264, prevPoints: 264, trend: 2 },
+    { name: 'BITTERBITZ', team: 'williams', points: 262, prevPoints: 259, trend: 1 }
 ];
